@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STARKY SPORTS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Starky Sports">
+    <style>
+        :root {
+            --primary:        #7B6EF6;
+            --primary-glow:   rgba(123,110,246,0.35);
+            --cyan:           #00D4FF;
+            --magenta:        #E040FB;
+            --grad:           linear-gradient(135deg,#7B6EF6 0%,#00D4FF 50%,#E040FB 100%);
+            --grad-soft:      linear-gradient(135deg,rgba(123,110,246,0.18) 0%,rgba(0,212,255,0.12) 100%);
+            --bg:             #000000;
+            --bg-surface:     #0A0A12;
+            --bg-card:        #0E0E1A;
+            --bg-elevated:    #141422;
+            --text:           #F0F0FF;
+            --text-muted:     #8A8AB0;
+            --text-inactive:  #5A5A80;
+            --border:         rgba(123,110,246,0.18);
+            --border-bright:  rgba(123,110,246,0.45);
+            --success:        #4FFFB0;
+            --danger:         #FF4D6D;
+            --warning:        #FFB830;
+            --logo-bg:        #141422;
+            --header-bg:      rgba(0,0,0,0.93);
+            --nav-bg:         rgba(0,0,0,0.96);
+            --notif-dot:      #FF4D6D;
+            --side-bg:        #080810;
+            --side-hover:     rgba(123,110,246,0.08);
+            --side-active:    rgba(123,110,246,0.15);
+            --home-color:     #FF4D6D;
+            --away-color:     #00D4FF;
+            --shadow:         rgba(0,0,0,0.7);
+            --overlay-bg:     rgba(0,0,0,0.85);
+            --proba-home:     #0066FF;
+            --proba-away:     #8800FF;
+        }
+        body.light-mode {
+            --bg:             #F0F0FF;
+            --bg-surface:     #E6E6F8;
+            --bg-card:        #FFFFFF;
+            --bg-elevated:    #EAEAF8;
+            --text:           #0E0E2A;
+            --text-muted:     #5A5A80;
+            --text-inactive:  #9090B0;
+            --border:         rgba(123,110,246,0.22);
+            --border-bright:  rgba(123,110,246,0.55);
+            --logo-bg:        #D8D8EE;
+            --header-bg:      rgba(240,240,255,0.96);
+            --nav-bg:         rgba(240,240,255,0.97);
+            --side-bg:        #E6E6F8;
+            --side-hover:     rgba(123,110,246,0.09);
+            --side-active:    rgba(123,110,246,0.17);
+            --shadow:         rgba(0,0,0,0.12);
+            --overlay-bg:     rgba(0,0,0,0.6);
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0; padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            width: 100%; height: 100vh;
+            position: fixed;
+            font-weight: 500;
+            -webkit-touch-callout: none;
+            transition: background 0.3s, color 0.3s;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+        }
+        @keyframes notifIn {
+            from { opacity:0; transform: translateX(-50%) translateY(-10px); }
+            to   { opacity:1; transform: translateX(-50%) translateY(0); }
+        }
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 56px;
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+            box-shadow: 0 2px 20px var(--shadow);
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .header-title {
+            font-size: 17px; font-weight: 700;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .icon-btn {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            position: relative;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover { border-color: var(--border-bright); color: var(--primary); }
+        .icon-btn i { font-size: 15px; }
+        .notif-dot {
+            position: absolute; top: 7px; right: 7px;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--notif-dot);
+            display: none;
+            box-shadow: 0 0 6px var(--notif-dot);
+        }
+        .notif-dot.active { display: block; }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 56px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: none;
+            display: flex;
+            z-index: 95;
+            box-shadow: none;
+        }
+        /* FIX: suppression totale — display:none — pour ne laisser aucun espace */
+        .bottom-nav.hidden {
+            display: none;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start;
+            padding: 8px 0 0;
+            font-size: 10px; font-weight: 600;
+            color: var(--text-inactive);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .nav-item.active { color: var(--primary); }
+        .nav-item .nav-icon { font-size: 20px; margin-bottom: 3px; }
+        .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(123,110,246,0.7)); }
+
+        /* ===== Pro S nav icon gradient ===== */
+        .nav-item[data-section="pros"] .nav-icon {
+            background: linear-gradient(135deg,#7B6EF6,#E040FB);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-item[data-section="pros"].active .nav-icon {
+            filter: drop-shadow(0 0 8px rgba(224,64,251,0.7));
+        }
+
+        /* main-content s'adapte dynamiquement selon la présence du nav */
+        #main-content {
+            position: fixed;
+            top: 56px; left: 0; right: 0;
+            bottom: 56px;
+            overflow: hidden;
+        }
+        /* Quand le nav est caché, main-content s'étend jusqu'en bas */
+        #main-content.no-nav {
+            bottom: 0;
+        }
+
+        .section { display: none; height: 100%; }
+        .section.active { display: block; }
+        .forecasts-container {
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 14px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .demo-banner {
+            background: rgba(123,110,246,0.1);
+            border: 1px solid rgba(123,110,246,0.3);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        .demo-banner i { color: var(--primary); margin-right: 6px; }
+
+        /* ===== FORECAST CARD ===== */
+        .forecast-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            position: relative;
+            overflow: visible;
+            transition: border-color 0.25s;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .forecast-card:active { border-color: var(--border-bright); }
+        .forecast-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px;
+        }
+        .league-badge {
+            font-size: 11px; color: var(--text-muted);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            padding: 4px 10px; border-radius: 20px;
+        }
+        .status-badge {
+            font-size: 11px; font-weight: 700;
+            padding: 4px 10px; border-radius: 20px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .status-badge.pending { background: transparent; border: none; padding: 0; min-height: 20px; }
+        .status-badge.win  { background: rgba(79,255,176,0.12); color: var(--success); border: 1px solid rgba(79,255,176,0.25); }
+        .status-badge.loss { background: rgba(255,77,109,0.12); color: var(--danger);  border: 1px solid rgba(255,77,109,0.25); }
+
+        .teams-row {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 8px;
+        }
+        .team-col {
+            display: flex; flex-direction: column;
+            align-items: center; flex: 1; min-width: 0;
+        }
+
+        /* ===== LOGO BOX AVEC ARC DE PROBABILITÉ ===== */
+        .team-logo-wrapper {
+            position: relative;
+            width: 60px; height: 60px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+        /* SVG arc en arrière-plan */
+        .team-logo-wrapper svg.proba-arc {
+            position: absolute;
+            inset: 0;
+            width: 100%; height: 100%;
+            overflow: visible;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .team-logo-box {
+            position: absolute;
+            inset: 4px;
+            background: var(--logo-bg);
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .team-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .team-logo-box i { font-size: 22px; color: var(--primary); }
+
+        .team-name {
+            font-weight: 700; font-size: 12px; text-align: center;
+            line-height: 1.3; color: var(--text);
+            display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .vs-col {
+            display: flex; flex-direction: column;
+            align-items: center; flex-shrink: 0;
+            min-width: 60px; padding-top: 10px;
+        }
+        .vs-text {
+            font-size: 24px; font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .match-date { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 2px; }
+
+        .empty-state {
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 60px 20px; text-align: center;
+            color: var(--text-muted); height: 100%;
+        }
+        .empty-state i { font-size: 50px; margin-bottom: 20px; opacity: 0.3; }
+        .empty-state h3 { font-size: 18px; margin-bottom: 10px; color: var(--text); }
+        .empty-state p { font-size: 13px; line-height: 1.5; }
+
+        /* ===== DETAIL PAGE ===== */
+        .forecast-detail {
+            position: fixed; inset: 0;
+            background: var(--bg);
+            z-index: 200;
+            display: none; flex-direction: column;
+        }
+        .forecast-detail.active { display: flex; }
+        .detail-header {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            background: var(--header-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+        .detail-topbar {
+            height: 56px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px;
+        }
+        .detail-topbar-left { display: flex; align-items: center; gap: 12px; }
+        .detail-topbar-title {
+            font-size: 15px; font-weight: 700;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            max-width: 220px; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+        .detail-teams-band { padding: 12px 16px 14px; }
+        .detail-league-label {
+            font-size: 11px; color: var(--text-muted);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; margin-bottom: 10px;
+        }
+        .detail-teams-row {
+            display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 10px;
+        }
+        .detail-team-col {
+            display: flex; flex-direction: column;
+            align-items: center; flex: 1; min-width: 0;
+        }
+        .detail-logo-box {
+            width: 68px; height: 68px;
+            background: var(--logo-bg);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 8px; overflow: hidden;
+            transition: background 0.3s;
+        }
+        .detail-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+        .detail-logo-box i { font-size: 34px; color: var(--primary); }
+        .detail-team-name {
+            font-weight: 700; font-size: 13px;
+            text-align: center; color: var(--text);
+            line-height: 1.3; max-width: 100px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .detail-center-col {
+            display: flex; flex-direction: column;
+            align-items: center; flex-shrink: 0;
+            min-width: 85px; padding-top: 10px;
+        }
+        .detail-status-badge {
+            font-size: 12px; font-weight: 700;
+            padding: 5px 12px; border-radius: 20px; margin-bottom: 5px;
+        }
+        .detail-status-badge.status-pending {
+            background: rgba(123,110,246,0.15); color: var(--primary);
+            border: 1px solid rgba(123,110,246,0.3);
+        }
+        .detail-status-badge.status-win {
+            background: rgba(79,255,176,0.12); color: var(--success);
+            border: 1px solid rgba(79,255,176,0.25);
+        }
+        .detail-status-badge.status-loss {
+            background: rgba(255,77,109,0.12); color: var(--danger);
+            border: 1px solid rgba(255,77,109,0.25);
+        }
+        .detail-match-time { font-size: 10px; color: var(--text-muted); text-align: center; }
+        .detail-tabs-bar {
+            display: flex;
+            border-top: 1px solid var(--border);
+            padding: 8px 14px;
+            gap: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .detail-tabs-bar::-webkit-scrollbar { display: none; }
+        .dtab {
+            flex-shrink: 0;
+            padding: 7px 16px;
+            font-size: 12px; font-weight: 700;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            color: var(--text-inactive);
+            cursor: pointer;
+            background: transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .dtab i { font-size: 11px; }
+        .dtab.active {
+            color: #fff;
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow);
+        }
+        .detail-scroll {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-panel { display: none; padding: 16px; }
+        .tab-panel.active { display: block; }
+        .analysis-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px; margin-bottom: 14px;
+        }
+        .analysis-block-title {
+            font-weight: 700; margin-bottom: 10px; color: var(--primary); font-size: 14px;
+            text-align: center;
+        }
+        .analysis-block-text { font-size: 14px; line-height: 1.6; color: var(--text); opacity: 0.87; }
+        .stats-row {
+            display: flex; align-items: center;
+            margin-bottom: 10px; gap: 8px;
+        }
+        .sval-home { flex:1; text-align:center; font-weight:700; font-size:13px; color: var(--home-color); }
+        .sval-away { flex:1; text-align:center; font-weight:700; font-size:13px; color: var(--away-color); }
+        .sval-label { flex:2; text-align:center; font-size:11px; color: var(--text-muted); }
+        .bar-track {
+            width:100%; height:6px; background:var(--bg-elevated);
+            border-radius:3px; overflow:hidden; display:flex; margin-bottom:12px;
+        }
+        .bar-home { height:100%; background: var(--home-color); border-radius: 3px 0 0 3px; }
+        .bar-away { height:100%; background: var(--away-color); border-radius: 0 3px 3px 0; margin-left:auto; }
+        .form-row { display:flex; align-items:center; margin-bottom:8px; gap:8px; }
+        .form-team-name { flex:1; font-size:12px; font-weight:600; color: var(--text); }
+        .form-dots { display:flex; gap:4px; }
+        .fdot {
+            width:20px; height:20px; border-radius:50%;
+            font-size:9px; font-weight:700;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .fdot.W { background:rgba(79,255,176,0.2); color:var(--success); }
+        .fdot.D { background:rgba(255,184,48,0.2);  color:var(--warning); }
+        .fdot.L { background:rgba(255,77,109,0.15); color:var(--danger);  }
+        .match-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
+        }
+        .match-item-header {
+            display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:6px; font-size:11px; color:var(--text-muted);
+        }
+        .match-item-teams { display:flex; align-items:center; justify-content:space-between; }
+        .match-team { display:flex; align-items:center; gap:6px; font-weight:700; font-size:12px; color:var(--text); }
+        .match-team-logo { width:22px; height:22px; border-radius:4px; object-fit:contain; }
+        .match-score { font-size:15px; font-weight:800; color:var(--primary); padding:0 8px; }
+        .result-chip { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; }
+        .result-chip.win  { background:rgba(79,255,176,0.12); color:var(--success); }
+        .result-chip.loss { background:rgba(255,77,109,0.12); color:var(--danger);  }
+        .result-chip.draw { background:rgba(255,184,48,0.12); color:var(--warning); }
+        .ranking-table { width:100%; border-collapse:collapse; font-size:11px; }
+        .ranking-table th { background:var(--bg-elevated); color:var(--primary); padding:8px 4px; text-align:center; font-weight:700; font-size:10px; border-bottom:1px solid var(--border); }
+        .ranking-table td { padding:7px 4px; text-align:center; border-bottom:1px solid rgba(123,110,246,0.07); color:var(--text); }
+        .ranking-table tr:nth-child(even) td { background:rgba(123,110,246,0.04); }
+        .ranking-table td:first-child, .ranking-table th:first-child { text-align:left; padding-left:8px; }
+        .team-cell { display:flex; align-items:center; gap:4px; }
+        .team-mini-logo { width:16px; height:16px; border-radius:3px; object-fit:contain; background: var(--logo-bg); }
+
+        /* ===== SIDE MENU ===== */
+        .side-menu {
+            position: fixed; top: 0; left: -300px; bottom: 0;
+            width: 300px;
+            background: var(--side-bg);
+            border-right: 1px solid var(--border);
+            z-index: 1000;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            transition: left 0.32s cubic-bezier(0.4,0,0.2,1),
+                        box-shadow 0.32s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: none;
+        }
+        .side-menu.active {
+            left: 0;
+            box-shadow: 4px 0 40px rgba(0,0,0,0.6);
+        }
+        .side-menu-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            z-index: 999; display: none;
+        }
+        .side-menu-overlay.active { display: block; }
+        .side-menu-hdr {
+            padding: 52px 20px 20px;
+            background: linear-gradient(180deg, rgba(123,110,246,0.12) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 14px;
+        }
+        .side-menu-brand { flex: 1; }
+        .side-menu-title {
+            font-size: 18px; font-weight: 900;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+        }
+        .side-menu-subtitle { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .side-menu-body { flex: 1; padding: 10px 0; overflow-y: auto; }
+        .side-menu-foot { border-top: 1px solid var(--border); padding: 6px 0 20px; }
+        .side-section-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+            color: var(--text-inactive); text-transform: uppercase;
+            padding: 14px 20px 6px;
+        }
+        .side-item {
+            display: flex; align-items: center;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: background 0.18s;
+        }
+        .side-item:hover, .side-item:active { background: var(--side-hover); }
+        .side-item-icon {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .side-item-icon i {
+            font-size: 15px;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .side-item-info { margin-left: 14px; flex: 1; }
+        .side-item-text { font-weight: 700; font-size: 14px; color: var(--text); }
+        .side-item-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .side-item-arrow { font-size: 12px; color: var(--text-inactive); }
+
+        /* ===== SECTIONS SCROLL ===== */
+        .scroll-section { height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+        /* ===== SECRETS ===== */
+        .secrets-container { padding: 20px; }
+        .secret-hdr { text-align: center; margin-bottom: 24px; }
+        .secret-title {
+            font-size: 20px; font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 8px;
+        }
+        .secret-subtitle { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .promo-box {
+            background: linear-gradient(135deg,#FFB830,#FF8C00);
+            border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;
+        }
+        .promo-box-title { font-size: 13px; font-weight: 700; color: rgba(0,0,0,0.7); margin-bottom: 8px; }
+        .promo-code { font-size: 32px; font-weight: 900; color: #000; letter-spacing: 3px; margin-bottom: 8px; cursor: pointer; }
+        .promo-hint { font-size: 12px; color: rgba(0,0,0,0.6); }
+        .deposit-box {
+            background: rgba(255,184,48,0.1); border: 1px solid rgba(255,184,48,0.3);
+            border-radius: 14px; padding: 16px; margin-bottom: 20px;
+        }
+        .deposit-box-title { font-size: 14px; font-weight: 700; color: var(--warning); margin-bottom: 8px; display:flex; align-items:center; gap:8px; }
+        .deposit-box-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .benefit-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 16px;
+        }
+        .benefit-icon { font-size: 24px; margin-bottom: 8px; color: var(--primary); }
+        .benefit-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+        .benefit-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+        /* ===== PARAMÈTRES ===== */
+        .interface-container { padding: 20px; }
+        .iface-block {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px;
+        }
+        .iface-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; display:flex; align-items:center; gap:8px; color: var(--text); }
+        .iface-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+        .setting-row { display:flex; align-items:center; justify-content:space-between; }
+        .setting-left { display:flex; align-items:center; gap:10px; }
+        .setting-icon {
+            width:32px; height:32px; border-radius:8px;
+            background:var(--bg-elevated); border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center; font-size:16px;
+        }
+        .setting-label { font-size: 14px; font-weight: 600; color: var(--text); }
+        .switch { position:relative; display:inline-block; width:48px; height:26px; }
+        .switch input { opacity:0; width:0; height:0; }
+        .slider {
+            position:absolute; cursor:pointer; inset:0;
+            background:var(--bg-elevated); border:1px solid var(--border);
+            border-radius:26px; transition:0.3s;
+        }
+        .slider::before {
+            content:''; position:absolute;
+            height:18px; width:18px; left:3px; bottom:3px;
+            background:var(--text-muted); border-radius:50%; transition:0.3s;
+        }
+        input:checked + .slider { background:var(--primary); border-color:var(--primary); }
+        input:checked + .slider::before { transform:translateX(24px); background:#fff; }
+        .theme-card {
+            background:var(--grad-soft); border:1px solid var(--border-bright);
+            border-radius:14px; padding:20px; text-align:center;
+        }
+        .theme-dots { display:flex; justify-content:center; gap:8px; margin-bottom:14px; }
+        .theme-dot { width:28px; height:28px; border-radius:50%; }
+        .theme-card-title { font-weight:700; font-size:15px; margin-bottom:6px; color:var(--text); }
+        .theme-card-desc { font-size:12px; color:var(--text-muted); }
+        .social-btns { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+        .social-btn {
+            display:flex; align-items:center; gap:8px;
+            padding:12px 18px; border-radius:12px;
+            font-weight:700; font-size:14px; text-decoration:none;
+            transition:transform 0.2s; flex:1; justify-content:center; min-width:120px;
+        }
+        .social-btn:hover { transform: translateY(-2px); }
+        .social-btn.wa  { background:rgba(37,211,102,0.15); border:1px solid rgba(37,211,102,0.3); color:#25D366; }
+        .social-btn.tg  { background:rgba(0,136,204,0.15);  border:1px solid rgba(0,136,204,0.3);  color:#0088cc; }
+        .social-btn.yt  { background:rgba(255,0,0,0.12);    border:1px solid rgba(255,0,0,0.25);   color:#FF0000; }
+        .social-btn i { font-size:18px; }
+        .btn {
+            width:100%; padding:13px; border-radius:12px;
+            font-weight:700; font-size:14px; cursor:pointer;
+            border: 1px solid var(--border); transition: all 0.2s;
+            background: var(--bg-elevated); color: var(--text);
+        }
+        .btn.danger { background:rgba(255,77,109,0.12); color:var(--danger); border-color:rgba(255,77,109,0.3); margin-top:12px; }
+
+        /* ===== PAGES GÉNÉRIQUES ===== */
+        .page-wrap { padding: 20px; }
+        .page-hdr { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .page-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+        .page-subtitle { font-size: 13px; color: var(--text-muted); }
+        .content-block { margin-bottom: 20px; }
+        .content-block h2 { font-size: 16px; font-weight: 700; margin-bottom: 10px; color: var(--primary); }
+        .content-block p { font-size: 14px; line-height: 1.6; color: var(--text); opacity: 0.85; }
+
+        /* ===== HISTORIQUE ===== */
+        .history-wrap { padding: 10px; }
+        .history-card {
+            background:var(--bg-card); border:1px solid var(--border);
+            border-radius:14px; padding:14px 16px; margin-bottom:10px;
+            display:flex; align-items:center; gap:12px;
+        }
+        .history-result {
+            width:32px; height:32px; border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            font-weight:800; font-size:14px; flex-shrink:0;
+        }
+        .history-result.win     { background:rgba(79,255,176,0.15); color:var(--success); }
+        .history-result.loss    { background:rgba(255,77,109,0.12); color:var(--danger);  }
+        .history-result.pending { background:rgba(255,184,48,0.1);  color:var(--warning); }
+        .history-info { flex:1; min-width:0; }
+        .history-match { font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text); }
+        .history-pred  { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+        /* ===== VALUE BET ===== */
+        .vbet-container { height:100%; display:flex; align-items:center; justify-content:center; }
+        .vbet-coming { text-align:center; }
+        .vbet-icon { font-size:60px; margin-bottom:20px; }
+        .vbet-title {
+            font-size:24px; font-weight:800;
+            background:linear-gradient(135deg,#00D4FF,#4FFFB0);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text; margin-bottom:10px;
+        }
+        .vbet-sub { font-size:14px; color:var(--text-muted); }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed; top: 76px; left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 22px; border-radius: 30px;
+            font-weight: 700; font-size: 13px;
+            z-index: 5000; display: none;
+            max-width: 82vw; width: max-content;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+            line-height: 1.4;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+        }
+        .toast.show { display: block; animation: notifIn 0.3s ease; }
+        .toast.success { background: rgba(79,255,176,0.18);  color: var(--success); border:1px solid rgba(79,255,176,0.4); }
+        .toast.error   { background: rgba(255,77,109,0.18);  color: var(--danger);  border:1px solid rgba(255,77,109,0.4); }
+        .toast.info    { background: rgba(0,212,255,0.13);   color: var(--cyan);    border:1px solid rgba(0,212,255,0.3); }
+        .toast.warning { background: rgba(255,184,48,0.16);  color: var(--warning); border:1px solid rgba(255,184,48,0.4); }
+
+        /* ===== OVERLAY & DIALOGS ===== */
+        .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); z-index:90; display:none; }
+        .overlay.active { display:block; }
+        .confirm-dialog {
+            position:fixed; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            background:var(--bg-elevated); border:1px solid var(--border);
+            border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,0.7);
+            width:88%; max-width:320px; padding:24px;
+            z-index:150; display:none;
+        }
+        .confirm-dialog.active { display:block; }
+        .confirm-title { font-weight:800; font-size:18px; margin-bottom:14px; text-align:center; color:var(--text); }
+        .confirm-text  { margin-bottom:22px; text-align:center; line-height:1.5; font-size:14px; color:var(--text-muted); }
+        .confirm-btns  { display:flex; justify-content:space-between; gap:12px; }
+        .confirm-btn   { padding:12px 16px; border-radius:10px; font-weight:700; cursor:pointer; flex:1; text-align:center; font-size:14px; transition:all 0.2s; border:none; }
+        .confirm-cancel  { background:var(--bg-surface); color:var(--text-muted); border:1px solid var(--border); }
+        .confirm-ok      { background:var(--primary); color:#fff; }
+        .confirm-del     { background:var(--danger); color:#fff; }
+
+        /* ===== AVATAR MODALS ===== */
+        .av-viewer-modal {
+            position:fixed; inset:0; background:rgba(0,0,0,0.97);
+            z-index:300; display:none; align-items:center; justify-content:center; padding:30px;
+        }
+        .av-viewer-modal.active { display:flex; }
+        .av-viewer-content { display:flex; flex-direction:column; align-items:center; gap:25px; }
+        .av-viewer-img { width:240px; height:240px; border-radius:50%; border:3px solid var(--primary); object-fit:cover; box-shadow:0 0 30px var(--primary-glow); }
+        .av-viewer-btns { display:flex; gap:14px; }
+        .av-btn { padding:12px 24px; border-radius:30px; font-weight:700; cursor:pointer; border:none; font-size:15px; transition:all 0.25s; display:flex; align-items:center; gap:8px; }
+        .av-btn.edit  { background:var(--primary); color:#fff; }
+        .av-btn.close { background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); }
+        .av-select-modal {
+            position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px);
+            z-index:350; display:none; align-items:center; justify-content:center; padding:20px;
+        }
+        .av-select-modal.active { display:flex; }
+        .av-select-box {
+            background:var(--bg-elevated); border:1px solid var(--border);
+            border-radius:20px; padding:28px; max-width:380px; width:100%;
+            max-height:80vh; overflow-y:auto;
+        }
+        .av-select-title  { font-size:20px; font-weight:800; color:var(--primary); margin-bottom:6px; text-align:center; }
+        .av-select-sub    { font-size:13px; color:var(--text-muted); text-align:center; margin-bottom:22px; }
+        .av-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px; }
+        .av-opt {
+            width:80px; height:80px; border-radius:50%; cursor:pointer;
+            border:2px solid var(--border); overflow:hidden; transition:all 0.25s;
+            display:flex; align-items:center; justify-content:center;
+            background:var(--bg-surface); justify-self:center;
+        }
+        .av-opt img { width:100%; height:100%; object-fit:cover; }
+        .av-opt:hover { transform:scale(1.1); border-color:var(--primary); }
+        .av-opt.active { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); }
+        .av-modal-btns { display:flex; gap:12px; justify-content:center; }
+        .av-modal-btn { padding:12px 24px; border-radius:10px; font-weight:700; cursor:pointer; border:none; font-size:14px; transition:all 0.25px; min-width:100px; }
+        .av-modal-cancel { background:var(--bg-surface); color:var(--text-muted); border:1px solid var(--border); }
+        .av-modal-save   { background:var(--primary); color:#fff; box-shadow:0 4px 15px var(--primary-glow); }
+        .av-modal-save:disabled { background:var(--bg-elevated); color:var(--text-inactive); box-shadow:none; cursor:not-allowed; }
+
+        /* ===== PRO S ===== */
+        .pros-container { padding: 20px; }
+        .pros-hero {
+            background: linear-gradient(135deg, rgba(123,110,246,0.2) 0%, rgba(224,64,251,0.15) 100%);
+            border: 1px solid rgba(123,110,246,0.4);
+            border-radius: 20px; padding: 28px 20px;
+            text-align: center; margin-bottom: 20px;
+        }
+        .pros-hero-icon { font-size: 48px; margin-bottom: 14px; }
+        .pros-hero-title {
+            font-size: 22px; font-weight: 900; letter-spacing: 1px;
+            background: var(--grad);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 8px;
+        }
+        .pros-hero-sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .pros-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 18px; margin-bottom: 14px;
+        }
+        .pros-card-hdr { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+        .pros-card-icon {
+            width:36px; height:36px; border-radius:10px;
+            background:var(--bg-elevated); border:1px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+        }
+        .pros-card-icon i {
+            font-size:16px;
+            background:var(--grad);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            background-clip:text;
+        }
+        .pros-card-title { font-weight:800; font-size:15px; color:var(--text); }
+        .pros-card-badge {
+            margin-left:auto; font-size:9px; font-weight:800;
+            padding:3px 9px; border-radius:20px;
+            background:linear-gradient(135deg,#7B6EF6,#E040FB); color:#fff;
+        }
+        .pros-card-text { font-size:13px; color:var(--text-muted); line-height:1.55; }
+        .pros-stat-row { display:flex; gap:10px; margin-bottom:16px; }
+        .pros-stat {
+            flex:1; background:var(--bg-elevated); border:1px solid var(--border);
+            border-radius:12px; padding:14px; text-align:center;
+        }
+        .pros-stat-val { font-size:22px; font-weight:900; color:var(--primary); }
+        .pros-stat-label { font-size:10px; color:var(--text-muted); margin-top:3px; }
+
+        /* Cartes Pro S avec étoile */
+        .pros-match-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(123,110,246,0.35);
+            border-radius: 16px; padding: 18px; margin-bottom: 14px;
+            position: relative; overflow: hidden;
+        }
+        .pros-match-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(135deg,#7B6EF6,#E040FB);
+        }
+        .pros-star-badge {
+            position: absolute; top: 12px; right: 12px;
+            font-size: 16px;
+            background: linear-gradient(135deg,#FFB830,#FF8C00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 4px rgba(255,184,48,0.5));
+        }
+        .pros-match-league {
+            font-size: 11px; color: var(--text-muted);
+            background: var(--bg-elevated); border: 1px solid var(--border);
+            padding: 3px 10px; border-radius: 20px;
+            display: inline-block; margin-bottom: 12px;
+        }
+        .pros-match-teams {
+            display: flex; align-items: center; justify-content: space-between; gap: 8px;
+        }
+        .pros-team-col { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
+        .pros-team-logo {
+            width: 44px; height: 44px;
+            background: var(--logo-bg); border-radius: 10px;
+            border: 1.5px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; margin-bottom: 6px;
+        }
+        .pros-team-logo i { font-size: 20px; color: var(--primary); }
+        .pros-team-name { font-size: 11px; font-weight: 700; text-align: center; color: var(--text); }
+        .pros-vs { font-size: 18px; font-weight: 800; background: var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .pros-confidence {
+            margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .pros-conf-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+        .pros-conf-val {
+            font-size: 13px; font-weight: 800;
+            background: linear-gradient(135deg,#7B6EF6,#E040FB);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @media (max-width: 480px) {
+            .detail-logo-box { width: 58px; height: 58px; }
+            .dtab { font-size: 11px; padding: 6px 13px; }
+            .ranking-table { font-size: 10px; }
+            .ranking-table th, .ranking-table td { padding: 5px 2px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===================== SIDE MENU ===================== -->
+<div class="side-menu" id="side-menu">
+    <div class="side-menu-hdr">
+        <div class="icon-btn" id="side-close-btn"><i class="fas fa-times"></i></div>
+        <div class="side-menu-brand">
+            <div class="side-menu-title">STARKY SPORTS</div>
+            <div class="side-menu-subtitle">Menu principal</div>
+        </div>
+    </div>
+    <div class="side-menu-body">
+        <div class="side-section-label">Navigation</div>
+        <div class="side-item" id="menu-install">
+            <div class="side-item-icon"><i class="fas fa-download"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">Installer l'app</div>
+                <div class="side-item-desc">Accès rapide depuis l'accueil</div>
+            </div>
+            <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+        <div class="side-item" id="menu-secrets">
+            <div class="side-item-icon"><i class="fas fa-lock"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">Secrets</div>
+                <div class="side-item-desc">Codes promo &amp; avantages</div>
+            </div>
+            <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+        <div class="side-item" id="menu-history">
+            <div class="side-item-icon"><i class="fas fa-history"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">Historique</div>
+                <div class="side-item-desc">Pronostics passés</div>
+            </div>
+            <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+        <div class="side-item" id="menu-interface">
+            <div class="side-item-icon"><i class="fas fa-sliders-h"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">Paramètres</div>
+                <div class="side-item-desc">Thème, affichage &amp; compte</div>
+            </div>
+            <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+    </div>
+    <div class="side-menu-foot">
+        <div class="side-section-label">Légal</div>
+        <div class="side-item" id="menu-terms">
+            <div class="side-item-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">Conditions d'utilisation</div>
+            </div>
+            <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+        <div class="side-item" id="menu-about">
+            <div class="side-item-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">À propos</div>
+            </div>
+            <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+    </div>
+</div>
+<div class="side-menu-overlay" id="side-menu-overlay"></div>
+
+<!-- ===================== MODALS AVATAR ===================== -->
+<div class="av-viewer-modal" id="av-viewer-modal">
+    <div class="av-viewer-content">
+        <img class="av-viewer-img" id="av-viewer-img" src="" alt="Avatar">
+        <div class="av-viewer-btns">
+            <button class="av-btn edit"  id="av-edit-btn"><i class="fas fa-edit"></i> Modifier</button>
+            <button class="av-btn close" id="av-viewer-close"><i class="fas fa-times"></i> Fermer</button>
+        </div>
+    </div>
+</div>
+<div class="av-select-modal" id="av-select-modal">
+    <div class="av-select-box">
+        <div class="av-select-title">Choisissez votre avatar</div>
+        <div class="av-select-sub">Sélectionnez l'avatar qui vous représente</div>
+        <div class="av-grid" id="av-grid"></div>
+        <div class="av-modal-btns">
+            <button class="av-modal-btn av-modal-cancel" id="av-cancel-btn">Annuler</button>
+            <button class="av-modal-btn av-modal-save"   id="av-save-btn" disabled>Sauvegarder</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== HEADER ===================== -->
+<div class="header" id="main-header">
+    <div class="header-left">
+        <div class="icon-btn" id="back-btn" style="display:none;"><i class="fas fa-arrow-left"></i></div>
+        <div class="icon-btn" id="menu-btn"><i class="fas fa-bars"></i></div>
+        <div class="header-title" id="header-title">Pronostics</div>
+    </div>
+    <div class="header-actions">
+        <div class="icon-btn" id="events-btn">
+            <i class="fas fa-bell"></i>
+            <div class="notif-dot" id="events-dot"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<div id="main-content">
+
+    <!-- PRONOSTICS -->
+    <div id="forecasts-section" class="section active">
+        <div class="forecasts-container" id="forecasts-container">
+        </div>
+    </div>
+
+    <!-- VALUE BET -->
+    <div id="icegame-section" class="section">
+        <div class="scroll-section">
+            <div class="vbet-container">
+                <div class="vbet-coming">
+                    <div class="vbet-icon">📈</div>
+                    <div class="vbet-title">Value Bet</div>
+                    <div class="vbet-sub">Bientôt disponible !</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRO S -->
+    <div id="pros-section" class="section">
+        <div class="scroll-section">
+            <div class="pros-container">
+                <div class="pros-hero">
+                    <div class="pros-hero-icon">⭐</div>
+                    <div class="pros-hero-title">PRO S — Analyses</div>
+                    <div class="pros-hero-sub">Analyses hyper confiantes générées par notre IA avancée, réservées aux membres les plus exigeants.</div>
+                </div>
+                <div class="pros-stat-row">
+                    <div class="pros-stat">
+                        <div class="pros-stat-val">87%</div>
+                        <div class="pros-stat-label">Taux de réussite</div>
+                    </div>
+                    <div class="pros-stat">
+                        <div class="pros-stat-val">+340</div>
+                        <div class="pros-stat-label">Analyses / mois</div>
+                    </div>
+                    <div class="pros-stat">
+                        <div class="pros-stat-val">24h</div>
+                        <div class="pros-stat-label">Mise à jour</div>
+                    </div>
+                </div>
+                <div class="pros-match-card">
+                    <span class="pros-star-badge"><i class="fas fa-star"></i></span>
+                    <div class="pros-match-league">Premier League</div>
+                    <div class="pros-match-teams">
+                        <div class="pros-team-col">
+                            <div class="pros-team-logo"><i class="fas fa-futbol"></i></div>
+                            <div class="pros-team-name">Manchester City</div>
+                        </div>
+                        <div class="pros-vs">VS</div>
+                        <div class="pros-team-col">
+                            <div class="pros-team-logo"><i class="fas fa-futbol"></i></div>
+                            <div class="pros-team-name">Arsenal</div>
+                        </div>
+                    </div>
+                    <div class="pros-confidence">
+                        <span class="pros-conf-label">⚡ Indice de confiance</span>
+                        <span class="pros-conf-val">92% — Victoire domicile</span>
+                    </div>
+                </div>
+                <div class="pros-match-card">
+                    <span class="pros-star-badge"><i class="fas fa-star"></i></span>
+                    <div class="pros-match-league">LaLiga</div>
+                    <div class="pros-match-teams">
+                        <div class="pros-team-col">
+                            <div class="pros-team-logo"><i class="fas fa-futbol"></i></div>
+                            <div class="pros-team-name">Real Madrid</div>
+                        </div>
+                        <div class="pros-vs">VS</div>
+                        <div class="pros-team-col">
+                            <div class="pros-team-logo"><i class="fas fa-futbol"></i></div>
+                            <div class="pros-team-name">Barcelone</div>
+                        </div>
+                    </div>
+                    <div class="pros-confidence">
+                        <span class="pros-conf-label">⚡ Indice de confiance</span>
+                        <span class="pros-conf-val">88% — Over 2.5</span>
+                    </div>
+                </div>
+                <div class="pros-card">
+                    <div class="pros-card-hdr">
+                        <div class="pros-card-icon"><i class="fas fa-lock"></i></div>
+                        <div class="pros-card-title">Accès Pro S</div>
+                    </div>
+                    <div class="pros-card-text">Les analyses hyper confiantes complètes sont disponibles via notre canal Telegram et WhatsApp. Rejoignez la communauté Starky Sports pour y accéder.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECRETS -->
+    <div id="secrets-section" class="section">
+        <div class="scroll-section">
+            <div class="secrets-container">
+                <div class="secret-hdr">
+                    <div class="secret-title"><i class="fas fa-crown"></i> SECRETS EXCLUSIFS <i class="fas fa-gem"></i></div>
+                    <div class="secret-subtitle">Découvrez les avantages secrets de 1XBET et AFROPARI avec notre code promo exclusif !</div>
+                </div>
+                <div class="promo-box">
+                    <div class="promo-box-title">🎯 Code Promo Exclusif</div>
+                    <div class="promo-code" id="promo-code-display">STARKY</div>
+                    <div class="promo-hint">👆 Cliquez pour copier le code</div>
+                </div>
+                <div class="deposit-box">
+                    <div class="deposit-box-title"><i class="fas fa-exclamation-triangle"></i> Condition d'Activation</div>
+                    <div class="deposit-box-text">Pour activer tous ces avantages exclusifs, un dépôt minimum de <strong>1000 FCFA</strong> est requis lors de votre inscription.</div>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="benefit-title">Cotes Augmentées</div>
+                        <div class="benefit-desc">Bénéficiez de cotes majorées jusqu'à +15% sur vos paris avec notre code exclusif</div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon"><i class="fas fa-rocket"></i></div>
+                        <div class="benefit-title">Retraits Ultra-Rapides</div>
+                        <div class="benefit-desc">Retraits instantanés en moins de 15 minutes, 24h/24 et 7j/7</div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon"><i class="fas fa-gift"></i></div>
+                        <div class="benefit-title">Bonus de Bienvenue</div>
+                        <div class="benefit-desc">Jusqu'à 200€ de bonus sur votre premier dépôt + paris gratuits</div>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="benefit-title">Paris Protégés</div>
+                        <div class="benefit-desc">Remboursement automatique jusqu'à 50€ sur vos paris perdants</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARAMÈTRES -->
+    <div id="interface-section" class="section">
+        <div class="scroll-section">
+            <div class="interface-container">
+                <div class="iface-block">
+                    <div class="iface-title"><i class="fas fa-palette"></i> Thème</div>
+                    <div class="iface-subtitle">Palette couleur exclusive du logo STARKY SPORTS</div>
+                    <div class="theme-card">
+                        <div class="theme-dots">
+                            <div class="theme-dot" style="background:#7B6EF6;"></div>
+                            <div class="theme-dot" style="background:#00D4FF;"></div>
+                            <div class="theme-dot" style="background:#E040FB;"></div>
+                        </div>
+                        <div class="theme-card-title">Violet · Bleu · Cyan · Magenta</div>
+                        <div class="theme-card-desc">Palette exclusive Starky Sports</div>
+                    </div>
+                </div>
+                <div class="iface-block">
+                    <div class="iface-title"><i class="fas fa-moon"></i> Mode d'affichage</div>
+                    <div class="iface-subtitle">Basculez entre le mode sombre et le mode clair</div>
+                    <div class="setting-row">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fas fa-moon" style="color:var(--primary);"></i></div>
+                            <div class="setting-label">Mode sombre</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="dark-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="iface-block">
+                    <div class="iface-title"><i class="fas fa-users"></i> Communauté</div>
+                    <div class="iface-subtitle">Rejoignez-nous sur nos réseaux</div>
+                    <div class="social-btns">
+                        <a href="https://whatsapp.com/channel/0029Vb6eoNkATRSqdUT76Y3Y" target="_blank" rel="noopener noreferrer" class="social-btn wa"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="https://t.me/parialliance" target="_blank" rel="noopener noreferrer" class="social-btn tg"><i class="fab fa-telegram"></i> Telegram</a>
+                        <a href="https://youtube.com/@parialliance?si=MMQ8MwI-XZNK7SiG" target="_blank" rel="noopener noreferrer" class="social-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
+                    </div>
+                </div>
+                <div class="iface-block">
+                    <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
+                    <div class="iface-subtitle">Gérez votre compte Starky Sports</div>
+                    <button id="logout-btn" class="btn">Se déconnecter</button>
+                    <button id="delete-account-btn" class="btn danger">Supprimer mon compte</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORIQUE -->
+    <div id="history-section" class="section">
+        <div class="scroll-section">
+            <div class="history-wrap" id="history-content">
+                <div class="empty-state" style="height:auto;padding:60px 20px;">
+                    <i class="fas fa-history"></i>
+                    <h3>Aucun historique</h3>
+                    <p>L'historique des pronostics passés apparaîtra ici</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONDITIONS -->
+    <div id="terms-section" class="section">
+        <div class="scroll-section">
+            <div class="page-wrap">
+                <div class="page-hdr">
+                    <div class="page-title">Conditions d'utilisation</div>
+                    <div class="page-subtitle">Veuillez lire attentivement ces conditions avant d'utiliser Starky Sports</div>
+                </div>
+                <div class="content-block"><h2>1. Acceptation des conditions</h2><p>En utilisant Starky Sports, vous acceptez pleinement et sans réserve les présentes conditions d'utilisation.</p></div>
+                <div class="content-block"><h2>2. Description du service</h2><p>Starky Sports est une application de pronostics sportifs qui fournit des analyses et des prédictions basées sur des données statistiques et des algorithmes d'intelligence artificielle.</p></div>
+                <div class="content-block"><h2>3. Utilisation responsable</h2><p>Les pronostics fournis sont à des fins de divertissement uniquement. Pariez uniquement ce que vous pouvez vous permettre de perdre. Interdit aux mineurs de moins de 18 ans.</p></div>
+                <div class="content-block"><h2>4. Responsabilités</h2><p>Starky Sports décline toute responsabilité en cas de pertes financières. L'utilisateur est seul responsable de ses décisions de paris.</p></div>
+                <div class="content-block"><h2>5. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- À PROPOS -->
+    <div id="about-section" class="section">
+        <div class="scroll-section">
+            <div class="page-wrap">
+                <div class="page-hdr">
+                    <div class="page-title">À propos de Starky Sports</div>
+                    <div class="page-subtitle">Pronostics sportifs avancés propulsés par l'IA</div>
+                </div>
+                <div class="content-block"><h2>Notre Mission</h2><p>Démocratiser l'accès aux analyses sportives avancées grâce à l'intelligence artificielle.</p></div>
+                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 3.9.0 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÉVÉNEMENTS -->
+    <div id="events-section" class="section">
+        <div class="scroll-section" style="padding:15px;">
+            <div class="empty-state" style="height:auto;padding:60px 0;">
+                <i class="fas fa-bell"></i>
+                <h3>Aucune notification</h3>
+                <p>Les annonces de l'administrateur apparaîtront ici</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===================== DETAIL PAGE ===================== -->
+<div class="forecast-detail" id="forecast-detail">
+    <div class="detail-header" id="detail-header">
+        <div class="detail-topbar">
+            <div class="detail-topbar-left">
+                <div class="icon-btn" id="detail-back-btn"><i class="fas fa-arrow-left"></i></div>
+                <div class="detail-topbar-title" id="detail-header-title">Détails du pronostic</div>
+            </div>
+            <div class="icon-btn" id="share-btn" title="Partager"><i class="fas fa-share-alt"></i></div>
+        </div>
+        <div class="detail-teams-band">
+            <div class="detail-league-label" id="detail-league">Compétition</div>
+            <div class="detail-teams-row">
+                <div class="detail-team-col">
+                    <div class="detail-logo-box" id="detail-home-logo"><i class="fas fa-futbol"></i></div>
+                    <div class="detail-team-name" id="detail-home-team">Domicile</div>
+                </div>
+                <div class="detail-center-col">
+                    <div class="detail-status-badge status-pending" id="detail-status">À venir</div>
+                    <div class="detail-match-time" id="detail-time">--:--</div>
+                </div>
+                <div class="detail-team-col">
+                    <div class="detail-logo-box" id="detail-away-logo"><i class="fas fa-futbol"></i></div>
+                    <div class="detail-team-name" id="detail-away-team">Extérieur</div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-tabs-bar">
+            <div class="dtab active" data-tab="probabilites"><i class="fas fa-percentage"></i> Probabilités</div>
+            <div class="dtab" data-tab="stats"><i class="fas fa-chart-bar"></i> Stats</div>
+            <div class="dtab" data-tab="matches"><i class="fas fa-futbol"></i> Matchs</div>
+            <div class="dtab" data-tab="h2h"><i class="fas fa-exchange-alt"></i> H2H</div>
+            <div class="dtab" data-tab="ranking"><i class="fas fa-trophy"></i> Classement</div>
+        </div>
+    </div>
+    <div class="detail-scroll" id="detail-scroll">
+        <div class="tab-panel active" id="probabilites-content">
+            <div class="analysis-block">
+                <div class="analysis-block-title">1X2</div>
+                <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
+                <div id="proba-ox2-container"></div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-block-title">Over / Under 2.5</div>
+                <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
+                <div id="proba-ou-container"></div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-block-title">BTTS (Les deux équipes marquent)</div>
+                <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
+                <div id="proba-btts-container"></div>
+            </div>
+        </div>
+        <div class="tab-panel" id="stats-content"><div id="stats-panel"></div></div>
+        <div class="tab-panel" id="matches-content"><div id="matches-list"></div></div>
+        <div class="tab-panel" id="h2h-content"><div id="h2h-list"></div></div>
+        <div class="tab-panel" id="ranking-content"><div id="ranking-list"></div></div>
+    </div>
+</div>
+
+<!-- ===================== BOTTOM NAV ===================== -->
+<div class="bottom-nav" id="bottom-nav">
+    <div class="nav-item active" data-section="forecasts">
+        <i class="nav-icon fas fa-futbol"></i><span>Pronostics</span>
+    </div>
+    <div class="nav-item" data-section="icegame">
+        <i class="nav-icon fas fa-chart-line"></i><span>Value Bet</span>
+    </div>
+    <div class="nav-item" data-section="pros">
+        <i class="nav-icon fas fa-star"></i><span>Pro S</span>
+    </div>
+</div>
+
+<!-- ===================== DIALOGS ===================== -->
+<div id="logout-confirm-dialog" class="confirm-dialog">
+    <div class="confirm-title">Se déconnecter ?</div>
+    <div class="confirm-text">Voulez-vous vraiment vous déconnecter de Starky Sports ?</div>
+    <div class="confirm-btns">
+        <div class="confirm-btn confirm-cancel" id="logout-cancel">Annuler</div>
+        <div class="confirm-btn confirm-ok" id="logout-confirm">Déconnecter</div>
+    </div>
+</div>
+<div id="delete-confirm-dialog" class="confirm-dialog">
+    <div class="confirm-title">Supprimer votre compte ?</div>
+    <div class="confirm-text">ATTENTION : Cette action est définitive et irréversible.</div>
+    <div class="confirm-btns">
+        <div class="confirm-btn confirm-cancel" id="delete-cancel">Annuler</div>
+        <div class="confirm-btn confirm-del" id="delete-confirm">Supprimer</div>
+    </div>
+</div>
+<div id="overlay" class="overlay"></div>
+<div id="toast" class="toast"></div>
+
+<!-- ===================== SERVICE WORKER ===================== -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    });
+}
+</script>
+
+<!-- ===================== APP SCRIPT ===================== -->
+<script>
+const GITHUB_RAW  = 'https://raw.githubusercontent.com/PariALLIANCE/Test/main/';
+const LOGO_URL    = 'https://raw.githubusercontent.com/Jonnhy2255/Test/main/IMG_1568.png';
+const LOGO_LS_KEY = 'starky_logo_b64_v2';
+
+const AVATAR_OPTIONS = [
+    { id:'king1', url: GITHUB_RAW+'king1.png' },
+    { id:'king2', url: GITHUB_RAW+'King2.png' },
+    { id:'king3', url: GITHUB_RAW+'king3.png' },
+    { id:'king4', url: GITHUB_RAW+'king4.png' },
+    { id:'king5', url: GITHUB_RAW+'king5.png' },
+    { id:'king6', url: GITHUB_RAW+'king6.png' },
+    { id:'king7', url: GITHUB_RAW+'king7.png' }
+];
+
+const SECTION_TITLES = {
+    forecasts : 'Pronostics',
+    icegame   : 'Value Bet',
+    pros      : 'Pro S',
+    interface : 'Paramètres',
+    events    : 'Événements',
+    history   : 'Historique',
+    secrets   : 'Secrets',
+    terms     : 'Conditions',
+    about     : 'À propos'
+};
+
+const DEMO_MATCH = {
+    HomeTeam:'Équipe Domicile', AwayTeam:'Équipe Extérieur',
+    HomeLogo:'https://a.espncdn.com/i/teamlogos/soccer/500/362.png',
+    AwayLogo:'https://a.espncdn.com/i/teamlogos/soccer/500/363.png',
+    league:'Liga Demo • Journée 1',
+    date: new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})+' 20:00',
+    status:'pending', prediction:'1',
+    probaHome:55, probaDraw:20, probaAway:25,
+    analysis:'Analyse démo basée sur les performances récentes des deux équipes.',
+    stats:{ possession:['52%','48%'], shots:['14','10'], shotsOnTarget:['6','4'], corners:['7','5'], fouls:['12','15'] },
+    form:{ home:['W','W','D','W','L'], away:['D','W','L','D','W'] }
+};
+
+let selectedForecast  = null;
+let currentSection    = 'forecasts';
+let hasNewEvents      = false;
+let selectedAvatar    = localStorage.getItem('starky_avatar') || 'king1';
+let tempSelectedAvatar= null;
+let deferredInstall   = null;
+
+/* ===== Sécurité ===== */
+document.addEventListener('contextmenu',  e=>e.preventDefault());
+document.addEventListener('selectstart',  e=>e.preventDefault());
+document.addEventListener('dragstart',    e=>e.preventDefault());
+document.addEventListener('copy',         e=>e.preventDefault());
+document.addEventListener('cut',          e=>e.preventDefault());
+document.addEventListener('keydown', e=>{
+    if (e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','C','J'].includes(e.key))||(e.ctrlKey&&['U','S','A','C','X','V'].includes(e.key))) e.preventDefault();
+});
+
+/* ===== Logo cache silencieux ===== */
+async function loadAndCacheLogo() {
+    const cached = localStorage.getItem(LOGO_LS_KEY);
+    if (cached) return cached;
+    try {
+        const res = await fetch(LOGO_URL);
+        if (!res.ok) throw new Error();
+        const blob = await res.blob();
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                try { localStorage.setItem(LOGO_LS_KEY, reader.result); } catch(e){}
+                resolve(reader.result);
+            };
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+        });
+    } catch { return null; }
+}
+
+/* ===== Toast ===== */
+let _toastTimer = null;
+function showToast(msg, type='info', ms=3000) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} show`;
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => { el.className = 'toast'; }, ms);
+}
+
+/* ===== PWA ===== */
+function initPWA() {
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
+}
+function installApp() {
+    if (deferredInstall) {
+        deferredInstall.prompt();
+        deferredInstall.userChoice.then(() => { deferredInstall = null; });
+    } else {
+        showToast("Utilisez 'Ajouter à l'accueil' dans votre navigateur", 'info', 4000);
+    }
+}
+
+/* ===== Share ===== */
+function shareApp() {
+    const shareData = { title:'Starky Sports', text:'🏆 Les meilleurs pronostics sportifs propulsés par l\'IA !', url:window.location.href };
+    if (navigator.share) {
+        navigator.share(shareData).catch(err => { if (err.name !== 'AbortError') fallbackCopyLink(); });
+    } else { fallbackCopyLink(); }
+}
+function fallbackCopyLink() {
+    navigator.clipboard?.writeText(window.location.href)
+        .then(() => showToast('Lien copié !', 'success'))
+        .catch(() => showToast('Lien : ' + window.location.href, 'info', 5000));
+}
+
+/* ===== Dark mode ===== */
+function applyDarkMode(isDark) { document.body.classList.toggle('light-mode', !isDark); }
+function setupDarkMode() {
+    const toggle = document.getElementById('dark-toggle');
+    const isDark = localStorage.getItem('starkyDarkMode') !== 'false';
+    toggle.checked = isDark;
+    applyDarkMode(isDark);
+    toggle.addEventListener('change', function() {
+        localStorage.setItem('starkyDarkMode', this.checked ? 'true' : 'false');
+        applyDarkMode(this.checked);
+    });
+}
+
+/* ===== Dates ===== */
+function getDateString(offset=0) {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return d.toISOString().split('T')[0];
+}
+function parseFrenchDate(str) {
+    if (!str) return null;
+    try {
+        const parts = str.trim().split(' ');
+        const dp    = parts[0].split('.');
+        if (dp.length === 3) return new Date(`${dp[2]}-${dp[1]}-${dp[0]}T${parts[1]||'00:00'}:00`);
+        return new Date(str);
+    } catch { return null; }
+}
+
+/* ===== GitHub fetch ===== */
+async function fetchGitHub(dateStr) {
+    try {
+        const res = await fetch(`${GITHUB_RAW}pronostics_${dateStr}.json`, { cache:'no-cache' });
+        if (!res.ok) return null;
+        return await res.json();
+    } catch { return null; }
+}
+function processData(data) {
+    const list = [];
+    const push = item => { if (item && (item.HomeTeam||item.AwayTeam)) list.push(item); };
+    if (!data) return list;
+    if (Array.isArray(data)) data.forEach(push);
+    else if (data.pronostics && Array.isArray(data.pronostics)) data.pronostics.forEach(push);
+    else Object.values(data).forEach(v => typeof v==='object' && v && push(v));
+    return list;
+}
+
+/* ===== Team icon fallback ===== */
+function teamIcon(name) {
+    const n = (name||'').toLowerCase();
+    if (n.includes('basket')||n.includes('nba')) return 'fas fa-basketball-ball';
+    if (n.includes('tennis')) return 'fas fa-table-tennis';
+    return 'fas fa-futbol';
+}
+
+/* ===== Compute probabilities ===== */
+function computeProba(data) {
+    let pH = +(data.probaHome||data.ProbaHome||0);
+    let pD = +(data.probaDraw||data.ProbaDraw||0);
+    let pA = +(data.probaAway||data.ProbaAway||0);
+    if (!pH && !pD && !pA) {
+        const seed = (data.HomeTeam||'').length + (data.AwayTeam||'').length;
+        pH = 35 + (seed % 25);
+        pA = 15 + (seed % 20);
+        pD = 100 - pH - pA;
+        if (pD < 8) { pD = 8; pH = 100 - pD - pA; }
+    }
+    const total = pH + pD + pA || 1;
+    pH = Math.round(pH/total*100);
+    pD = Math.round(pD/total*100);
+    pA = 100 - pH - pD;
+    return { pH, pD, pA };
+}
+
+/* ============================================================
+   DRAW NO BET (DNB)
+   ============================================================ */
+function computeDNB(pH, pA) {
+    const base = pH + pA || 1;
+    const dnbH = Math.round(pH / base * 100);
+    const dnbA = 100 - dnbH;
+    return { dnbH, dnbA };
+}
+
+/* ============================================================
+   ARC SVG — Draw No Bet
+   • Les deux arcs partent du MÊME point : milieu côté HAUT (S/2, 0)
+   • Domicile  : part du centre-haut et remplit vers la GAUCHE
+                 (sens anti-horaire)
+   • Extérieur : part du centre-haut et remplit vers la DROITE
+                 (sens horaire)
+   ============================================================ */
+function buildProbaArcSVG(pct, color, isHome) {
+    const S = 60, R = 12;
+
+    /* Périmètre du rounded-rect 60×60 r=12 */
+    const perimeter = 2 * (S - 2*R) * 2 + 2 * Math.PI * R;
+    const dash = (pct / 100) * perimeter;
+    const gap  = perimeter - dash;
+
+    /*
+     * DOMICILE — chemin sens ANTI-HORAIRE depuis le centre-haut
+     * Part de M S/2 0, va vers la GAUCHE (haut→gauche→bas→droite)
+     */
+    const pathHome = `
+        M ${S/2} 0
+        L ${R} 0
+        A ${R} ${R} 0 0 0 0 ${R}
+        L 0 ${S-R}
+        A ${R} ${R} 0 0 0 ${R} ${S}
+        L ${S-R} ${S}
+        A ${R} ${R} 0 0 0 ${S} ${S-R}
+        L ${S} ${R}
+        A ${R} ${R} 0 0 0 ${S-R} 0
+        Z
+    `;
+
+    /*
+     * EXTÉRIEUR — chemin sens HORAIRE depuis le centre-haut
+     * Part de M S/2 0, va vers la DROITE (haut→droite→bas→gauche)
+     */
+    const pathAway = `
+        M ${S/2} 0
+        L ${S-R} 0
+        A ${R} ${R} 0 0 1 ${S} ${R}
+        L ${S} ${S-R}
+        A ${R} ${R} 0 0 1 ${S-R} ${S}
+        L ${R} ${S}
+        A ${R} ${R} 0 0 1 0 ${S-R}
+        L 0 ${R}
+        A ${R} ${R} 0 0 1 ${R} 0
+        Z
+    `;
+
+    const path = isHome ? pathHome : pathAway;
+
+    const trackStroke = `<path d="${path}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" stroke-linecap="round"/>`;
+
+    const arcStroke = `<path d="${path}" fill="none"
+        stroke="${color}"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="${dash.toFixed(1)} ${gap.toFixed(1)}"
+        stroke-dashoffset="0"
+        style="filter:drop-shadow(0 0 4px ${color}88);"
+    />`;
+
+    return `<svg class="proba-arc" viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg">
+        ${trackStroke}
+        ${arcStroke}
+    </svg>`;
+}
+
+/* ===== CSS barres de probabilité (onglet détail) ===== */
+(function injectProbaBarCSS() {
+    const s = document.createElement('style');
+    s.textContent = `
+        .proba-bars { display:flex; align-items:center; gap:3px; width:100%; }
+        .pbar-wrap  { display:flex; flex-direction:column; align-items:center; flex-shrink:0; transition:width 0.5s; }
+        .pbar       { height:20px; border-radius:50px; display:flex; align-items:center; justify-content:center; width:100%; min-width:28px; }
+        .pbar span  { font-size:9px; font-weight:800; color:#fff; white-space:nowrap; }
+        .pbar-label { font-size:8px; font-weight:700; color:var(--text-muted); margin-top:3px; text-align:center; white-space:nowrap; }
+        .pbar-home      { background:#0066FF; }
+        .pbar-draw      { background:transparent; border:1.5px solid rgba(180,180,255,0.4); }
+        .pbar-draw span { color:var(--text-muted); }
+        .pbar-away      { background:#8800FF; }
+        .pbar-over      { background:#0066FF; }
+        .pbar-under     { background:#8800FF; }
+        .pbar-btts-yes  { background:#0066FF; }
+        .pbar-btts-no   { background:#8800FF; }
+    `;
+    document.head.appendChild(s);
+})();
+
+function buildBarWrap(widthPct, barClass, valueText, labelText) {
+    return `<div class="pbar-wrap" style="width:${widthPct}%">
+        <div class="pbar ${barClass}"><span>${valueText}</span></div>
+        <div class="pbar-label">${labelText}</div>
+    </div>`;
+}
+
+/* ============================================================
+   CARTE PRONOSTIC — arc DNB sur les logos
+   ============================================================ */
+function createForecastCard(data) {
+    const card = document.createElement('div');
+    card.className = 'forecast-card';
+    card.addEventListener('click', () => openDetail(data));
+
+    const homeTeam = data.HomeTeam||data.homeTeam||'Domicile';
+    const awayTeam = data.AwayTeam||data.awayTeam||'Extérieur';
+    const homeLogo = data.HomeLogo||data.homeLogo||'';
+    const awayLogo = data.AwayLogo||data.awayLogo||'';
+    const league   = data.league||data.League||'Compétition';
+    const status   = data.status||'pending';
+
+    const { pH, pD, pA } = computeProba(data);
+    const { dnbH, dnbA } = computeDNB(pH, pA);
+
+    let formattedDate = '';
+    try {
+        if (data.date) {
+            const d = parseFrenchDate(data.date);
+            if (d && !isNaN(d)) formattedDate = d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+        }
+    } catch {}
+
+    let badgeClass   = 'pending';
+    let badgeContent = '';
+    if (status === 'win') {
+        badgeClass   = 'win';
+        badgeContent = '✓ Gagné';
+    } else if (status === 'loss') {
+        badgeClass   = 'loss';
+        badgeContent = '✗ Perdu';
+    }
+
+    /* Arc DNB domicile (part du centre-haut vers gauche) et extérieur (part du centre-haut vers droite) */
+    const homeArcSVG = buildProbaArcSVG(dnbH, '#0066FF', true);
+    const awayArcSVG = buildProbaArcSVG(dnbA, '#8800FF', false);
+
+    card.innerHTML = `
+        <div class="forecast-header">
+            <div class="league-badge">${league}</div>
+            <div class="status-badge ${badgeClass}">${badgeContent}</div>
+        </div>
+        <div class="teams-row">
+            <div class="team-col">
+                <div class="team-logo-wrapper">
+                    ${homeArcSVG}
+                    <div class="team-logo-box">
+                        ${homeLogo
+                            ? `<img src="${homeLogo}" alt="${homeTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
+                            : `<i class="${teamIcon(homeTeam)}"></i>`}
+                    </div>
+                </div>
+                <div class="team-name">${homeTeam}</div>
+            </div>
+            <div class="vs-col">
+                <div class="vs-text">VS</div>
+                <div class="match-date">${formattedDate||data.date||''}</div>
+            </div>
+            <div class="team-col">
+                <div class="team-logo-wrapper">
+                    ${awayArcSVG}
+                    <div class="team-logo-box">
+                        ${awayLogo
+                            ? `<img src="${awayLogo}" alt="${awayTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
+                            : `<i class="${teamIcon(awayTeam)}"></i>`}
+                    </div>
+                </div>
+                <div class="team-name">${awayTeam}</div>
+            </div>
+        </div>
+    `;
+    return card;
+}
+
+/* ===== Chargement des pronostics ===== */
+async function loadForecasts() {
+    const container = document.getElementById('forecasts-container');
+
+    const demoBanner = document.createElement('div');
+    demoBanner.className = 'demo-banner';
+    demoBanner.innerHTML = '<i class="fas fa-info-circle"></i>Carte de démonstration — Les vrais pronostics se chargent ci-dessous';
+
+    const demoCard = createForecastCard(DEMO_MATCH);
+    demoCard.style.border    = '1px solid rgba(123,110,246,0.4)';
+    demoCard.style.boxShadow = '0 0 20px rgba(123,110,246,0.15)';
+
+    container.innerHTML = '';
+    container.appendChild(demoBanner);
+    container.appendChild(demoCard);
+
+    for (let i = 0; i <= 2; i++) {
+        const data = await fetchGitHub(getDateString(i));
+        if (data) {
+            const items = processData(data);
+            if (items.length > 0) {
+                items.forEach(f => container.appendChild(createForecastCard(f)));
+                break;
+            }
+        }
+    }
+}
+
+/* ============================================================
+   DETAIL PAGE
+   ============================================================ */
+function adjustDetailScroll() {
+    const header = document.getElementById('detail-header');
+    const scroll  = document.getElementById('detail-scroll');
+    if (header && scroll) scroll.style.top = header.offsetHeight + 'px';
+}
+
+function openDetail(data) {
+    selectedForecast = data;
+    const homeTeam = data.HomeTeam||data.homeTeam||'Domicile';
+    const awayTeam = data.AwayTeam||data.awayTeam||'Extérieur';
+    const homeLogo = data.HomeLogo||data.homeLogo||'';
+    const awayLogo = data.AwayLogo||data.awayLogo||'';
+    const status   = data.status||'pending';
+
+    document.getElementById('detail-header-title').textContent = `${homeTeam} vs ${awayTeam}`;
+    document.getElementById('detail-league').textContent = data.league||data.League||'Compétition';
+    document.getElementById('detail-time').textContent   = data.date||'';
+    document.getElementById('detail-home-team').textContent = homeTeam;
+    document.getElementById('detail-away-team').textContent = awayTeam;
+
+    document.getElementById('detail-home-logo').innerHTML = homeLogo
+        ? `<img src="${homeLogo}" alt="${homeTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
+        : `<i class="${teamIcon(homeTeam)}"></i>`;
+    document.getElementById('detail-away-logo').innerHTML = awayLogo
+        ? `<img src="${awayLogo}" alt="${awayTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
+        : `<i class="${teamIcon(awayTeam)}"></i>`;
+
+    const statusEl = document.getElementById('detail-status');
+    if (status === 'win') {
+        statusEl.textContent = '✓ Gagné'; statusEl.className = 'detail-status-badge status-win';
+    } else if (status === 'loss') {
+        statusEl.textContent = '✗ Perdu'; statusEl.className = 'detail-status-badge status-loss';
+    } else {
+        statusEl.textContent = 'À venir'; statusEl.className = 'detail-status-badge status-pending';
+    }
+
+    renderProbabilites(data);
+    renderStats(data);
+    renderMatches(data);
+    renderH2H(data);
+    renderRanking(data);
+    switchTab('probabilites');
+    document.getElementById('forecast-detail').classList.add('active');
+    requestAnimationFrame(adjustDetailScroll);
+}
+
+function closeDetail() {
+    document.getElementById('forecast-detail').classList.remove('active');
+    selectedForecast = null;
+}
+
+function switchTab(name) {
+    document.querySelectorAll('.dtab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `${name}-content`));
+    const scroll = document.getElementById('detail-scroll');
+    if (scroll) scroll.scrollTop = 0;
+}
+
+/* ===== Onglet probabilités ===== */
+function renderProbabilites(data) {
+    const { pH, pD, pA } = computeProba(data);
+    document.getElementById('proba-ox2-container').innerHTML = `
+        <div class="proba-bars">
+            ${buildBarWrap(pH, 'pbar-home', pH+'%', 'Victoire domicile')}
+            ${buildBarWrap(pD, 'pbar-draw', pD+'%', 'Nul')}
+            ${buildBarWrap(pA, 'pbar-away', pA+'%', 'Victoire extérieure')}
+        </div>`;
+
+    const pOver  = +(data.probaOver||data.ProbaOver||65);
+    const pUnder = 100 - pOver;
+    document.getElementById('proba-ou-container').innerHTML = `
+        <div class="proba-bars">
+            ${buildBarWrap(pOver,  'pbar-over',  'Over '+pOver+'%',   'Over 2.5')}
+            ${buildBarWrap(pUnder, 'pbar-under', 'Under '+pUnder+'%', 'Under 2.5')}
+        </div>`;
+
+    const pBttsYes = +(data.probaBttsYes||data.ProbaBttsYes||45);
+    const pBttsNo  = 100 - pBttsYes;
+    document.getElementById('proba-btts-container').innerHTML = `
+        <div class="proba-bars">
+            ${buildBarWrap(pBttsYes, 'pbar-btts-yes', 'Oui '+pBttsYes+'%', 'Oui')}
+            ${buildBarWrap(pBttsNo,  'pbar-btts-no',  'Non '+pBttsNo+'%',  'Non')}
+        </div>`;
+}
+
+function renderStats(data) { document.getElementById('stats-panel').innerHTML = ''; }
+
+function renderMatches(data) {
+    const container = document.getElementById('matches-list');
+    container.innerHTML = '';
+    const list = data.recentMatches||data.matches||[];
+    if (!list.length) {
+        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
+        return;
+    }
+    list.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        const resultLabel = m.result==='win'?'Victoire':m.result==='loss'?'Défaite':'Nul';
+        div.innerHTML = `
+            <div class="match-item-header">
+                <span>${m.date||''}</span>
+                <span class="result-chip ${m.result||'draw'}">${resultLabel}</span>
+            </div>
+            <div class="match-item-teams">
+                <div class="match-team">${m.homeLogo?`<img class="match-team-logo" src="${m.homeLogo}" alt="">`:''}<span>${m.homeTeam||''}</span></div>
+                <div class="match-score">${m.score||'-'}</div>
+                <div class="match-team">${m.awayLogo?`<img class="match-team-logo" src="${m.awayLogo}" alt="">`:''}<span>${m.awayTeam||''}</span></div>
+            </div>`;
+        container.appendChild(div);
+    });
+}
+
+function renderH2H(data) {
+    const container = document.getElementById('h2h-list');
+    container.innerHTML = '';
+    if (!data.h2h||!data.h2h.length) {
+        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-exchange-alt"></i><h3>Pas d'historique H2H</h3></div>`;
+        return;
+    }
+    data.h2h.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'match-item';
+        div.innerHTML = `
+            <div class="match-item-header"><span>${m.date||''}</span><span>${m.competition||''}</span></div>
+            <div class="match-item-teams">
+                <div class="match-team"><span>${m.homeTeam||''}</span></div>
+                <div class="match-score">${m.score||'-'}</div>
+                <div class="match-team"><span>${m.awayTeam||''}</span></div>
+            </div>`;
+        container.appendChild(div);
+    });
+}
+
+function renderRanking(data) {
+    const container = document.getElementById('ranking-list');
+    container.innerHTML = '';
+    if (!data.ranking||!data.ranking.length) {
+        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-list-ol"></i><h3>Pas de classement</h3></div>`;
+        return;
+    }
+    const table = document.createElement('table');
+    table.className = 'ranking-table';
+    table.innerHTML = `
+        <thead><tr><th>#</th><th>Équipe</th><th>J</th><th>G</th><th>N</th><th>P</th><th>BP</th><th>BC</th><th>Pts</th></tr></thead>
+        <tbody>${data.ranking.map((t,i)=>`
+            <tr>
+                <td>${i+1}</td>
+                <td><div class="team-cell">${t.logo?`<img class="team-mini-logo" src="${t.logo}" alt="">`:''} ${t.name||''}</div></td>
+                <td>${t.played||0}</td><td>${t.won||0}</td><td>${t.drawn||0}</td><td>${t.lost||0}</td>
+                <td>${t.gf||0}</td><td>${t.ga||0}</td><td><strong>${t.points||0}</strong></td>
+            </tr>`).join('')}
+        </tbody>`;
+    container.appendChild(table);
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    const section = document.getElementById(`${id}-section`);
+    if (section) section.classList.add('active');
+
+    const navItem = document.querySelector(`.nav-item[data-section="${id}"]`);
+    if (navItem) navItem.classList.add('active');
+
+    currentSection = id;
+
+    const backBtn   = document.getElementById('back-btn');
+    const menuBtn   = document.getElementById('menu-btn');
+    const hTitle    = document.getElementById('header-title');
+    const hActions  = document.querySelector('#main-header .header-actions');
+    const bottomNav = document.getElementById('bottom-nav');
+    const mainContent = document.getElementById('main-content');
+
+    hTitle.textContent = SECTION_TITLES[id] || id;
+
+    const mainSections = ['forecasts','icegame','pros'];
+
+    if (mainSections.includes(id)) {
+        backBtn.style.display = 'none';
+        menuBtn.style.display = 'flex';
+        hActions.innerHTML = `
+            <div class="icon-btn" id="events-btn">
+                <i class="fas fa-bell"></i>
+                <div class="notif-dot${hasNewEvents?' active':''}" id="events-dot"></div>
+            </div>`;
+        document.getElementById('events-btn').addEventListener('click', () => {
+            showSection('events');
+            hasNewEvents = false;
+        });
+        /* FIX: afficher le nav ET ajuster main-content */
+        bottomNav.classList.remove('hidden');
+        mainContent.classList.remove('no-nav');
+    } else {
+        menuBtn.style.display = 'none';
+        backBtn.style.display = 'flex';
+        hActions.innerHTML = '';
+        /* FIX: supprimer le nav (display:none) ET étendre main-content jusqu'en bas */
+        bottomNav.classList.add('hidden');
+        mainContent.classList.add('no-nav');
+    }
+}
+
+/* ============================================================
+   AVATAR
+   ============================================================ */
+function openAvatarSelector() {
+    const grid = document.getElementById('av-grid');
+    grid.innerHTML = '';
+    tempSelectedAvatar = null;
+    document.getElementById('av-save-btn').disabled = true;
+    AVATAR_OPTIONS.forEach(av => {
+        const opt = document.createElement('div');
+        opt.className = `av-opt${selectedAvatar===av.id?' active':''}`;
+        opt.innerHTML = `<img src="${av.url}" alt="${av.id}" onerror="this.style.display='none'">`;
+        opt.addEventListener('click', () => {
+            document.querySelectorAll('.av-opt').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+            tempSelectedAvatar = av.id;
+            document.getElementById('av-save-btn').disabled = false;
+        });
+        grid.appendChild(opt);
+    });
+    document.getElementById('av-select-modal').classList.add('active');
+}
+function closeAvatarSelector() {
+    document.getElementById('av-select-modal').classList.remove('active');
+    tempSelectedAvatar = null;
+}
+function saveAvatar() {
+    if (!tempSelectedAvatar) return;
+    selectedAvatar = tempSelectedAvatar;
+    localStorage.setItem('starky_avatar', selectedAvatar);
+    closeAvatarSelector();
+    showToast('Avatar mis à jour !', 'success');
+}
+
+/* ============================================================
+   DIALOGS
+   ============================================================ */
+function showDialog(id) {
+    document.getElementById(id).classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+}
+function hideDialog(id) {
+    document.getElementById(id).classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+}
+function copyPromo(code) {
+    navigator.clipboard?.writeText(code)
+        .then(() => showToast('Code copié !', 'success'))
+        .catch(() => showToast('Code : ' + code, 'info'));
+}
+
+/* ============================================================
+   EVENT LISTENERS
+   ============================================================ */
+function setupListeners() {
+    const bottomNav = document.getElementById('bottom-nav');
+
+    document.getElementById('menu-btn').addEventListener('click', () => {
+        document.getElementById('side-menu').classList.add('active');
+        document.getElementById('side-menu-overlay').classList.add('active');
+        bottomNav.classList.add('hidden');
+        document.getElementById('main-content').classList.add('no-nav');
+    });
+    const closeSideMenu = () => {
+        document.getElementById('side-menu').classList.remove('active');
+        document.getElementById('side-menu-overlay').classList.remove('active');
+        const mainSections = ['forecasts','icegame','pros'];
+        if (mainSections.includes(currentSection)) {
+            bottomNav.classList.remove('hidden');
+            document.getElementById('main-content').classList.remove('no-nav');
+        }
+    };
+    document.getElementById('side-close-btn').addEventListener('click', closeSideMenu);
+    document.getElementById('side-menu-overlay').addEventListener('click', closeSideMenu);
+
+    const sideNav = id => { closeSideMenu(); showSection(id); };
+    document.getElementById('menu-install').addEventListener('click',   () => { closeSideMenu(); installApp(); });
+    document.getElementById('menu-secrets').addEventListener('click',   () => sideNav('secrets'));
+    document.getElementById('menu-history').addEventListener('click',   () => sideNav('history'));
+    document.getElementById('menu-interface').addEventListener('click', () => sideNav('interface'));
+    document.getElementById('menu-terms').addEventListener('click',     () => sideNav('terms'));
+    document.getElementById('menu-about').addEventListener('click',     () => sideNav('about'));
+
+    document.getElementById('back-btn').addEventListener('click', () => showSection('forecasts'));
+
+    document.querySelectorAll('.nav-item').forEach(el =>
+        el.addEventListener('click', () => showSection(el.dataset.section))
+    );
+
+    document.getElementById('detail-back-btn').addEventListener('click', closeDetail);
+    document.querySelectorAll('.dtab').forEach(el =>
+        el.addEventListener('click', () => switchTab(el.dataset.tab))
+    );
+
+    document.getElementById('share-btn').addEventListener('click', shareApp);
+    window.addEventListener('resize', adjustDetailScroll);
+
+    document.getElementById('promo-code-display').addEventListener('click', () => copyPromo('STARKY'));
+
+    document.getElementById('av-cancel-btn').addEventListener('click', closeAvatarSelector);
+    document.getElementById('av-save-btn').addEventListener('click', saveAvatar);
+    document.getElementById('av-viewer-close').addEventListener('click', () => document.getElementById('av-viewer-modal').classList.remove('active'));
+    document.getElementById('av-edit-btn').addEventListener('click', () => {
+        document.getElementById('av-viewer-modal').classList.remove('active');
+        openAvatarSelector();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => showDialog('logout-confirm-dialog'));
+    document.getElementById('logout-cancel').addEventListener('click', () => hideDialog('logout-confirm-dialog'));
+    document.getElementById('logout-confirm').addEventListener('click', () => { hideDialog('logout-confirm-dialog'); showToast('Fonctionnalité désactivée', 'info'); });
+    document.getElementById('delete-account-btn').addEventListener('click', () => showDialog('delete-confirm-dialog'));
+    document.getElementById('delete-cancel').addEventListener('click', () => hideDialog('delete-confirm-dialog'));
+    document.getElementById('delete-confirm').addEventListener('click', () => { hideDialog('delete-confirm-dialog'); showToast('Fonctionnalité désactivée', 'info'); });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', async () => {
+    setupListeners();
+    setupDarkMode();
+    initPWA();
+
+    console.log('Starky Sports v3.9.1');
+
+    loadAndCacheLogo();
+
+    showSection('forecasts');
+    await loadForecasts();
+});
+</script>
+</body>
+</html>
