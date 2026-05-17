@@ -11,57 +11,65 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Starky Sports">
+    <!-- PWA theme-color : barre de navigation + barre de notification Android -->
+    <meta name="theme-color" content="#05050F" id="meta-theme-color">
     <style>
         :root {
-            --primary:        #7B6EF6;
-            --primary-glow:   rgba(123,110,246,0.35);
-            --cyan:           #00D4FF;
-            --magenta:        #E040FB;
-            --grad:           linear-gradient(135deg,#7B6EF6 0%,#00D4FF 50%,#E040FB 100%);
-            --grad-soft:      linear-gradient(135deg,rgba(123,110,246,0.18) 0%,rgba(0,212,255,0.12) 100%);
-            --bg:             #000000;
-            --bg-surface:     #0A0A12;
-            --bg-card:        #0E0E1A;
-            --bg-elevated:    #141422;
-            --text:           #F0F0FF;
-            --text-muted:     #8A8AB0;
-            --text-inactive:  #5A5A80;
-            --border:         rgba(123,110,246,0.18);
-            --border-bright:  rgba(123,110,246,0.45);
+            /* === COULEURS LOGO SS : bleu électrique → violet profond === */
+            --primary:        #1A7AFF;
+            --primary-glow:   rgba(26,122,255,0.38);
+            --cyan:           #00CFFF;
+            --violet:         #7A00FF;
+            --magenta:        #B040FF;
+            /* Dégradé logo : bleu cyan → violet indigo */
+            --grad:           linear-gradient(135deg, #00CFFF 0%, #1A7AFF 45%, #7A00FF 100%);
+            --grad-soft:      linear-gradient(135deg, rgba(0,207,255,0.16) 0%, rgba(122,0,255,0.13) 100%);
+            --grad-arc-home:  #00A8FF;
+            --grad-arc-away:  #7A00FF;
+
+            --bg:             #05050F;
+            --bg-surface:     #08081A;
+            --bg-card:        #0C0C1E;
+            --bg-elevated:    #101028;
+            --text:           #E8E8FF;
+            --text-muted:     #7A7AAA;
+            --text-inactive:  #454570;
+            --border:         rgba(26,122,255,0.18);
+            --border-bright:  rgba(26,122,255,0.48);
             --success:        #4FFFB0;
             --danger:         #FF4D6D;
             --warning:        #FFB830;
-            --logo-bg:        #141422;
-            --header-bg:      rgba(0,0,0,0.93);
-            --nav-bg:         rgba(0,0,0,0.96);
+            --logo-bg:        #101028;
+            --header-bg:      rgba(5,5,15,0.95);
+            --nav-bg:         rgba(5,5,15,0.97);
             --notif-dot:      #FF4D6D;
-            --side-bg:        #080810;
-            --side-hover:     rgba(123,110,246,0.08);
-            --side-active:    rgba(123,110,246,0.15);
-            --home-color:     #FF4D6D;
-            --away-color:     #00D4FF;
-            --shadow:         rgba(0,0,0,0.7);
-            --overlay-bg:     rgba(0,0,0,0.85);
-            --proba-home:     #0066FF;
-            --proba-away:     #8800FF;
+            --side-bg:        #06060F;
+            --side-hover:     rgba(26,122,255,0.08);
+            --side-active:    rgba(26,122,255,0.16);
+            --home-color:     #00A8FF;
+            --away-color:     #7A00FF;
+            --shadow:         rgba(0,0,0,0.75);
+            --overlay-bg:     rgba(0,0,0,0.88);
+            --proba-home:     #00A8FF;
+            --proba-away:     #7A00FF;
         }
         body.light-mode {
-            --bg:             #F0F0FF;
-            --bg-surface:     #E6E6F8;
+            --bg:             #EEF0FF;
+            --bg-surface:     #E2E5FF;
             --bg-card:        #FFFFFF;
-            --bg-elevated:    #EAEAF8;
-            --text:           #0E0E2A;
-            --text-muted:     #5A5A80;
-            --text-inactive:  #9090B0;
-            --border:         rgba(123,110,246,0.22);
-            --border-bright:  rgba(123,110,246,0.55);
-            --logo-bg:        #D8D8EE;
-            --header-bg:      rgba(240,240,255,0.96);
-            --nav-bg:         rgba(240,240,255,0.97);
-            --side-bg:        #E6E6F8;
-            --side-hover:     rgba(123,110,246,0.09);
-            --side-active:    rgba(123,110,246,0.17);
-            --shadow:         rgba(0,0,0,0.12);
+            --bg-elevated:    #E8EAFF;
+            --text:           #0A0A28;
+            --text-muted:     #505080;
+            --text-inactive:  #8888B0;
+            --border:         rgba(26,122,255,0.22);
+            --border-bright:  rgba(26,122,255,0.55);
+            --logo-bg:        #D4D8FF;
+            --header-bg:      rgba(238,240,255,0.97);
+            --nav-bg:         rgba(238,240,255,0.98);
+            --side-bg:        #E2E5FF;
+            --side-hover:     rgba(26,122,255,0.08);
+            --side-active:    rgba(26,122,255,0.16);
+            --shadow:         rgba(0,0,0,0.14);
             --overlay-bg:     rgba(0,0,0,0.6);
         }
         *, *::before, *::after {
@@ -147,10 +155,7 @@
             z-index: 95;
             box-shadow: none;
         }
-        /* FIX: suppression totale — display:none — pour ne laisser aucun espace */
-        .bottom-nav.hidden {
-            display: none;
-        }
+        .bottom-nav.hidden { display: none; }
         .nav-item {
             flex: 1;
             display: flex; flex-direction: column;
@@ -163,29 +168,25 @@
         }
         .nav-item.active { color: var(--primary); }
         .nav-item .nav-icon { font-size: 20px; margin-bottom: 3px; }
-        .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(123,110,246,0.7)); }
+        .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px rgba(26,122,255,0.7)); }
 
-        /* ===== Pro S nav icon gradient ===== */
+        /* Pro S nav icon gradient */
         .nav-item[data-section="pros"] .nav-icon {
-            background: linear-gradient(135deg,#7B6EF6,#E040FB);
+            background: linear-gradient(135deg, #1A7AFF, #7A00FF);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .nav-item[data-section="pros"].active .nav-icon {
-            filter: drop-shadow(0 0 8px rgba(224,64,251,0.7));
+            filter: drop-shadow(0 0 8px rgba(122,0,255,0.7));
         }
 
-        /* main-content s'adapte dynamiquement selon la présence du nav */
         #main-content {
             position: fixed;
             top: 56px; left: 0; right: 0;
             bottom: 56px;
             overflow: hidden;
         }
-        /* Quand le nav est caché, main-content s'étend jusqu'en bas */
-        #main-content.no-nav {
-            bottom: 0;
-        }
+        #main-content.no-nav { bottom: 0; }
 
         .section { display: none; height: 100%; }
         .section.active { display: block; }
@@ -197,8 +198,8 @@
             display: flex; flex-direction: column; gap: 12px;
         }
         .demo-banner {
-            background: rgba(123,110,246,0.1);
-            border: 1px solid rgba(123,110,246,0.3);
+            background: rgba(26,122,255,0.1);
+            border: 1px solid rgba(26,122,255,0.3);
             border-radius: 12px;
             padding: 10px 14px;
             font-size: 12px;
@@ -256,7 +257,6 @@
             margin-bottom: 8px;
             flex-shrink: 0;
         }
-        /* SVG arc en arrière-plan */
         .team-logo-wrapper svg.proba-arc {
             position: absolute;
             inset: 0;
@@ -382,8 +382,8 @@
             padding: 5px 12px; border-radius: 20px; margin-bottom: 5px;
         }
         .detail-status-badge.status-pending {
-            background: rgba(123,110,246,0.15); color: var(--primary);
-            border: 1px solid rgba(123,110,246,0.3);
+            background: rgba(26,122,255,0.15); color: var(--primary);
+            border: 1px solid rgba(26,122,255,0.3);
         }
         .detail-status-badge.status-win {
             background: rgba(79,255,176,0.12); color: var(--success);
@@ -486,8 +486,8 @@
         .result-chip.draw { background:rgba(255,184,48,0.12); color:var(--warning); }
         .ranking-table { width:100%; border-collapse:collapse; font-size:11px; }
         .ranking-table th { background:var(--bg-elevated); color:var(--primary); padding:8px 4px; text-align:center; font-weight:700; font-size:10px; border-bottom:1px solid var(--border); }
-        .ranking-table td { padding:7px 4px; text-align:center; border-bottom:1px solid rgba(123,110,246,0.07); color:var(--text); }
-        .ranking-table tr:nth-child(even) td { background:rgba(123,110,246,0.04); }
+        .ranking-table td { padding:7px 4px; text-align:center; border-bottom:1px solid rgba(26,122,255,0.07); color:var(--text); }
+        .ranking-table tr:nth-child(even) td { background:rgba(26,122,255,0.04); }
         .ranking-table td:first-child, .ranking-table th:first-child { text-align:left; padding-left:8px; }
         .team-cell { display:flex; align-items:center; gap:4px; }
         .team-mini-logo { width:16px; height:16px; border-radius:3px; object-fit:contain; background: var(--logo-bg); }
@@ -519,7 +519,7 @@
         .side-menu-overlay.active { display: block; }
         .side-menu-hdr {
             padding: 52px 20px 20px;
-            background: linear-gradient(180deg, rgba(123,110,246,0.12) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(26,122,255,0.12) 0%, transparent 100%);
             border-bottom: 1px solid var(--border);
             display: flex; align-items: center; gap: 14px;
         }
@@ -692,7 +692,7 @@
         .vbet-icon { font-size:60px; margin-bottom:20px; }
         .vbet-title {
             font-size:24px; font-weight:800;
-            background:linear-gradient(135deg,#00D4FF,#4FFFB0);
+            background: var(--grad);
             -webkit-background-clip:text; -webkit-text-fill-color:transparent;
             background-clip:text; margin-bottom:10px;
         }
@@ -715,7 +715,7 @@
         .toast.show { display: block; animation: notifIn 0.3s ease; }
         .toast.success { background: rgba(79,255,176,0.18);  color: var(--success); border:1px solid rgba(79,255,176,0.4); }
         .toast.error   { background: rgba(255,77,109,0.18);  color: var(--danger);  border:1px solid rgba(255,77,109,0.4); }
-        .toast.info    { background: rgba(0,212,255,0.13);   color: var(--cyan);    border:1px solid rgba(0,212,255,0.3); }
+        .toast.info    { background: rgba(0,207,255,0.13);   color: var(--cyan);    border:1px solid rgba(0,207,255,0.3); }
         .toast.warning { background: rgba(255,184,48,0.16);  color: var(--warning); border:1px solid rgba(255,184,48,0.4); }
 
         /* ===== OVERLAY & DIALOGS ===== */
@@ -773,7 +773,7 @@
         .av-opt:hover { transform:scale(1.1); border-color:var(--primary); }
         .av-opt.active { border-color:var(--primary); box-shadow:0 0 0 3px var(--primary-glow); }
         .av-modal-btns { display:flex; gap:12px; justify-content:center; }
-        .av-modal-btn { padding:12px 24px; border-radius:10px; font-weight:700; cursor:pointer; border:none; font-size:14px; transition:all 0.25px; min-width:100px; }
+        .av-modal-btn { padding:12px 24px; border-radius:10px; font-weight:700; cursor:pointer; border:none; font-size:14px; transition:all 0.25s; min-width:100px; }
         .av-modal-cancel { background:var(--bg-surface); color:var(--text-muted); border:1px solid var(--border); }
         .av-modal-save   { background:var(--primary); color:#fff; box-shadow:0 4px 15px var(--primary-glow); }
         .av-modal-save:disabled { background:var(--bg-elevated); color:var(--text-inactive); box-shadow:none; cursor:not-allowed; }
@@ -781,8 +781,8 @@
         /* ===== PRO S ===== */
         .pros-container { padding: 20px; }
         .pros-hero {
-            background: linear-gradient(135deg, rgba(123,110,246,0.2) 0%, rgba(224,64,251,0.15) 100%);
-            border: 1px solid rgba(123,110,246,0.4);
+            background: linear-gradient(135deg, rgba(26,122,255,0.2) 0%, rgba(122,0,255,0.15) 100%);
+            border: 1px solid rgba(26,122,255,0.4);
             border-radius: 20px; padding: 28px 20px;
             text-align: center; margin-bottom: 20px;
         }
@@ -814,7 +814,7 @@
         .pros-card-badge {
             margin-left:auto; font-size:9px; font-weight:800;
             padding:3px 9px; border-radius:20px;
-            background:linear-gradient(135deg,#7B6EF6,#E040FB); color:#fff;
+            background: var(--grad); color:#fff;
         }
         .pros-card-text { font-size:13px; color:var(--text-muted); line-height:1.55; }
         .pros-stat-row { display:flex; gap:10px; margin-bottom:16px; }
@@ -824,18 +824,16 @@
         }
         .pros-stat-val { font-size:22px; font-weight:900; color:var(--primary); }
         .pros-stat-label { font-size:10px; color:var(--text-muted); margin-top:3px; }
-
-        /* Cartes Pro S avec étoile */
         .pros-match-card {
             background: var(--bg-card);
-            border: 1px solid rgba(123,110,246,0.35);
+            border: 1px solid rgba(26,122,255,0.35);
             border-radius: 16px; padding: 18px; margin-bottom: 14px;
             position: relative; overflow: hidden;
         }
         .pros-match-card::before {
             content: '';
             position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(135deg,#7B6EF6,#E040FB);
+            background: var(--grad);
         }
         .pros-star-badge {
             position: absolute; top: 12px; right: 12px;
@@ -872,7 +870,7 @@
         .pros-conf-label { font-size: 11px; color: var(--text-muted); font-weight: 600; }
         .pros-conf-val {
             font-size: 13px; font-weight: 800;
-            background: linear-gradient(135deg,#7B6EF6,#E040FB);
+            background: var(--grad);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
@@ -898,11 +896,12 @@
     </div>
     <div class="side-menu-body">
         <div class="side-section-label">Navigation</div>
+        <!-- Bouton Installer / Partager — texte & icône mis à jour dynamiquement -->
         <div class="side-item" id="menu-install">
-            <div class="side-item-icon"><i class="fas fa-download"></i></div>
+            <div class="side-item-icon"><i class="fas fa-download" id="menu-install-icon"></i></div>
             <div class="side-item-info">
-                <div class="side-item-text">Installer l'app</div>
-                <div class="side-item-desc">Accès rapide depuis l'accueil</div>
+                <div class="side-item-text" id="menu-install-text">Installer l'app</div>
+                <div class="side-item-desc" id="menu-install-desc">Accès rapide depuis l'accueil</div>
             </div>
             <i class="fas fa-chevron-right side-item-arrow"></i>
         </div>
@@ -1134,12 +1133,12 @@
                     <div class="iface-subtitle">Palette couleur exclusive du logo STARKY SPORTS</div>
                     <div class="theme-card">
                         <div class="theme-dots">
-                            <div class="theme-dot" style="background:#7B6EF6;"></div>
-                            <div class="theme-dot" style="background:#00D4FF;"></div>
-                            <div class="theme-dot" style="background:#E040FB;"></div>
+                            <div class="theme-dot" style="background:#00CFFF;"></div>
+                            <div class="theme-dot" style="background:#1A7AFF;"></div>
+                            <div class="theme-dot" style="background:#7A00FF;"></div>
                         </div>
-                        <div class="theme-card-title">Violet · Bleu · Cyan · Magenta</div>
-                        <div class="theme-card-desc">Palette exclusive Starky Sports</div>
+                        <div class="theme-card-title">Cyan · Bleu Électrique · Violet Profond</div>
+                        <div class="theme-card-desc">Palette exclusive Starky Sports — inspirée du logo SS</div>
                     </div>
                 </div>
                 <div class="iface-block">
@@ -1214,7 +1213,7 @@
                     <div class="page-subtitle">Pronostics sportifs avancés propulsés par l'IA</div>
                 </div>
                 <div class="content-block"><h2>Notre Mission</h2><p>Démocratiser l'accès aux analyses sportives avancées grâce à l'intelligence artificielle.</p></div>
-                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 3.9.0 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 4.0.0 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
             </div>
         </div>
     </div>
@@ -1381,6 +1380,7 @@ let hasNewEvents      = false;
 let selectedAvatar    = localStorage.getItem('starky_avatar') || 'king1';
 let tempSelectedAvatar= null;
 let deferredInstall   = null;
+let isAppInstalled    = false;
 
 /* ===== Sécurité ===== */
 document.addEventListener('contextmenu',  e=>e.preventDefault());
@@ -1422,16 +1422,102 @@ function showToast(msg, type='info', ms=3000) {
     _toastTimer = setTimeout(() => { el.className = 'toast'; }, ms);
 }
 
-/* ===== PWA ===== */
-function initPWA() {
-    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
+/* ============================================================
+   PWA — theme-color + install/share
+   ============================================================ */
+
+/**
+ * Met à jour le meta theme-color selon le mode (dark/light)
+ * pour que la barre de statut + navigation du téléphone
+ * prennent la couleur de l'interface.
+ */
+function updateThemeColor(isDark) {
+    const color = isDark ? '#05050F' : '#EEF0FF';
+    const meta  = document.getElementById('meta-theme-color');
+    if (meta) meta.setAttribute('content', color);
 }
-function installApp() {
-    if (deferredInstall) {
-        deferredInstall.prompt();
-        deferredInstall.userChoice.then(() => { deferredInstall = null; });
+
+/**
+ * Détecte si l'app est déjà installée (mode standalone ou fullscreen).
+ * Retourne true si oui.
+ */
+function detectInstalled() {
+    return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.navigator.standalone === true
+    );
+}
+
+/**
+ * Met à jour l'apparence du bouton Installer / Partager du side menu
+ * en fonction du statut d'installation.
+ */
+function updateInstallButton() {
+    const icon = document.getElementById('menu-install-icon');
+    const text = document.getElementById('menu-install-text');
+    const desc = document.getElementById('menu-install-desc');
+    if (!icon || !text || !desc) return;
+
+    if (isAppInstalled) {
+        icon.className = 'fas fa-share-alt';
+        text.textContent = "Partager l'app";
+        desc.textContent = 'Invitez vos amis sur Starky Sports';
     } else {
-        showToast("Utilisez 'Ajouter à l'accueil' dans votre navigateur", 'info', 4000);
+        icon.className = 'fas fa-download';
+        text.textContent = "Installer l'app";
+        desc.textContent = 'Accès rapide depuis l\'accueil';
+    }
+}
+
+function initPWA() {
+    /* Détection initiale */
+    isAppInstalled = detectInstalled();
+    updateInstallButton();
+
+    /* Écoute du prompt d'installation natif */
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredInstall = e;
+        isAppInstalled = false;
+        updateInstallButton();
+    });
+
+    /* L'app vient d'être installée */
+    window.addEventListener('appinstalled', () => {
+        isAppInstalled = true;
+        deferredInstall = null;
+        updateInstallButton();
+        showToast('Application installée avec succès !', 'success', 4000);
+    });
+
+    /* Écoute si l'utilisateur passe en standalone en cours de session */
+    window.matchMedia('(display-mode: standalone)').addEventListener('change', e => {
+        isAppInstalled = e.matches;
+        updateInstallButton();
+    });
+}
+
+/**
+ * Action du bouton Installer / Partager
+ */
+function handleInstallOrShare() {
+    if (isAppInstalled) {
+        /* App déjà installée → Partager */
+        shareApp();
+    } else if (deferredInstall) {
+        /* Prompt natif disponible → Installer */
+        deferredInstall.prompt();
+        deferredInstall.userChoice.then(result => {
+            if (result.outcome === 'accepted') {
+                isAppInstalled = true;
+                deferredInstall = null;
+                updateInstallButton();
+            }
+        });
+    } else {
+        /* Pas de prompt (iOS ou déjà installé) → partager */
+        shareApp();
     }
 }
 
@@ -1449,7 +1535,11 @@ function fallbackCopyLink() {
 }
 
 /* ===== Dark mode ===== */
-function applyDarkMode(isDark) { document.body.classList.toggle('light-mode', !isDark); }
+function applyDarkMode(isDark) {
+    document.body.classList.toggle('light-mode', !isDark);
+    /* Met à jour la barre système du téléphone */
+    updateThemeColor(isDark);
+}
 function setupDarkMode() {
     const toggle = document.getElementById('dark-toggle');
     const isDark = localStorage.getItem('starkyDarkMode') !== 'false';
@@ -1522,9 +1612,7 @@ function computeProba(data) {
     return { pH, pD, pA };
 }
 
-/* ============================================================
-   DRAW NO BET (DNB)
-   ============================================================ */
+/* ===== Draw No Bet (DNB) ===== */
 function computeDNB(pH, pA) {
     const base = pH + pA || 1;
     const dnbH = Math.round(pH / base * 100);
@@ -1534,24 +1622,13 @@ function computeDNB(pH, pA) {
 
 /* ============================================================
    ARC SVG — Draw No Bet
-   • Les deux arcs partent du MÊME point : milieu côté HAUT (S/2, 0)
-   • Domicile  : part du centre-haut et remplit vers la GAUCHE
-                 (sens anti-horaire)
-   • Extérieur : part du centre-haut et remplit vers la DROITE
-                 (sens horaire)
    ============================================================ */
 function buildProbaArcSVG(pct, color, isHome) {
     const S = 60, R = 12;
-
-    /* Périmètre du rounded-rect 60×60 r=12 */
     const perimeter = 2 * (S - 2*R) * 2 + 2 * Math.PI * R;
     const dash = (pct / 100) * perimeter;
     const gap  = perimeter - dash;
 
-    /*
-     * DOMICILE — chemin sens ANTI-HORAIRE depuis le centre-haut
-     * Part de M S/2 0, va vers la GAUCHE (haut→gauche→bas→droite)
-     */
     const pathHome = `
         M ${S/2} 0
         L ${R} 0
@@ -1564,11 +1641,6 @@ function buildProbaArcSVG(pct, color, isHome) {
         A ${R} ${R} 0 0 0 ${S-R} 0
         Z
     `;
-
-    /*
-     * EXTÉRIEUR — chemin sens HORAIRE depuis le centre-haut
-     * Part de M S/2 0, va vers la DROITE (haut→droite→bas→gauche)
-     */
     const pathAway = `
         M ${S/2} 0
         L ${S-R} 0
@@ -1581,11 +1653,8 @@ function buildProbaArcSVG(pct, color, isHome) {
         A ${R} ${R} 0 0 1 ${R} 0
         Z
     `;
-
     const path = isHome ? pathHome : pathAway;
-
     const trackStroke = `<path d="${path}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" stroke-linecap="round"/>`;
-
     const arcStroke = `<path d="${path}" fill="none"
         stroke="${color}"
         stroke-width="3"
@@ -1594,14 +1663,13 @@ function buildProbaArcSVG(pct, color, isHome) {
         stroke-dashoffset="0"
         style="filter:drop-shadow(0 0 4px ${color}88);"
     />`;
-
     return `<svg class="proba-arc" viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg">
         ${trackStroke}
         ${arcStroke}
     </svg>`;
 }
 
-/* ===== CSS barres de probabilité (onglet détail) ===== */
+/* ===== CSS barres de probabilité ===== */
 (function injectProbaBarCSS() {
     const s = document.createElement('style');
     s.textContent = `
@@ -1610,14 +1678,14 @@ function buildProbaArcSVG(pct, color, isHome) {
         .pbar       { height:20px; border-radius:50px; display:flex; align-items:center; justify-content:center; width:100%; min-width:28px; }
         .pbar span  { font-size:9px; font-weight:800; color:#fff; white-space:nowrap; }
         .pbar-label { font-size:8px; font-weight:700; color:var(--text-muted); margin-top:3px; text-align:center; white-space:nowrap; }
-        .pbar-home      { background:#0066FF; }
+        .pbar-home      { background:#00A8FF; }
         .pbar-draw      { background:transparent; border:1.5px solid rgba(180,180,255,0.4); }
         .pbar-draw span { color:var(--text-muted); }
-        .pbar-away      { background:#8800FF; }
-        .pbar-over      { background:#0066FF; }
-        .pbar-under     { background:#8800FF; }
-        .pbar-btts-yes  { background:#0066FF; }
-        .pbar-btts-no   { background:#8800FF; }
+        .pbar-away      { background:#7A00FF; }
+        .pbar-over      { background:#00A8FF; }
+        .pbar-under     { background:#7A00FF; }
+        .pbar-btts-yes  { background:#00A8FF; }
+        .pbar-btts-no   { background:#7A00FF; }
     `;
     document.head.appendChild(s);
 })();
@@ -1629,9 +1697,7 @@ function buildBarWrap(widthPct, barClass, valueText, labelText) {
     </div>`;
 }
 
-/* ============================================================
-   CARTE PRONOSTIC — arc DNB sur les logos
-   ============================================================ */
+/* ===== Carte pronostic ===== */
 function createForecastCard(data) {
     const card = document.createElement('div');
     card.className = 'forecast-card';
@@ -1657,17 +1723,11 @@ function createForecastCard(data) {
 
     let badgeClass   = 'pending';
     let badgeContent = '';
-    if (status === 'win') {
-        badgeClass   = 'win';
-        badgeContent = '✓ Gagné';
-    } else if (status === 'loss') {
-        badgeClass   = 'loss';
-        badgeContent = '✗ Perdu';
-    }
+    if (status === 'win') { badgeClass='win'; badgeContent='✓ Gagné'; }
+    else if (status === 'loss') { badgeClass='loss'; badgeContent='✗ Perdu'; }
 
-    /* Arc DNB domicile (part du centre-haut vers gauche) et extérieur (part du centre-haut vers droite) */
-    const homeArcSVG = buildProbaArcSVG(dnbH, '#0066FF', true);
-    const awayArcSVG = buildProbaArcSVG(dnbA, '#8800FF', false);
+    const homeArcSVG = buildProbaArcSVG(dnbH, '#00A8FF', true);
+    const awayArcSVG = buildProbaArcSVG(dnbA, '#7A00FF', false);
 
     card.innerHTML = `
         <div class="forecast-header">
@@ -1706,7 +1766,7 @@ function createForecastCard(data) {
     return card;
 }
 
-/* ===== Chargement des pronostics ===== */
+/* ===== Chargement pronostics ===== */
 async function loadForecasts() {
     const container = document.getElementById('forecasts-container');
 
@@ -1715,8 +1775,8 @@ async function loadForecasts() {
     demoBanner.innerHTML = '<i class="fas fa-info-circle"></i>Carte de démonstration — Les vrais pronostics se chargent ci-dessous';
 
     const demoCard = createForecastCard(DEMO_MATCH);
-    demoCard.style.border    = '1px solid rgba(123,110,246,0.4)';
-    demoCard.style.boxShadow = '0 0 20px rgba(123,110,246,0.15)';
+    demoCard.style.border    = '1px solid rgba(26,122,255,0.4)';
+    demoCard.style.boxShadow = '0 0 20px rgba(26,122,255,0.15)';
 
     container.innerHTML = '';
     container.appendChild(demoBanner);
@@ -1931,14 +1991,12 @@ function showSection(id) {
             showSection('events');
             hasNewEvents = false;
         });
-        /* FIX: afficher le nav ET ajuster main-content */
         bottomNav.classList.remove('hidden');
         mainContent.classList.remove('no-nav');
     } else {
         menuBtn.style.display = 'none';
         backBtn.style.display = 'flex';
         hActions.innerHTML = '';
-        /* FIX: supprimer le nav (display:none) ET étendre main-content jusqu'en bas */
         bottomNav.classList.add('hidden');
         mainContent.classList.add('no-nav');
     }
@@ -2020,7 +2078,13 @@ function setupListeners() {
     document.getElementById('side-menu-overlay').addEventListener('click', closeSideMenu);
 
     const sideNav = id => { closeSideMenu(); showSection(id); };
-    document.getElementById('menu-install').addEventListener('click',   () => { closeSideMenu(); installApp(); });
+
+    /* Bouton Installer / Partager */
+    document.getElementById('menu-install').addEventListener('click', () => {
+        closeSideMenu();
+        handleInstallOrShare();
+    });
+
     document.getElementById('menu-secrets').addEventListener('click',   () => sideNav('secrets'));
     document.getElementById('menu-history').addEventListener('click',   () => sideNav('history'));
     document.getElementById('menu-interface').addEventListener('click', () => sideNav('interface'));
@@ -2067,7 +2131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupDarkMode();
     initPWA();
 
-    console.log('Starky Sports v3.9.1');
+    console.log('Starky Sports v4.0.0');
 
     loadAndCacheLogo();
 
