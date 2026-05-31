@@ -3,103 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blink Mini Wallet Test</title>
+<title>Blink Wallet Pro</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 body{
-    font-family: Arial;
-    max-width: 520px;
-    margin: 30px auto;
-    padding: 15px;
+    font-family:Arial;
+    max-width:520px;
+    margin:20px auto;
+    padding:15px;
+}
+
+.card{
+    border:1px solid #ddd;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
 }
 
 input,select,button{
     width:100%;
-    padding:12px;
-    margin:8px 0;
-}
-
-.box{
-    padding:12px;
-    border:1px solid #ddd;
-    margin-top:15px;
-    border-radius:8px;
+    padding:10px;
+    margin:6px 0;
 }
 
 #status{
     font-weight:bold;
+}
+
+.tx{
+    font-size:12px;
+    background:#f5f5f5;
+    padding:6px;
+    margin-top:5px;
+    border-radius:5px;
+    word-break:break-all;
 }
 </style>
 </head>
 
 <body>
 
-<h2>⚡ Blink Mini Wallet (Test)</h2>
+<h2>⚡ Blink Wallet Pro (Test)</h2>
 
-<!-- CREATE INVOICE -->
-<div class="box">
-<h3>Créer une invoice</h3>
+<!-- DEPOT -->
+<div class="card">
+<h3>📥 Recevoir</h3>
 
 <input type="number" id="amount" placeholder="Montant">
 
 <select id="currency">
-    <option value="btc">Bitcoin Lightning</option>
-    <option value="usd">USD Stablesats</option>
+<option value="btc">BTC Lightning</option>
+<option value="usd">USD Stablesats</option>
 </select>
 
-<button onclick="createInvoice()">
-Générer invoice
-</button>
+<button onclick="createInvoice()">Générer invoice</button>
 
 <pre id="invoice"></pre>
-
 <div id="qrcode"></div>
 
-<p id="status">Statut : en attente</p>
+<p id="status">Statut : idle</p>
 </div>
 
-<!-- WITHDRAW -->
-<div class="box">
-<h3>Retrait (payer une invoice)</h3>
+<!-- RETRAIT -->
+<div class="card">
+<h3>📤 Retirer</h3>
 
 <input id="withdrawInvoice" placeholder="Invoice Lightning (lnbc...)">
 
-<button onclick="payInvoice()">
-Envoyer paiement
-</button>
+<button onclick="withdraw()">Envoyer</button>
 
 <pre id="withdrawResult"></pre>
 </div>
 
+<!-- HISTORIQUE -->
+<div class="card">
+<h3>📜 Historique local</h3>
+<div id="history"></div>
+</div>
+
 <script>
 
-const API_KEY = "blink_9J0zWrI30jdLUhwlW4ZXNWb8SKC98SSu2HwM3jAl2wYvVXaB3Ag0oA2HpL7lK6VG";
+const API_KEY = "TON_API_KEY";
 
-// Wallet IDs
 const BTC_WALLET = "09b58fdc-7d5b-411e-a629-f55572dfb696";
 const USD_WALLET = "8a9c646f-4595-4af8-bdd5-a7d87121b1d6";
 
-let currentPaymentHash = null;
-let pollInterval = null;
+let currentHash = null;
+let interval = null;
 
-// ---------------------------
+let history = JSON.parse(localStorage.getItem("history") || "[]");
+
+renderHistory();
+
+// --------------------
 // CREATE INVOICE
-// ---------------------------
+// --------------------
 async function createInvoice(){
 
-    document.getElementById("status").innerText =
-    "Statut : génération...";
+    const amount = Number(document.getElementById("amount").value);
+    const currency = document.getElementById("currency").value;
 
-    const amount =
-    Number(document.getElementById("amount").value);
-
-    const currency =
-    document.getElementById("currency").value;
-
-    const walletId =
-    currency === "btc" ? BTC_WALLET : USD_WALLET;
+    const walletId = currency === "btc" ? BTC_WALLET : USD_WALLET;
 
     const query = `
     mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
@@ -108,60 +114,55 @@ async function createInvoice(){
           paymentRequest
           paymentHash
         }
-        errors { message }
       }
     }`;
 
-    const variables = {
-        input: { walletId, amount }
-    };
-
     const res = await fetch("https://api.blink.sv/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": API_KEY
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "X-API-KEY":API_KEY
         },
-        body: JSON.stringify({ query, variables })
+        body: JSON.stringify({
+            query,
+            variables:{
+                input:{ walletId, amount }
+            }
+        })
     });
 
     const data = await res.json();
 
-    const invoice =
-    data?.data?.lnInvoiceCreate?.invoice;
+    const inv = data?.data?.lnInvoiceCreate?.invoice;
 
-    if(!invoice){
+    if(!inv){
         document.getElementById("invoice").innerText =
         JSON.stringify(data,null,2);
         return;
     }
 
-    document.getElementById("invoice").innerText =
-    invoice.paymentRequest;
+    document.getElementById("invoice").innerText = inv.paymentRequest;
 
-    currentPaymentHash = invoice.paymentHash;
+    currentHash = inv.paymentHash;
 
-    // QR CODE
     document.getElementById("qrcode").innerHTML = "";
-    new QRCode(document.getElementById("qrcode"), invoice.paymentRequest);
+    new QRCode(document.getElementById("qrcode"), inv.paymentRequest);
 
-    // start polling payment
-    startPolling();
+    startCheck();
+
+    addHistory("INVOICE", amount + " " + currency, inv.paymentRequest);
 }
 
-// ---------------------------
-// POLLING PAYMENT STATUS
-// ---------------------------
-function startPolling(){
-
-    if(pollInterval){
-        clearInterval(pollInterval);
-    }
+// --------------------
+// CHECK PAYMENT
+// --------------------
+function startCheck(){
+    clearInterval(interval);
 
     document.getElementById("status").innerText =
-    "Statut : en attente de paiement...";
+    "⏳ attente paiement...";
 
-    pollInterval = setInterval(checkPayment, 4000);
+    interval = setInterval(checkPayment, 4000);
 }
 
 async function checkPayment(){
@@ -186,74 +187,101 @@ async function checkPayment(){
     }`;
 
     const res = await fetch("https://api.blink.sv/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": API_KEY
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "X-API-KEY":API_KEY
         },
         body: JSON.stringify({ query })
     });
 
     const data = await res.json();
 
-    const txs =
-    data?.data?.defaultAccount?.transactions?.edges || [];
+    const txs = data?.data?.defaultAccount?.transactions?.edges || [];
 
-    for(let tx of txs){
+    for(let t of txs){
+        const h = t?.node?.initiationVia?.paymentHash;
 
-        const hash =
-        tx?.node?.initiationVia?.paymentHash;
-
-        if(hash && hash === currentPaymentHash){
-
-            clearInterval(pollInterval);
+        if(h && h === currentHash){
+            clearInterval(interval);
 
             document.getElementById("status").innerText =
-            "✅ Paiement confirmé !";
+            "✅ payé";
+
+            addHistory("PAID", currentHash, "");
 
             return;
         }
     }
 }
 
-// ---------------------------
-// WITHDRAW PAYMENT
-// ---------------------------
-async function payInvoice(){
+// --------------------
+// WITHDRAW
+// --------------------
+async function withdraw(){
 
     const invoice =
-    document.getElementById("withdrawInvoice").value;
+    document.getElementById("withdrawInvoice").value.trim();
 
     document.getElementById("withdrawResult").innerText =
-    "Traitement...";
+    "⏳ envoi...";
 
     const query = `
-    mutation LnInvoicePaymentSend($input: LnInvoicePaymentSendInput!) {
+    mutation LnInvoicePaymentSend($input: LnInvoicePaymentInput!) {
       lnInvoicePaymentSend(input: $input) {
         status
         errors { message }
       }
     }`;
 
-    const variables = {
-        input: {
-            paymentRequest: invoice
-        }
-    };
-
     const res = await fetch("https://api.blink.sv/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": API_KEY
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "X-API-KEY":API_KEY
         },
-        body: JSON.stringify({ query, variables })
+        body: JSON.stringify({
+            query,
+            variables:{
+                input:{ paymentRequest: invoice }
+            }
+        })
     });
 
     const data = await res.json();
 
     document.getElementById("withdrawResult").innerText =
-    JSON.stringify(data, null, 2);
+    JSON.stringify(data,null,2);
+
+    addHistory("WITHDRAW", invoice, "");
+}
+
+// --------------------
+// HISTORY
+// --------------------
+function addHistory(type, amount, data){
+
+    history.unshift({
+        type,
+        amount,
+        data,
+        time: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("history", JSON.stringify(history));
+
+    renderHistory();
+}
+
+function renderHistory(){
+
+    document.getElementById("history").innerHTML =
+    history.map(h =>
+        `<div class="tx">
+            ${h.type} - ${h.amount}<br>
+            ${h.time}
+        </div>`
+    ).join("");
 }
 
 </script>
