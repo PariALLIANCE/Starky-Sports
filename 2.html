@@ -3,86 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blink Invoice Test</title>
+<title>Blink Invoice Checker</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 body{
-    font-family:Arial;
-    max-width:520px;
+    font-family:Arial,sans-serif;
+    max-width:600px;
     margin:20px auto;
     padding:15px;
 }
-
 .card{
     border:1px solid #ddd;
-    padding:15px;
     border-radius:10px;
-    margin-bottom:15px;
+    padding:15px;
 }
-
 input,select,button{
     width:100%;
     padding:10px;
-    margin:6px 0;
+    margin:8px 0;
 }
-
-#status{
-    font-weight:bold;
+pre{
+    white-space:pre-wrap;
+    word-break:break-all;
 }
 </style>
 </head>
-
 <body>
-
-<h2>⚡ Blink Invoice Test</h2>
 
 <div class="card">
 
-<h3>📥 Générer Invoice</h3>
+<h2>Blink Invoice Test</h2>
 
-<input type="number" id="amount" placeholder="Montant">
+<input id="amount" type="number" placeholder="Montant">
 
 <select id="currency">
-<option value="btc">BTC Lightning</option>
-<option value="usd">USD Stablesats</option>
+    <option value="btc">BTC</option>
+    <option value="usd">USD</option>
 </select>
 
 <button onclick="createInvoice()">
-Générer
+Générer invoice
 </button>
 
-<pre id="invoice"></pre>
+<p id="status">Statut : idle</p>
 
 <div id="qrcode"></div>
 
-<p id="status">Statut : idle</p>
+<pre id="invoice"></pre>
 
 </div>
 
 <script>
 
 const API_KEY = "blink_9J0zWrI30jdLUhwlW4ZXNWb8SKC98SSu2HwM3jAl2wYvVXaB3Ag0oA2HpL7lK6VG";
-
 const BTC_WALLET = "09b58fdc-7d5b-411e-a629-f55572dfb696";
 const USD_WALLET = "8a9c646f-4595-4af8-bdd5-a7d87121b1d6";
 
 let currentPaymentHash = null;
+let currentPaymentRequest = null;
 let pollInterval = null;
 
-// ---------------------------
-// CREATE INVOICE
-// ---------------------------
-async function createInvoice(){
+async function gql(query, variables = {}) {
 
-    const amount = Number(document.getElementById("amount").value);
-    const currency = document.getElementById("currency").value;
+    const response = await fetch(
+        "https://api.blink.sv/graphql",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-API-KEY": API_KEY
+            },
+            body: JSON.stringify({
+                query,
+                variables
+            })
+        }
+    );
 
-    const walletId = currency === "btc" ? BTC_WALLET : USD_WALLET;
+    return response.json();
+}
+
+async function createInvoice() {
+
+    const amount =
+        Number(document.getElementById("amount").value);
+
+    const currency =
+        document.getElementById("currency").value;
+
+    const walletId =
+        currency === "btc"
+            ? BTC_WALLET
+            : USD_WALLET;
 
     const query = `
-    mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
+    mutation($input: LnInvoiceCreateInput!) {
       lnInvoiceCreate(input: $input) {
         invoice {
           paymentRequest
@@ -94,117 +111,109 @@ async function createInvoice(){
       }
     }`;
 
-    const res = await fetch("https://api.blink.sv/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": API_KEY
-        },
-        body: JSON.stringify({
-            query,
-            variables: {
-                input: {
-                    walletId,
-                    amount
-                }
+    const data = await gql(
+        query,
+        {
+            input: {
+                walletId,
+                amount
             }
-        })
-    });
+        }
+    );
 
-    const data = await res.json();
+    console.log(data);
 
-    const invoice = data?.data?.lnInvoiceCreate?.invoice;
+    const invoice =
+        data?.data?.lnInvoiceCreate?.invoice;
 
-    if(!invoice){
-        document.getElementById("invoice").innerText =
-        JSON.stringify(data, null, 2);
+    if (!invoice) {
+
+        document.getElementById("invoice").textContent =
+            JSON.stringify(data, null, 2);
+
         return;
     }
 
-    document.getElementById("invoice").innerText =
-    invoice.paymentRequest;
+    currentPaymentHash =
+        invoice.paymentHash;
 
-    // QR CODE
+    currentPaymentRequest =
+        invoice.paymentRequest;
+
+    document.getElementById("invoice").textContent =
+        invoice.paymentRequest;
+
     document.getElementById("qrcode").innerHTML = "";
-    new QRCode(document.getElementById("qrcode"), invoice.paymentRequest);
 
-    currentPaymentHash = invoice.paymentHash;
+    new QRCode(
+        document.getElementById("qrcode"),
+        invoice.paymentRequest
+    );
 
-    document.getElementById("status").innerText =
-    "⏳ En attente de paiement...";
+    document.getElementById("status").textContent =
+        "Statut : attente paiement";
 
     startPolling();
 }
 
-// ---------------------------
-// POLLING PAYMENT (FIXED)
-// ---------------------------
-function startPolling(){
+function startPolling() {
 
     clearInterval(pollInterval);
 
-    pollInterval = setInterval(checkPayment, 4000);
+    pollInterval =
+        setInterval(checkPayment, 3000);
 }
 
-async function checkPayment(){
+async function checkPayment() {
 
-    if(!currentPaymentHash) return;
+    if (!currentPaymentHash) return;
 
     const query = `
-    query {
-      me {
-        defaultAccount {
-          transactions(first: 20) {
-            edges {
-              node {
-                status
-                initiationVia {
-                  ... on InitiationViaLn {
-                    paymentHash
-                  }
-                }
-              }
-            }
-          }
-        }
+    query($input: LnInvoicePaymentStatusByHashInput!) {
+      lnInvoicePaymentStatusByHash(input: $input) {
+        status
+        paymentHash
       }
     }`;
 
-    const res = await fetch("https://api.blink.sv/graphql", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-API-KEY": API_KEY
-        },
-        body: JSON.stringify({ query })
-    });
-
-    const data = await res.json();
-
-    const txs =
-    data?.data?.defaultAccount?.transactions?.edges || [];
-
-    for(const t of txs){
-
-        const node = t.node;
-
-        const hash =
-        node?.initiationVia?.paymentHash;
-
-        const status = node?.status;
-
-        // ✅ BEST CHECK: hash + status confirmed/settled
-        if(
-            hash === currentPaymentHash &&
-            (status === "SUCCESS" || status === "SETTLED" || status === "PAID")
-        ){
-            clearInterval(pollInterval);
-
-            document.getElementById("status").innerText =
-            "✅ Paiement confirmé";
-
-            return;
+    const data = await gql(
+        query,
+        {
+            input: {
+                paymentHash:
+                    currentPaymentHash
+            }
         }
+    );
+
+    console.log(data);
+
+    const status =
+        data?.data?.lnInvoicePaymentStatusByHash?.status;
+
+    if (!status) return;
+
+    document.getElementById("status").textContent =
+        "Statut : " + status;
+
+    if (
+        status === "PAID" ||
+        status === "SETTLED" ||
+        status === "SUCCESS"
+    ) {
+
+        clearInterval(pollInterval);
+
+        document.getElementById("status").textContent =
+            "✅ Paiement confirmé";
+    }
+
+    if (status === "EXPIRED") {
+
+        clearInterval(pollInterval);
+
+        document.getElementById("status").textContent =
+            "❌ Invoice expirée";
     }
 }
 
