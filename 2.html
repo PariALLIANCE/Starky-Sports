@@ -3,217 +3,380 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blink Invoice Checker</title>
+
+<title>Blink Pay</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
+
 body{
     font-family:Arial,sans-serif;
     max-width:600px;
     margin:20px auto;
     padding:15px;
 }
+
 .card{
     border:1px solid #ddd;
-    border-radius:10px;
+    border-radius:12px;
     padding:15px;
+    margin-bottom:15px;
 }
+
 input,select,button{
     width:100%;
-    padding:10px;
-    margin:8px 0;
+    padding:12px;
+    margin-top:10px;
+    box-sizing:border-box;
 }
+
+button{
+    cursor:pointer;
+}
+
+#qrcode{
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
+}
+
 pre{
     white-space:pre-wrap;
     word-break:break-all;
 }
+
+#invoiceBox{
+    background:#f5f5f5;
+    padding:10px;
+    border-radius:8px;
+}
+
+#logs{
+    background:#111;
+    color:#00ff00;
+    padding:10px;
+    border-radius:8px;
+    max-height:400px;
+    overflow:auto;
+    font-size:12px;
+}
+
+.success{
+    color:green;
+}
+
+.error{
+    color:red;
+}
+
+.wait{
+    color:orange;
+}
+
 </style>
 </head>
 <body>
 
 <div class="card">
 
-<h2>Blink Invoice Test</h2>
+<h2>⚡ Blink Pay</h2>
 
-<input id="amount" type="number" placeholder="Montant">
+<input
+    type="number"
+    id="amount"
+    placeholder="Montant"
+>
 
 <select id="currency">
-    <option value="btc">BTC</option>
-    <option value="usd">USD</option>
+    <option value="btc">
+        BTC Lightning
+    </option>
+    <option value="usd">
+        USD Stablesats
+    </option>
 </select>
 
 <button onclick="createInvoice()">
-Générer invoice
+    Générer Invoice
 </button>
-
-<p id="status">Statut : idle</p>
 
 <div id="qrcode"></div>
 
-<pre id="invoice"></pre>
+<pre id="invoiceBox"></pre>
+
+<div id="status">
+    Statut : idle
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>📋 Logs</h3>
+
+<pre id="logs"></pre>
 
 </div>
 
 <script>
 
-const API_KEY = "blink_9J0zWrI30jdLUhwlW4ZXNWb8SKC98SSu2HwM3jAl2wYvVXaB3Ag0oA2HpL7lK6VG";
-const BTC_WALLET = "09b58fdc-7d5b-411e-a629-f55572dfb696";
-const USD_WALLET = "8a9c646f-4595-4af8-bdd5-a7d87121b1d6";
+const API_URL =
+"https://starkyblinkpay.billionsjonnhy.workers.dev";
 
-let currentPaymentHash = null;
-let currentPaymentRequest = null;
-let pollInterval = null;
+let paymentHash = null;
+let interval = null;
 
-async function gql(query, variables = {}) {
+// ====================
+// LOG SYSTEM
+// ====================
 
-    const response = await fetch(
-        "https://api.blink.sv/graphql",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-API-KEY": API_KEY
-            },
-            body: JSON.stringify({
-                query,
-                variables
-            })
-        }
-    );
+function log(data){
 
-    return response.json();
+    const logs =
+        document.getElementById("logs");
+
+    const now =
+        new Date().toLocaleTimeString();
+
+    logs.textContent =
+        "[" + now + "]\n" +
+        (
+            typeof data === "string"
+            ? data
+            : JSON.stringify(
+                data,
+                null,
+                2
+            )
+        ) +
+        "\n\n" +
+        logs.textContent;
 }
 
-async function createInvoice() {
+// ====================
+// CREATE INVOICE
+// ====================
+
+async function createInvoice(){
+
+    clearInterval(interval);
+
+    paymentHash = null;
+
+    document.getElementById("qrcode")
+        .innerHTML = "";
+
+    document.getElementById("invoiceBox")
+        .textContent = "";
+
+    document.getElementById("status")
+        .innerHTML =
+        "⏳ Génération...";
 
     const amount =
-        Number(document.getElementById("amount").value);
+        Number(
+            document.getElementById("amount")
+            .value
+        );
 
     const currency =
-        document.getElementById("currency").value;
+        document.getElementById("currency")
+        .value;
 
-    const walletId =
-        currency === "btc"
-            ? BTC_WALLET
-            : USD_WALLET;
+    if(!amount || amount <= 0){
 
-    const query = `
-    mutation($input: LnInvoiceCreateInput!) {
-      lnInvoiceCreate(input: $input) {
-        invoice {
-          paymentRequest
-          paymentHash
-        }
-        errors {
-          message
-        }
-      }
-    }`;
-
-    const data = await gql(
-        query,
-        {
-            input: {
-                walletId,
-                amount
-            }
-        }
-    );
-
-    console.log(data);
-
-    const invoice =
-        data?.data?.lnInvoiceCreate?.invoice;
-
-    if (!invoice) {
-
-        document.getElementById("invoice").textContent =
-            JSON.stringify(data, null, 2);
+        document.getElementById("status")
+            .innerHTML =
+            "<span class='error'>Montant invalide</span>";
 
         return;
     }
 
-    currentPaymentHash =
-        invoice.paymentHash;
+    try{
 
-    currentPaymentRequest =
-        invoice.paymentRequest;
+        log("Création invoice...");
 
-    document.getElementById("invoice").textContent =
-        invoice.paymentRequest;
+        const response =
+            await fetch(
+                API_URL + "/invoice",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                        "application/json"
+                    },
+                    body:JSON.stringify({
+                        amount,
+                        currency
+                    })
+                }
+            );
 
-    document.getElementById("qrcode").innerHTML = "";
+        const data =
+            await response.json();
 
-    new QRCode(
-        document.getElementById("qrcode"),
-        invoice.paymentRequest
-    );
+        log(data);
 
-    document.getElementById("status").textContent =
-        "Statut : attente paiement";
+        const invoice =
+            data?.data
+            ?.lnInvoiceCreate
+            ?.invoice;
 
-    startPolling();
-}
+        if(!invoice){
 
-function startPolling() {
+            document.getElementById("status")
+                .innerHTML =
+                "<span class='error'>Erreur création invoice</span>";
 
-    clearInterval(pollInterval);
-
-    pollInterval =
-        setInterval(checkPayment, 3000);
-}
-
-async function checkPayment() {
-
-    if (!currentPaymentHash) return;
-
-    const query = `
-    query($input: LnInvoicePaymentStatusByHashInput!) {
-      lnInvoicePaymentStatusByHash(input: $input) {
-        status
-        paymentHash
-      }
-    }`;
-
-    const data = await gql(
-        query,
-        {
-            input: {
-                paymentHash:
-                    currentPaymentHash
-            }
+            return;
         }
+
+        paymentHash =
+            invoice.paymentHash;
+
+        document.getElementById("invoiceBox")
+            .textContent =
+            invoice.paymentRequest;
+
+        new QRCode(
+            document.getElementById("qrcode"),
+            invoice.paymentRequest
+        );
+
+        document.getElementById("status")
+            .innerHTML =
+            "<span class='wait'>⏳ En attente paiement...</span>";
+
+        log(
+            "PaymentHash : " +
+            paymentHash
+        );
+
+        startPolling();
+
+    }catch(error){
+
+        log({
+            error:error.message
+        });
+
+        document.getElementById("status")
+            .innerHTML =
+            "<span class='error'>Erreur</span>";
+    }
+}
+
+// ====================
+// START POLLING
+// ====================
+
+function startPolling(){
+
+    clearInterval(interval);
+
+    interval =
+        setInterval(
+            checkPayment,
+            5000
+        );
+
+    log(
+        "Polling démarré (5s)"
     );
+}
 
-    console.log(data);
+// ====================
+// CHECK PAYMENT
+// ====================
 
-    const status =
-        data?.data?.lnInvoicePaymentStatusByHash?.status;
+async function checkPayment(){
 
-    if (!status) return;
-
-    document.getElementById("status").textContent =
-        "Statut : " + status;
-
-    if (
-        status === "PAID" ||
-        status === "SETTLED" ||
-        status === "SUCCESS"
-    ) {
-
-        clearInterval(pollInterval);
-
-        document.getElementById("status").textContent =
-            "✅ Paiement confirmé";
+    if(!paymentHash){
+        return;
     }
 
-    if (status === "EXPIRED") {
+    try{
 
-        clearInterval(pollInterval);
+        log(
+            "Vérification statut..."
+        );
 
-        document.getElementById("status").textContent =
-            "❌ Invoice expirée";
+        const response =
+            await fetch(
+                API_URL + "/status",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                        "application/json"
+                    },
+                    body:JSON.stringify({
+                        paymentHash
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        log(data);
+
+        const status =
+            data?.data
+            ?.lnInvoicePaymentStatusByHash
+            ?.status;
+
+        if(!status){
+
+            log(
+                "Aucun statut retourné"
+            );
+
+            return;
+        }
+
+        log(
+            "STATUS = " + status
+        );
+
+        if(
+            status === "PAID" ||
+            status === "SUCCESS" ||
+            status === "SETTLED"
+        ){
+
+            clearInterval(interval);
+
+            document.getElementById("status")
+                .innerHTML =
+                "<span class='success'>✅ Paiement confirmé</span>";
+
+            log(
+                "PAIEMENT CONFIRMÉ"
+            );
+        }
+
+        if(
+            status === "EXPIRED"
+        ){
+
+            clearInterval(interval);
+
+            document.getElementById("status")
+                .innerHTML =
+                "<span class='error'>❌ Invoice expirée</span>";
+
+            log(
+                "INVOICE EXPIRÉE"
+            );
+        }
+
+    }catch(error){
+
+        log({
+            error:error.message
+        });
     }
 }
 
