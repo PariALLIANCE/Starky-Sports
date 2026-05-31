@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blink Wallet Pro</title>
+<title>Blink Invoice Test</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -18,8 +18,8 @@ body{
 .card{
     border:1px solid #ddd;
     padding:15px;
-    margin-bottom:15px;
     border-radius:10px;
+    margin-bottom:15px;
 }
 
 input,select,button{
@@ -31,25 +31,16 @@ input,select,button{
 #status{
     font-weight:bold;
 }
-
-.tx{
-    font-size:12px;
-    background:#f5f5f5;
-    padding:6px;
-    margin-top:5px;
-    border-radius:5px;
-    word-break:break-all;
-}
 </style>
 </head>
 
 <body>
 
-<h2>⚡ Blink Wallet Pro (Test)</h2>
+<h2>⚡ Blink Invoice Test</h2>
 
-<!-- DEPOT -->
 <div class="card">
-<h3>📥 Recevoir</h3>
+
+<h3>📥 Générer Invoice</h3>
 
 <input type="number" id="amount" placeholder="Montant">
 
@@ -58,29 +49,16 @@ input,select,button{
 <option value="usd">USD Stablesats</option>
 </select>
 
-<button onclick="createInvoice()">Générer invoice</button>
+<button onclick="createInvoice()">
+Générer
+</button>
 
 <pre id="invoice"></pre>
+
 <div id="qrcode"></div>
 
 <p id="status">Statut : idle</p>
-</div>
 
-<!-- RETRAIT -->
-<div class="card">
-<h3>📤 Retirer</h3>
-
-<input id="withdrawInvoice" placeholder="Invoice Lightning (lnbc...)">
-
-<button onclick="withdraw()">Envoyer</button>
-
-<pre id="withdrawResult"></pre>
-</div>
-
-<!-- HISTORIQUE -->
-<div class="card">
-<h3>📜 Historique local</h3>
-<div id="history"></div>
 </div>
 
 <script>
@@ -90,16 +68,12 @@ const API_KEY = "blink_9J0zWrI30jdLUhwlW4ZXNWb8SKC98SSu2HwM3jAl2wYvVXaB3Ag0oA2Hp
 const BTC_WALLET = "09b58fdc-7d5b-411e-a629-f55572dfb696";
 const USD_WALLET = "8a9c646f-4595-4af8-bdd5-a7d87121b1d6";
 
-let currentHash = null;
-let interval = null;
+let currentPaymentHash = null;
+let pollInterval = null;
 
-let history = JSON.parse(localStorage.getItem("history") || "[]");
-
-renderHistory();
-
-// --------------------
+// ---------------------------
 // CREATE INVOICE
-// --------------------
+// ---------------------------
 async function createInvoice(){
 
     const amount = Number(document.getElementById("amount").value);
@@ -114,66 +88,76 @@ async function createInvoice(){
           paymentRequest
           paymentHash
         }
+        errors {
+          message
+        }
       }
     }`;
 
     const res = await fetch("https://api.blink.sv/graphql", {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "X-API-KEY":API_KEY
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": API_KEY
         },
         body: JSON.stringify({
             query,
-            variables:{
-                input:{ walletId, amount }
+            variables: {
+                input: {
+                    walletId,
+                    amount
+                }
             }
         })
     });
 
     const data = await res.json();
 
-    const inv = data?.data?.lnInvoiceCreate?.invoice;
+    const invoice = data?.data?.lnInvoiceCreate?.invoice;
 
-    if(!inv){
+    if(!invoice){
         document.getElementById("invoice").innerText =
-        JSON.stringify(data,null,2);
+        JSON.stringify(data, null, 2);
         return;
     }
 
-    document.getElementById("invoice").innerText = inv.paymentRequest;
+    document.getElementById("invoice").innerText =
+    invoice.paymentRequest;
 
-    currentHash = inv.paymentHash;
-
+    // QR CODE
     document.getElementById("qrcode").innerHTML = "";
-    new QRCode(document.getElementById("qrcode"), inv.paymentRequest);
+    new QRCode(document.getElementById("qrcode"), invoice.paymentRequest);
 
-    startCheck();
-
-    addHistory("INVOICE", amount + " " + currency, inv.paymentRequest);
-}
-
-// --------------------
-// CHECK PAYMENT
-// --------------------
-function startCheck(){
-    clearInterval(interval);
+    currentPaymentHash = invoice.paymentHash;
 
     document.getElementById("status").innerText =
-    "⏳ attente paiement...";
+    "⏳ En attente de paiement...";
 
-    interval = setInterval(checkPayment, 4000);
+    startPolling();
+}
+
+// ---------------------------
+// POLLING PAYMENT (FIXED)
+// ---------------------------
+function startPolling(){
+
+    clearInterval(pollInterval);
+
+    pollInterval = setInterval(checkPayment, 4000);
 }
 
 async function checkPayment(){
+
+    if(!currentPaymentHash) return;
 
     const query = `
     query {
       me {
         defaultAccount {
-          transactions(first:20) {
+          transactions(first: 20) {
             edges {
               node {
+                status
                 initiationVia {
                   ... on InitiationViaLn {
                     paymentHash
@@ -187,101 +171,41 @@ async function checkPayment(){
     }`;
 
     const res = await fetch("https://api.blink.sv/graphql", {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "X-API-KEY":API_KEY
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-API-KEY": API_KEY
         },
         body: JSON.stringify({ query })
     });
 
     const data = await res.json();
 
-    const txs = data?.data?.defaultAccount?.transactions?.edges || [];
+    const txs =
+    data?.data?.defaultAccount?.transactions?.edges || [];
 
-    for(let t of txs){
-        const h = t?.node?.initiationVia?.paymentHash;
+    for(const t of txs){
 
-        if(h && h === currentHash){
-            clearInterval(interval);
+        const node = t.node;
+
+        const hash =
+        node?.initiationVia?.paymentHash;
+
+        const status = node?.status;
+
+        // ✅ BEST CHECK: hash + status confirmed/settled
+        if(
+            hash === currentPaymentHash &&
+            (status === "SUCCESS" || status === "SETTLED" || status === "PAID")
+        ){
+            clearInterval(pollInterval);
 
             document.getElementById("status").innerText =
-            "✅ payé";
-
-            addHistory("PAID", currentHash, "");
+            "✅ Paiement confirmé";
 
             return;
         }
     }
-}
-
-// --------------------
-// WITHDRAW
-// --------------------
-async function withdraw(){
-
-    const invoice =
-    document.getElementById("withdrawInvoice").value.trim();
-
-    document.getElementById("withdrawResult").innerText =
-    "⏳ envoi...";
-
-    const query = `
-    mutation LnInvoicePaymentSend($input: LnInvoicePaymentInput!) {
-      lnInvoicePaymentSend(input: $input) {
-        status
-        errors { message }
-      }
-    }`;
-
-    const res = await fetch("https://api.blink.sv/graphql", {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "X-API-KEY":API_KEY
-        },
-        body: JSON.stringify({
-            query,
-            variables:{
-                input:{ paymentRequest: invoice }
-            }
-        })
-    });
-
-    const data = await res.json();
-
-    document.getElementById("withdrawResult").innerText =
-    JSON.stringify(data,null,2);
-
-    addHistory("WITHDRAW", invoice, "");
-}
-
-// --------------------
-// HISTORY
-// --------------------
-function addHistory(type, amount, data){
-
-    history.unshift({
-        type,
-        amount,
-        data,
-        time: new Date().toLocaleString()
-    });
-
-    localStorage.setItem("history", JSON.stringify(history));
-
-    renderHistory();
-}
-
-function renderHistory(){
-
-    document.getElementById("history").innerHTML =
-    history.map(h =>
-        `<div class="tx">
-            ${h.type} - ${h.amount}<br>
-            ${h.time}
-        </div>`
-    ).join("");
 }
 
 </script>
