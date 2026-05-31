@@ -2,598 +2,148 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blink · Recharger</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blink Invoice Generator</title>
+
 <style>
-  :root {
-    --bg: #0d0d0d;
-    --card: #141414;
-    --border: #222;
-    --orange: #f7931a;
-    --orange-dim: rgba(247,147,26,0.12);
-    --orange-glow: rgba(247,147,26,0.25);
-    --text: #f0ede8;
-    --muted: #555;
-    --muted2: #888;
-    --green: #22c55e;
-    --red: #ef4444;
-    --mono: 'Space Mono', monospace;
-    --display: 'Bebas Neue', sans-serif;
-  }
+body{
+    font-family:Arial,sans-serif;
+    max-width:500px;
+    margin:30px auto;
+    padding:20px;
+}
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+input,select,button{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 2rem 1rem;
-  }
+textarea{
+    width:100%;
+    height:180px;
+}
 
-  /* Ambient glow */
-  body::before {
-    content: '';
-    position: fixed;
-    top: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 400px;
-    background: radial-gradient(ellipse, rgba(247,147,26,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .page {
-    width: 100%;
-    max-width: 420px;
-    animation: up 0.5s cubic-bezier(0.22,1,0.36,1) both;
-  }
-
-  @keyframes up {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── HEADER ── */
-  .top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .logo {
-    width: 48px; height: 48px;
-    border-radius: 14px;
-    background: var(--orange);
-    display: grid;
-    place-items: center;
-    font-family: var(--display);
-    font-size: 1.8rem;
-    color: #000;
-    flex-shrink: 0;
-    box-shadow: 0 0 32px var(--orange-glow);
-  }
-
-  .top-text h1 {
-    font-family: var(--display);
-    font-size: 2rem;
-    letter-spacing: 0.04em;
-    line-height: 1;
-    color: var(--text);
-  }
-
-  .top-text p {
-    font-size: 0.6rem;
-    color: var(--muted2);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-  }
-
-  .form-area {
-    padding: 28px 24px 24px;
-  }
-
-  /* ── AMOUNT ── */
-  .field-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted2);
-    margin-bottom: 8px;
-    display: block;
-  }
-
-  .amount-field {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-
-  .amount-field:focus-within {
-    border-color: var(--orange);
-    box-shadow: 0 0 0 3px var(--orange-dim);
-  }
-
-  .unit {
-    padding: 0 14px;
-    font-family: var(--display);
-    font-size: 1rem;
-    letter-spacing: 0.08em;
-    color: var(--orange);
-    border-right: 1px solid var(--border);
-    height: 56px;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    background: rgba(247,147,26,0.05);
-  }
-
-  #satsInput {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: var(--display);
-    font-size: 2rem;
-    letter-spacing: 0.04em;
-    padding: 0 16px;
-    height: 56px;
-    width: 100%;
-    -moz-appearance: textfield;
-  }
-
-  #satsInput::-webkit-outer-spin-button,
-  #satsInput::-webkit-inner-spin-button { -webkit-appearance: none; }
-  #satsInput::placeholder { color: var(--muted); }
-
-  /* ── MEMO ── */
-  .memo-area {
-    margin-top: 16px;
-  }
-
-  #memoInput {
-    width: 100%;
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    outline: none;
-    resize: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    line-height: 1.5;
-  }
-
-  #memoInput:focus {
-    border-color: var(--orange);
-    box-shadow: 0 0 0 3px var(--orange-dim);
-  }
-
-  #memoInput::placeholder { color: var(--muted); }
-
-  /* ── BUTTON ── */
-  .gen-btn {
-    margin-top: 20px;
-    width: 100%;
-    height: 52px;
-    background: var(--orange);
-    border: none;
-    border-radius: 12px;
-    color: #000;
-    font-family: var(--display);
-    font-size: 1.2rem;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: opacity 0.15s, transform 0.12s, box-shadow 0.2s;
-    box-shadow: 0 4px 24px var(--orange-glow);
-  }
-
-  .gen-btn:hover { opacity: 0.92; box-shadow: 0 6px 32px var(--orange-glow); }
-  .gen-btn:active { transform: scale(0.98); }
-  .gen-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner {
-    width: 18px; height: 18px;
-    border: 2.5px solid rgba(0,0,0,0.25);
-    border-top-color: #000;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
-  /* ── ALERT ── */
-  .alert {
-    margin-top: 12px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    line-height: 1.5;
-    display: none;
-    border: 1px solid;
-  }
-
-  .alert.error  { display: block; background: rgba(239,68,68,0.08);  color: var(--red);   border-color: rgba(239,68,68,0.25);  }
-  .alert.notice { display: block; background: rgba(247,147,26,0.08); color: var(--orange); border-color: rgba(247,147,26,0.25); }
-
-  /* ── RESULT ── */
-  .sep {
-    height: 1px;
-    background: var(--border);
-    display: none;
-  }
-
-  .result-area {
-    padding: 24px;
-    display: none;
-    animation: up 0.35s ease both;
-  }
-
-  .result-area.show { display: block; }
-  .sep.show         { display: block; }
-
-  /* QR */
-  .qr-wrap {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .qr-inner {
-    background: white;
-    padding: 14px;
-    border-radius: 14px;
-    box-shadow: 0 0 40px rgba(247,147,26,0.15);
-  }
-
-  #qrcode canvas, #qrcode img { display: block; border-radius: 6px; }
-
-  /* Invoice string */
-  .invoice-wrap {
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .invoice-str {
-    font-size: 0.58rem;
-    color: var(--muted2);
-    word-break: break-all;
-    line-height: 1.7;
-    max-height: 64px;
-    overflow: hidden;
-  }
-
-  .invoice-fade {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 28px;
-    background: linear-gradient(transparent, #0a0a0a);
-  }
-
-  /* Meta chips */
-  .meta-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .chip {
-    flex: 1;
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 10px;
-    text-align: center;
-  }
-
-  .chip .cval {
-    font-family: var(--display);
-    font-size: 1.1rem;
-    letter-spacing: 0.04em;
-    color: var(--orange);
-  }
-
-  .chip .clbl {
-    font-size: 0.55rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  /* Action buttons */
-  .actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-  }
-
-  .act-btn {
-    flex: 1;
-    height: 44px;
-    border-radius: 10px;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.15s;
-    border: 1px solid;
-  }
-
-  .act-copy {
-    background: var(--orange-dim);
-    border-color: rgba(247,147,26,0.35);
-    color: var(--orange);
-  }
-  .act-copy:hover { background: rgba(247,147,26,0.2); }
-
-  .act-new {
-    background: transparent;
-    border-color: var(--border);
-    color: var(--muted2);
-  }
-  .act-new:hover { border-color: var(--muted2); color: var(--text); }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.58rem;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-  }
-  .footer a { color: var(--orange); text-decoration: none; }
+#invoice{
+    word-break:break-all;
+}
 </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="top">
-    <div class="logo">₿</div>
-    <div class="top-text">
-      <h1>RECHARGER</h1>
-      <p>Lightning Network · Blink</p>
-    </div>
-  </div>
+<h2>Générateur Invoice Blink</h2>
 
-  <div class="card">
+<input
+    type="number"
+    id="amount"
+    placeholder="Montant"
+/>
 
-    <!-- Form -->
-    <div class="form-area">
+<select id="currency">
+    <option value="btc">
+        Bitcoin Lightning
+    </option>
 
-      <label class="field-label" for="satsInput">Montant en satoshis</label>
-      <div class="amount-field">
-        <span class="unit">SATS</span>
-        <input
-          type="number"
-          id="satsInput"
-          placeholder="0"
-          min="1"
-          autocomplete="off"
-        />
-      </div>
+    <option value="usd">
+        USD Stablesats
+    </option>
+</select>
 
-      <div class="memo-area">
-        <label class="field-label" for="memoInput">Mémo (optionnel)</label>
-        <textarea id="memoInput" rows="2" placeholder="Description du paiement..."></textarea>
-      </div>
+<button onclick="createInvoice()">
+    Générer
+</button>
 
-      <button class="gen-btn" id="genBtn" onclick="generate()">
-        <span id="btnContent">⚡ GÉNÉRER L'INVOICE</span>
-      </button>
-
-      <div class="alert" id="alert"></div>
-
-    </div>
-
-    <!-- Separator -->
-    <div class="sep" id="sep"></div>
-
-    <!-- Result -->
-    <div class="result-area" id="result">
-
-      <div class="qr-wrap">
-        <div class="qr-inner">
-          <div id="qrcode"></div>
-        </div>
-      </div>
-
-      <div class="invoice-wrap">
-        <div class="invoice-str" id="invoiceStr"></div>
-        <div class="invoice-fade"></div>
-      </div>
-
-      <div class="meta-row">
-        <div class="chip">
-          <div class="cval" id="metaSats">—</div>
-          <div class="clbl">Satoshis</div>
-        </div>
-        <div class="chip">
-          <div class="cval" id="metaHash">—</div>
-          <div class="clbl">Hash</div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="act-btn act-copy" id="copyBtn" onclick="copyInvoice()">📋 Copier</button>
-        <button class="act-btn act-new" onclick="reset()">↩ Nouvelle</button>
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="footer">
-    Propulsé par <a href="https://blink.sv" target="_blank">Blink</a> · mainnet
-  </div>
-
-</div>
+<h3>Invoice</h3>
+<textarea id="invoice" readonly></textarea>
 
 <script>
-  const WALLET_ID = '79d08dd0-9371-4107-a369-ef35bae7b726';
-  const API       = 'https://api.blink.sv/graphql';
-  let invoice     = '';
 
-  async function generate() {
-    const sats = parseInt(document.getElementById('satsInput').value);
-    const memo = document.getElementById('memoInput').value.trim();
+const API_KEY = "blink_9J0zWrI30jdLUhwlW4ZXNWb8SKC98SSu2HwM3jAl2wYvVXaB3Ag0oA2HpL7lK6VG";
 
-    hideAlert();
+const BTC_WALLET =
+"09b58fdc-7d5b-411e-a629-f55572dfb696";
 
-    if (!sats || sats < 1) {
-      showAlert('Saisis un montant en satoshis.', 'error');
-      return;
-    }
+const USD_WALLET =
+"8a9c646f-4595-4af8-bdd5-a7d87121b1d6";
 
-    setLoading(true);
+async function createInvoice(){
+
+    const amount =
+    Number(document.getElementById("amount").value);
+
+    const currency =
+    document.getElementById("currency").value;
+
+    const walletId =
+    currency === "btc"
+    ? BTC_WALLET
+    : USD_WALLET;
 
     const query = `
-      mutation LnInvoiceCreateOnBehalfOfRecipient($input: LnInvoiceCreateOnBehalfOfRecipientInput!) {
-        lnInvoiceCreateOnBehalfOfRecipient(input: $input) {
-          invoice {
-            paymentRequest
-            paymentHash
-            satoshis
-          }
-          errors { message }
+    mutation LnInvoiceCreate($input: LnInvoiceCreateInput!) {
+      lnInvoiceCreate(input: $input) {
+        invoice {
+          paymentRequest
+          paymentHash
+          satoshis
+        }
+        errors {
+          message
         }
       }
+    }
     `;
 
     const variables = {
       input: {
-        walletId: WALLET_ID,
-        amount: sats,
-        ...(memo && { memo })
+        walletId,
+        amount
       }
     };
 
-    try {
-      const res  = await fetch(API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, variables })
-      });
+    try{
 
-      const json   = await res.json();
-      const result = json?.data?.lnInvoiceCreateOnBehalfOfRecipient;
+        const response = await fetch(
+            "https://api.blink.sv/graphql",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "X-API-KEY":API_KEY
+                },
+                body:JSON.stringify({
+                    query,
+                    variables
+                })
+            }
+        );
 
-      if (result?.errors?.length) {
-        showAlert('Erreur : ' + result.errors[0].message, 'error');
-        return;
-      }
+        const data = await response.json();
 
-      const inv = result?.invoice;
-      if (!inv?.paymentRequest) {
-        showAlert('Réponse inattendue de l\'API.', 'error');
-        return;
-      }
+        if(
+            data.data &&
+            data.data.lnInvoiceCreate &&
+            data.data.lnInvoiceCreate.invoice
+        ){
 
-      invoice = inv.paymentRequest;
-      renderResult(inv);
+            document.getElementById("invoice").value =
+            data.data.lnInvoiceCreate.invoice.paymentRequest;
 
-    } catch (e) {
-      showAlert('Erreur réseau : ' + e.message, 'error');
-    } finally {
-      setLoading(false);
+        }else{
+
+            document.getElementById("invoice").value =
+            JSON.stringify(data,null,2);
+
+        }
+
+    }catch(err){
+
+        document.getElementById("invoice").value =
+        err.message;
+
     }
-  }
-
-  function renderResult(inv) {
-    document.getElementById('invoiceStr').textContent = inv.paymentRequest;
-    document.getElementById('metaSats').textContent   = inv.satoshis.toLocaleString('fr-FR');
-    document.getElementById('metaHash').textContent   = inv.paymentHash.slice(0, 10) + '…';
-
-    document.getElementById('qrcode').innerHTML = '';
-    new QRCode(document.getElementById('qrcode'), {
-      text: 'lightning:' + inv.paymentRequest,
-      width: 200,
-      height: 200,
-      colorDark: '#000000',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.M
-    });
-
-    document.getElementById('sep').classList.add('show');
-    document.getElementById('result').classList.add('show');
-    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  function copyInvoice() {
-    if (!invoice) return;
-    navigator.clipboard.writeText(invoice).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = '✅ Copié !';
-      setTimeout(() => btn.innerHTML = '📋 Copier', 2000);
-    });
-  }
-
-  function reset() {
-    invoice = '';
-    document.getElementById('satsInput').value  = '';
-    document.getElementById('memoInput').value  = '';
-    document.getElementById('qrcode').innerHTML = '';
-    document.getElementById('result').classList.remove('show');
-    document.getElementById('sep').classList.remove('show');
-    hideAlert();
-    document.getElementById('satsInput').focus();
-  }
-
-  function setLoading(on) {
-    const btn = document.getElementById('genBtn');
-    btn.disabled = on;
-    document.getElementById('btnContent').innerHTML = on
-      ? '<span class="spinner"></span>'
-      : '⚡ GÉNÉRER L\'INVOICE';
-  }
-
-  function showAlert(msg, type) {
-    const el = document.getElementById('alert');
-    el.textContent = msg;
-    el.className   = 'alert ' + type;
-  }
-
-  function hideAlert() {
-    document.getElementById('alert').className = 'alert';
-  }
-
-  document.getElementById('satsInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') generate();
-  });
+}
 </script>
+
 </body>
 </html>
