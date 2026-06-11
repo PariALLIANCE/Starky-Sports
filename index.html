@@ -121,18 +121,13 @@
             0%,100%{opacity:0.5}
             50%{opacity:0.9}
         }
-        @keyframes lg-icon-bounce {
-            0%,100%{transform:translateY(0) scale(1)}
-            38%{transform:translateY(-4px) scale(1.18)}
-            68%{transform:translateY(1.5px) scale(0.94)}
-        }
         @keyframes lg-card-press {
             0%{transform:scale(1)}
             45%{transform:scale(0.972)}
             100%{transform:scale(1)}
         }
         @keyframes fadeSlideUp {
-            from{opacity:0;transform:translateY(8px)}
+            from{opacity:0;transform:translateY(10px)}
             to{opacity:1;transform:translateY(0)}
         }
         @keyframes fadeSlideIn {
@@ -295,9 +290,6 @@
             background:var(--grad);
             animation:lg-glow-breathe 2.8s ease-in-out infinite;
         }
-        body.liquid-glass .nav-item.active .nav-icon {
-            animation:lg-icon-bounce 0.46s var(--lg-spring) forwards;
-        }
         .nav-item[data-section="pros"] .nav-icon {
             background:linear-gradient(135deg,#7B6EF6,#E040FB);
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
@@ -317,7 +309,7 @@
         /* ══ FORECAST CARD ══ */
         .forecast-card {
             background:var(--bg-card);border:1px solid var(--border);
-            border-radius:16px;padding:18px;cursor:pointer;
+            border-radius:16px;padding:16px 18px 14px;cursor:pointer;
             position:relative;overflow:hidden;
             transition:border-color 0.22s,background 0.45s var(--lg-ease),box-shadow 0.45s var(--lg-ease),transform 0.3s var(--lg-ease);
             flex-shrink:0;-webkit-tap-highlight-color:transparent;
@@ -330,7 +322,7 @@
             -webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-d)) brightness(var(--lg-bright-d));
             border:1px solid var(--lg-bdr-d);
             box-shadow:var(--lg-shadow-card-d);
-            animation:lg-float-in 0.48s var(--lg-ease) both;
+            animation:lg-float-in 0.52s var(--lg-ease) both;
         }
         body.liquid-glass .forecast-card::before {
             content:'';position:absolute;top:0;left:0;right:0;height:1px;
@@ -369,14 +361,13 @@
             box-shadow:0 14px 40px rgba(100,90,200,0.16), 0 2px 0 rgba(255,255,255,0.95) inset, 0 0 0 1px rgba(123,110,246,0.18);
         }
         body.liquid-glass .forecasts-container>.forecast-card:nth-child(1){animation-delay:0.00s}
-        body.liquid-glass .forecasts-container>.forecast-card:nth-child(2){animation-delay:0.07s}
-        body.liquid-glass .forecasts-container>.forecast-card:nth-child(3){animation-delay:0.14s}
-        body.liquid-glass .forecasts-container>.forecast-card:nth-child(4){animation-delay:0.21s}
-        body.liquid-glass .forecasts-container>.forecast-card:nth-child(5){animation-delay:0.28s}
-        body.liquid-glass .forecasts-container>.forecast-card:nth-child(n+6){animation-delay:0.33s}
+        body.liquid-glass .forecasts-container>.forecast-card:nth-child(2){animation-delay:0.08s}
+        body.liquid-glass .forecasts-container>.forecast-card:nth-child(3){animation-delay:0.16s}
+        body.liquid-glass .forecasts-container>.forecast-card:nth-child(4){animation-delay:0.24s}
+        body.liquid-glass .forecasts-container>.forecast-card:nth-child(5){animation-delay:0.32s}
+        body.liquid-glass .forecasts-container>.forecast-card:nth-child(n+6){animation-delay:0.38s}
 
         .forecast-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-        /* ── League badge + heure ── */
         .forecast-header-left{display:flex;align-items:center;gap:7px}
         .league-badge{
             font-size:11px;color:var(--text-muted);
@@ -395,23 +386,6 @@
             background:rgba(255,255,255,0.65);
             border:1px solid var(--lg-bdr-l);
             box-shadow:0 2px 8px rgba(100,90,200,0.08);
-        }
-        /* Heure sur la carte */
-        .card-time-badge{
-            font-size:10px;font-weight:700;color:var(--primary);
-            background:rgba(123,110,246,0.10);border:1px solid rgba(123,110,246,0.22);
-            padding:3px 8px;border-radius:20px;white-space:nowrap;
-            transition:background 0.3s,transform 0.2s var(--lg-spring);
-        }
-        .forecast-card:active .card-time-badge{transform:scale(0.95)}
-        body.liquid-glass .card-time-badge{
-            background:rgba(123,110,246,0.14);backdrop-filter:blur(10px);
-            border:1px solid rgba(123,110,246,0.28);
-            box-shadow:0 2px 8px rgba(123,110,246,0.12);
-        }
-        body.light-mode.liquid-glass .card-time-badge{
-            background:rgba(123,110,246,0.10);
-            border:1px solid rgba(123,110,246,0.22);
         }
         .status-badge{
             font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;
@@ -465,9 +439,26 @@
             white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
             width:100%;max-width:90px;
         }
-        .vs-col{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;padding-top:10px;min-width:44px}
+
+        /* VS col — heure en bas au centre */
+        .vs-col{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;padding-top:6px;min-width:52px;gap:4px}
         .vs-text{font-size:14px;font-weight:800;color:var(--text-inactive)}
-        .match-date{font-size:10px;color:var(--text-muted);margin-top:3px;text-align:center}
+        .match-date{font-size:10px;color:var(--text-muted);text-align:center}
+        .card-time-badge{
+            font-size:11px;font-weight:700;color:var(--primary);
+            background:rgba(123,110,246,0.10);border:1px solid rgba(123,110,246,0.22);
+            padding:3px 10px;border-radius:20px;white-space:nowrap;
+            transition:background 0.3s;margin-top:2px;
+        }
+        body.liquid-glass .card-time-badge{
+            background:rgba(123,110,246,0.14);backdrop-filter:blur(10px);
+            border:1px solid rgba(123,110,246,0.28);
+            box-shadow:0 2px 8px rgba(123,110,246,0.12);
+        }
+        body.light-mode.liquid-glass .card-time-badge{
+            background:rgba(123,110,246,0.10);
+            border:1px solid rgba(123,110,246,0.22);
+        }
 
         /* ══ DETAIL PAGE ══ */
         .forecast-detail{
@@ -549,8 +540,7 @@
             color:var(--text-inactive);cursor:pointer;background:transparent;
             transition:all 0.22s var(--lg-ease);white-space:nowrap;display:flex;align-items:center;gap:5px;
         }
-        .dtab i{font-size:11px;transition:transform 0.22s var(--lg-spring)}
-        .dtab:hover i{transform:scale(1.2)}
+        .dtab i{font-size:11px}
         .dtab.active{color:#fff;background:var(--primary);border-color:var(--primary);box-shadow:0 0 14px var(--primary-glow)}
         body.liquid-glass .dtab {
             background:rgba(255,255,255,0.04);
@@ -582,8 +572,9 @@
             color:#fff;
         }
         .detail-scroll{position:absolute;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+        /* Tab panel — animation ralentie */
         .tab-panel{display:none;padding:16px}
-        .tab-panel.active{display:block;animation:fadeSlideUp 0.28s var(--lg-ease)}
+        .tab-panel.active{display:block;animation:fadeSlideUp 0.55s var(--lg-ease)}
 
         /* ══ ANALYSIS BLOCKS ══ */
         .analysis-block{
@@ -622,35 +613,108 @@
         .fdot.W{background:rgba(79,255,176,0.2);color:var(--success)}
         .fdot.D{background:rgba(255,184,48,0.2);color:var(--warning)}
         .fdot.L{background:rgba(255,77,109,0.15);color:var(--danger)}
+
+        /* ══ MATCH ITEM ══ */
         .match-item{
             background:var(--bg-card);border:1px solid var(--border);
-            border-radius:12px;padding:12px 14px;margin-bottom:10px;
-            transition:background 0.4s,border-color 0.4s,box-shadow 0.4s,transform 0.25s var(--lg-spring);
-            animation:fadeSlideIn 0.28s var(--lg-ease) both;
+            border-radius:10px;padding:11px 14px;margin-bottom:8px;
+            transition:background 0.4s,border-color 0.25s,opacity 0.25s,transform 0.25s var(--lg-ease);
+            animation:fadeSlideUp 0.55s var(--lg-ease) both;
         }
-        .match-item:hover{transform:translateX(3px)}
+        .match-item:hover{border-color:var(--border-bright)}
         body.liquid-glass .match-item {
-            background:rgba(255,255,255,0.04);
+            background:rgba(255,255,255,0.03);
             backdrop-filter:blur(10px);
             -webkit-backdrop-filter:blur(10px);
             border:1px solid var(--lg-bdr-d);
-            box-shadow:0 3px 14px rgba(0,0,0,0.22);
+            box-shadow:0 2px 10px rgba(0,0,0,0.18);
         }
         body.light-mode.liquid-glass .match-item {
-            background:rgba(255,255,255,0.62);
+            background:rgba(255,255,255,0.58);
             border:1px solid var(--lg-bdr-l);
-            box-shadow:0 3px 14px rgba(100,90,200,0.08);
+            box-shadow:0 2px 10px rgba(100,90,200,0.07);
         }
-        .match-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;color:var(--text-muted)}
-        .match-item-teams{display:flex;align-items:center;justify-content:space-between}
-        .match-team{display:flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:var(--text)}
-        .match-team-logo{width:22px;height:22px;border-radius:4px;object-fit:contain}
-        .match-score{font-size:15px;font-weight:800;color:var(--primary);padding:0 8px}
-        .result-chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;transition:transform 0.2s var(--lg-spring)}
-        .result-chip:hover{transform:scale(1.06)}
+        .match-item-header{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:8px;
+        }
+        .match-item-comp{
+            font-size:10px;font-weight:600;color:var(--text-inactive);
+            letter-spacing:0.3px;
+        }
+        .match-item-date{font-size:10px;color:var(--text-inactive)}
+        .match-item-teams{
+            display:flex;align-items:center;justify-content:space-between;gap:6px;
+        }
+        .match-team{
+            display:flex;align-items:center;gap:6px;
+            font-weight:700;font-size:12px;color:var(--text);
+            flex:1;min-width:0;
+        }
+        .match-team.away{justify-content:flex-end;flex-direction:row-reverse}
+        .match-team span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}
+        .match-team-logo{
+            width:22px;height:22px;border-radius:4px;object-fit:contain;
+            background:var(--logo-bg);flex-shrink:0;
+        }
+        .match-score-block{
+            display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;min-width:52px;
+        }
+        .match-score{
+            font-size:15px;font-weight:800;color:var(--text);
+            letter-spacing:1px;line-height:1;
+        }
+        .result-chip{
+            font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;
+            letter-spacing:0.4px;text-transform:uppercase;
+        }
         .result-chip.win{background:rgba(79,255,176,0.12);color:var(--success)}
-        .result-chip.loss{background:rgba(255,77,109,0.12);color:var(--danger)}
-        .result-chip.draw{background:rgba(255,184,48,0.12);color:var(--warning)}
+        .result-chip.loss{background:rgba(255,77,109,0.10);color:var(--danger)}
+        .result-chip.draw{background:rgba(255,184,48,0.10);color:var(--warning)}
+
+        /* ══ H2H ITEM ══ */
+        .h2h-item{
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:10px;padding:11px 14px;margin-bottom:8px;
+            animation:fadeSlideUp 0.55s var(--lg-ease) both;
+            transition:background 0.4s,border-color 0.25s;
+        }
+        .h2h-item:hover{border-color:var(--border-bright)}
+        body.liquid-glass .h2h-item{
+            background:rgba(255,255,255,0.03);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+            border:1px solid var(--lg-bdr-d);box-shadow:0 2px 10px rgba(0,0,0,0.18);
+        }
+        body.light-mode.liquid-glass .h2h-item{
+            background:rgba(255,255,255,0.58);border:1px solid var(--lg-bdr-l);
+            box-shadow:0 2px 10px rgba(100,90,200,0.07);
+        }
+        .h2h-header{
+            display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+        }
+        .h2h-comp{font-size:10px;font-weight:600;color:var(--text-inactive);letter-spacing:0.3px;}
+        .h2h-date{font-size:10px;color:var(--text-inactive)}
+        .h2h-teams{display:flex;align-items:center;justify-content:space-between;gap:6px}
+        .h2h-team{
+            display:flex;align-items:center;gap:6px;
+            font-weight:700;font-size:12px;
+            flex:1;min-width:0;
+        }
+        .h2h-team.away{justify-content:flex-end;flex-direction:row-reverse}
+        .h2h-team span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}
+        /* Couleur verte pour le vainqueur H2H */
+        .h2h-team.winner span{color:var(--success);text-shadow:0 0 8px rgba(79,255,176,0.3)}
+        .h2h-team-logo{
+            width:22px;height:22px;border-radius:4px;object-fit:contain;
+            background:var(--logo-bg);flex-shrink:0;
+        }
+        .h2h-score-block{
+            display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;min-width:52px;
+        }
+        .h2h-score{
+            font-size:15px;font-weight:800;color:var(--text);
+            letter-spacing:1px;line-height:1;
+        }
+
         .ranking-table{width:100%;border-collapse:collapse;font-size:11px}
         .ranking-table th{
             background:var(--bg-elevated);color:var(--primary);padding:8px 4px;
@@ -667,10 +731,8 @@
         .team-cell{display:flex;align-items:center;gap:4px}
         .team-mini-logo{width:16px;height:16px;border-radius:3px;object-fit:contain;background:var(--logo-bg)}
 
-        /* ══ INFOS TAB — Design professionnel ══ */
+        /* ══ INFOS TAB ══ */
         .infos-panel{padding:16px}
-
-        /* Section cotes redesign */
         .odds-section-title{
             display:flex;align-items:center;gap:8px;
             font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
@@ -681,12 +743,11 @@
             background:linear-gradient(90deg,var(--border),transparent);
             transform-origin:left;animation:lineGrow 0.5s var(--lg-ease) 0.1s both;
         }
-
         .odds-card{
             background:var(--bg-card);border:1px solid var(--border);
             border-radius:16px;overflow:hidden;margin-bottom:20px;
             transition:background 0.45s var(--lg-ease),border-color 0.45s var(--lg-ease),box-shadow 0.45s var(--lg-ease);
-            animation:fadeSlideUp 0.32s var(--lg-ease) both;
+            animation:fadeSlideUp 0.55s var(--lg-ease) both;
         }
         body.liquid-glass .odds-card{
             background:var(--lg-tint-d-card);
@@ -726,8 +787,6 @@
         body.liquid-glass .odds-cell{background:rgba(12,12,22,0.60)}
         body.light-mode .odds-cell{background:var(--bg-card)}
         body.light-mode.liquid-glass .odds-cell{background:rgba(255,255,255,0.55)}
-        .odds-cell:first-child{border-radius:0}
-        .odds-cell:last-child{border-radius:0}
         .odds-cell:hover{background:var(--bg-elevated);transform:translateY(-2px)}
         body.liquid-glass .odds-cell:hover{background:rgba(123,110,246,0.08)}
         .odds-cell-label{
@@ -743,11 +802,10 @@
             letter-spacing:-0.5px;line-height:1;
             animation:numberCount 0.4s var(--lg-ease) both;
         }
-        .odds-cell-divider{width:1px;height:28px;background:var(--border);align-self:center}
         .odds-no-data{
             display:flex;flex-direction:column;align-items:center;gap:8px;
             padding:28px 16px;color:var(--text-inactive);
-            animation:fadeSlideUp 0.28s var(--lg-ease);
+            animation:fadeSlideUp 0.55s var(--lg-ease);
         }
         .odds-no-data i{font-size:22px;opacity:0.4}
         .odds-no-data span{font-size:12px;font-weight:600}
@@ -756,7 +814,7 @@
         .infos-match-meta{
             background:var(--bg-card);border:1px solid var(--border);
             border-radius:16px;padding:0;margin-bottom:20px;overflow:hidden;
-            animation:fadeSlideUp 0.28s var(--lg-ease) both;
+            animation:fadeSlideUp 0.55s var(--lg-ease) both;
             transition:background 0.45s var(--lg-ease),border-color 0.45s var(--lg-ease),box-shadow 0.45s var(--lg-ease);
         }
         body.liquid-glass .infos-match-meta{
@@ -777,7 +835,7 @@
             display:flex;align-items:center;justify-content:space-between;
             padding:13px 16px;border-bottom:1px solid var(--border);
             transition:background 0.18s;
-            animation:fadeSlideIn 0.3s var(--lg-ease) both;
+            animation:fadeSlideIn 0.45s var(--lg-ease) both;
         }
         .infos-meta-row:last-child{border-bottom:none}
         .infos-meta-row:hover{background:rgba(123,110,246,0.04)}
@@ -858,6 +916,12 @@
         .side-item-desc{font-size:11px;color:var(--text-muted);margin-top:1px}
         .side-item-arrow{font-size:12px;color:var(--text-inactive);transition:transform 0.22s var(--lg-ease)}
         .side-item:hover .side-item-arrow{transform:translateX(3px)}
+        /* Badge bientôt */
+        .side-item-soon{
+            font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;
+            background:rgba(123,110,246,0.15);color:var(--primary);
+            border:1px solid rgba(123,110,246,0.25);white-space:nowrap;
+        }
         .scroll-section{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
 
         /* ══ SECRETS ══ */
@@ -889,8 +953,7 @@
         .benefit-card:hover{transform:translateY(-3px) scale(1.02)}
         body.liquid-glass .benefit-card{background:var(--lg-tint-d-card);backdrop-filter:blur(var(--lg-blur-light)) saturate(var(--lg-sat-d));-webkit-backdrop-filter:blur(var(--lg-blur-light)) saturate(var(--lg-sat-d));border:1px solid var(--lg-bdr-d);box-shadow:var(--lg-shadow-d)}
         body.light-mode.liquid-glass .benefit-card{background:rgba(255,255,255,0.65);backdrop-filter:blur(var(--lg-blur-light)) saturate(var(--lg-sat-l));-webkit-backdrop-filter:blur(var(--lg-blur-light)) saturate(var(--lg-sat-l));border:1px solid var(--lg-bdr-l);box-shadow:var(--lg-shadow-card-l)}
-        .benefit-icon{font-size:24px;margin-bottom:8px;color:var(--primary);transition:transform 0.3s var(--lg-spring)}
-        .benefit-card:hover .benefit-icon{transform:scale(1.2) rotate(-5deg)}
+        .benefit-icon{font-size:24px;margin-bottom:8px;color:var(--primary)}
         .benefit-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
         .benefit-desc{font-size:11px;color:var(--text-muted);line-height:1.4}
 
@@ -1012,7 +1075,7 @@
         /* ══ VALUE BET ══ */
         .vbet-container{height:100%;display:flex;align-items:center;justify-content:center}
         .vbet-coming{text-align:center}
-        .vbet-icon{font-size:60px;margin-bottom:20px;animation:lg-icon-bounce 3s ease-in-out infinite}
+        .vbet-icon{font-size:60px;margin-bottom:20px}
         .vbet-title{font-size:24px;font-weight:800;background:linear-gradient(135deg,#00D4FF,#4FFFB0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
         .vbet-sub{font-size:14px;color:var(--text-muted)}
 
@@ -1021,7 +1084,7 @@
         .pros-hero{background:linear-gradient(135deg,rgba(123,110,246,0.16) 0%,rgba(224,64,251,0.12) 100%);border:1px solid rgba(123,110,246,0.32);border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:20px;transition:background 0.45s,border-color 0.45s,box-shadow 0.45s}
         body.liquid-glass .pros-hero{background:linear-gradient(135deg,rgba(123,110,246,0.12) 0%,rgba(224,64,251,0.08) 100%);backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-d));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-d));border:1px solid rgba(123,110,246,0.26);box-shadow:var(--lg-shadow-card-d), 0 0 36px rgba(123,110,246,0.07) inset}
         body.light-mode.liquid-glass .pros-hero{background:linear-gradient(135deg,rgba(123,110,246,0.08) 0%,rgba(224,64,251,0.05) 100%);backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));border:1px solid rgba(123,110,246,0.18);box-shadow:var(--lg-shadow-card-l)}
-        .pros-hero-icon{font-size:48px;margin-bottom:14px;display:block;animation:lg-icon-bounce 4s ease-in-out infinite}
+        .pros-hero-icon{font-size:48px;margin-bottom:14px;display:block}
         .pros-hero-title{font-size:22px;font-weight:900;letter-spacing:1px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
         .pros-hero-sub{font-size:13px;color:var(--text-muted);line-height:1.5}
         .pros-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;transition:background 0.45s var(--lg-ease),border-color 0.45s var(--lg-ease),box-shadow 0.45s var(--lg-ease)}
@@ -1030,8 +1093,7 @@
         body.light-mode.liquid-glass .pros-card{background:rgba(255,255,255,0.65);backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));border:1px solid var(--lg-bdr-l);box-shadow:var(--lg-shadow-card-l)}
         body.light-mode.liquid-glass .pros-card::after{background:linear-gradient(90deg,transparent,var(--lg-ref-edge-l),transparent)}
         .pros-card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-        .pros-card-icon{width:36px;height:36px;border-radius:10px;background:var(--bg-elevated);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform 0.3s var(--lg-spring)}
-        .pros-card:hover .pros-card-icon{transform:rotate(-8deg) scale(1.1)}
+        .pros-card-icon{width:36px;height:36px;border-radius:10px;background:var(--bg-elevated);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
         .pros-card-icon i{font-size:16px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .pros-card-title{font-weight:800;font-size:15px;color:var(--text)}
         .pros-card-badge{margin-left:auto;font-size:9px;font-weight:800;padding:3px 9px;border-radius:20px;background:linear-gradient(135deg,#7B6EF6,#E040FB);color:#fff}
@@ -1049,12 +1111,12 @@
         body.liquid-glass .pros-match-card::after{content:'';position:absolute;top:2px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.14),transparent);pointer-events:none;z-index:2}
         body.light-mode.liquid-glass .pros-match-card{background:rgba(255,255,255,0.65);backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));border:1px solid var(--lg-bdr-l);box-shadow:var(--lg-shadow-card-l)}
         .pros-star-badge{position:absolute;top:12px;right:12px;font-size:16px;background:linear-gradient(135deg,#FFB830,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 4px rgba(255,184,48,0.5))}
-        .pros-match-league{font-size:11px;color:var(--text-muted);background:var(--bg-elevated);border:1px solid var(--border);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;transition:background 0.4s,border-color 0.4s}
+        .pros-match-league{font-size:11px;color:var(--text-muted);background:var(--bg-elevated);border:1px solid var(--border);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;transition:background 0.4s,border-color 0.4t}
         body.liquid-glass .pros-match-league{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid var(--lg-bdr-d)}
         body.light-mode.liquid-glass .pros-match-league{background:rgba(255,255,255,0.68);border:1px solid var(--lg-bdr-l)}
         .pros-match-teams{display:flex;align-items:center;justify-content:space-between;gap:8px}
         .pros-team-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
-        .pros-team-logo{width:44px;height:44px;background:var(--logo-bg);border-radius:10px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px;transition:background 0.4s,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring)}
+        .pros-team-logo{width:44px;height:44px;background:var(--logo-bg);border-radius:10px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px;transition:background 0.4t,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring)}
         .pros-team-logo:hover{transform:scale(1.1)}
         body.liquid-glass .pros-team-logo{background:rgba(255,255,255,0.05);backdrop-filter:blur(8px);border:1px solid var(--lg-bdr-d);box-shadow:0 2px 10px rgba(0,0,0,0.24), 0 1px 0 rgba(255,255,255,0.08) inset}
         body.light-mode.liquid-glass .pros-team-logo{background:rgba(255,255,255,0.72);border:1px solid var(--lg-bdr-l);box-shadow:0 2px 10px rgba(100,90,200,0.08), 0 1px 0 rgba(255,255,255,0.95) inset}
@@ -1132,7 +1194,7 @@
 
         /* ══ EMPTY STATE ══ */
         .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;color:var(--text-inactive)}
-        .empty-state i{font-size:48px;animation:lg-icon-bounce 4s ease-in-out infinite}
+        .empty-state i{font-size:48px}
         .empty-state h3{font-size:18px;font-weight:700;color:var(--text-muted)}
         .empty-state p{font-size:13px;color:var(--text-inactive);text-align:center;padding:0 30px}
 
@@ -1157,10 +1219,21 @@
     </div>
     <div class="side-menu-body">
         <div class="side-section-label">Navigation</div>
-        <div class="side-item" id="menu-install">
-            <div class="side-item-icon"><i class="fas fa-download"></i></div>
-            <div class="side-item-info"><div class="side-item-text">Installer l'app</div><div class="side-item-desc">Accès rapide depuis l'accueil</div></div>
+        <div class="side-item" id="menu-install-share">
+            <div class="side-item-icon"><i class="fas fa-download" id="menu-install-share-icon"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text" id="menu-install-share-text">Installer l'app</div>
+                <div class="side-item-desc" id="menu-install-share-desc">Accès rapide depuis l'accueil</div>
+            </div>
             <i class="fas fa-chevron-right side-item-arrow"></i>
+        </div>
+        <div class="side-item" id="menu-abonnement">
+            <div class="side-item-icon"><i class="fas fa-crown"></i></div>
+            <div class="side-item-info">
+                <div class="side-item-text">Abonnement</div>
+                <div class="side-item-desc">Plans & accès premium</div>
+            </div>
+            <span class="side-item-soon">Bientôt</span>
         </div>
         <div class="side-item" id="menu-secrets">
             <div class="side-item-icon"><i class="fas fa-lock"></i></div>
@@ -1417,7 +1490,7 @@
                     <div class="page-subtitle">Pronostics sportifs avancés propulsés par l'IA</div>
                 </div>
                 <div class="content-block"><h2>Notre Mission</h2><p>Démocratiser l'accès aux analyses sportives avancées grâce à l'intelligence artificielle.</p></div>
-                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 3.9.4 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 4.0.0 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p>Application créée par <strong>Starky.Ai</strong></p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
             </div>
         </div>
     </div>
@@ -1493,7 +1566,6 @@
         <div class="tab-panel" id="matches-content"><div id="matches-list"></div></div>
         <div class="tab-panel" id="h2h-content"><div id="h2h-list"></div></div>
         <div class="tab-panel" id="ranking-content"><div id="ranking-list"></div></div>
-        <!-- INFOS TAB -->
         <div class="tab-panel" id="infos-content">
             <div class="infos-panel" id="infos-panel"></div>
         </div>
@@ -1575,9 +1647,8 @@ let hasNewEvents       = false;
 let selectedAvatar     = localStorage.getItem('starky_avatar') || 'king1';
 let tempSelectedAvatar = null;
 let deferredInstall    = null;
-
-/* Cache des données games_of_day */
-let gamesCache = null;
+let appIsInstalled     = false;
+let gamesCache         = null;
 
 /* ===== Sécurité ===== */
 document.addEventListener('contextmenu',  e=>e.preventDefault());
@@ -1620,19 +1691,54 @@ function showToast(msg, type='info', ms=3000) {
 }
 
 /* ===== PWA ===== */
-function initPWA() {
-    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; });
-}
-function installApp() {
-    if (deferredInstall) {
-        deferredInstall.prompt();
-        deferredInstall.userChoice.then(() => { deferredInstall = null; });
+function updateInstallShareButton() {
+    const icon = document.getElementById('menu-install-share-icon');
+    const text = document.getElementById('menu-install-share-text');
+    const desc = document.getElementById('menu-install-share-desc');
+    if (appIsInstalled || !deferredInstall) {
+        icon.className = 'fas fa-share-alt';
+        text.textContent = 'Partager l\'app';
+        desc.textContent = 'Envoyez le lien à vos amis';
     } else {
-        showToast("Utilisez 'Ajouter à l'accueil' dans votre navigateur", 'info', 4000);
+        icon.className = 'fas fa-download';
+        text.textContent = 'Installer l\'app';
+        desc.textContent = 'Accès rapide depuis l\'accueil';
     }
 }
 
-/* ===== Share ===== */
+function initPWA() {
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        appIsInstalled = true;
+    }
+    window.addEventListener('appinstalled', () => {
+        appIsInstalled = true;
+        deferredInstall = null;
+        updateInstallShareButton();
+    });
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault();
+        deferredInstall = e;
+        appIsInstalled = false;
+        updateInstallShareButton();
+    });
+    updateInstallShareButton();
+}
+
+function handleInstallShare() {
+    if (appIsInstalled || !deferredInstall) {
+        shareApp();
+    } else {
+        deferredInstall.prompt();
+        deferredInstall.userChoice.then(choice => {
+            if (choice.outcome === 'accepted') {
+                appIsInstalled = true;
+                deferredInstall = null;
+                updateInstallShareButton();
+            }
+        });
+    }
+}
+
 function shareApp() {
     if (navigator.share) {
         navigator.share({ title:'Starky Sports', text:'Pronostics sportifs IA', url: window.location.href }).catch(()=>{});
@@ -1696,7 +1802,7 @@ async function fetchGamesOfDay() {
     } catch { return []; }
 }
 
-/* ===== GitHub fetch (fallback pronostics) ===== */
+/* ===== GitHub fetch fallback ===== */
 async function fetchGitHub(dateStr) {
     try {
         const res = await fetch(`${GITHUB_RAW}pronostics_${dateStr}.json`, { cache:'no-cache' });
@@ -1741,7 +1847,6 @@ function computeProba(data) {
     return { pH, pD, pA };
 }
 
-/* ===== Draw No Bet ===== */
 function computeDNB(pH, pA) {
     const base = pH + pA || 1;
     const dnbH = Math.round(pH / base * 100);
@@ -1768,7 +1873,7 @@ function buildProbaArcSVG(pct, color, isHome) {
     </svg>`;
 }
 
-/* ===== CSS barres de probabilité ===== */
+/* ===== CSS barres probabilité ===== */
 (function injectProbaBarCSS() {
     const s = document.createElement('style');
     s.textContent = `
@@ -1804,29 +1909,33 @@ function createForecastCard(data) {
     card.className = 'forecast-card';
     card.addEventListener('click', () => openDetail(data));
 
-    const homeTeam = data.HomeTeam||data.homeTeam||'Domicile';
-    const awayTeam = data.AwayTeam||data.awayTeam||'Extérieur';
-    const homeLogo = data.HomeLogo||data.homeLogo||'';
-    const awayLogo = data.AwayLogo||data.awayLogo||'';
-    const league   = data.league||data.League||'Compétition';
-    const status   = data.status||'pending';
+    const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
+    const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
+    const homeLogo = data.HomeLogo || data.homeLogo || '';
+    const awayLogo = data.AwayLogo || data.awayLogo || '';
+    const league   = data.league   || data.League   || 'Compétition';
+    const status   = data.status   || 'pending';
 
     const { pH, pD, pA } = computeProba(data);
     const { dnbH, dnbA } = computeDNB(pH, pA);
 
-    /* ── Heure extraite de la date ── */
-    let formattedDate = '';
     let timeStr = '';
+    try {
+        const g = data._game;
+        if (g?.time_ci)  timeStr = g.time_ci.substring(0, 5);
+        else if (g?.time_utc) timeStr = g.time_utc.substring(0, 5);
+        else if (data.date) {
+            const timePart = data.date.split(' ')[1];
+            if (timePart && /^\d{2}:\d{2}/.test(timePart)) timeStr = timePart.substring(0, 5);
+        }
+    } catch {}
+
+    let formattedDate = '';
     try {
         if (data.date) {
             const d = parseFrenchDate(data.date);
             if (d && !isNaN(d)) formattedDate = d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
-            // Extraire l'heure depuis data.date si format "YYYY-MM-DD HH:MM"
-            const timePart = data.date.split(' ')[1];
-            if (timePart && /^\d{2}:\d{2}/.test(timePart)) timeStr = timePart.substring(0,5);
         }
-        // Priorité à time_utc depuis _game si disponible
-        if (data._game?.time_utc) timeStr = data._game.time_utc.substring(0,5);
     } catch {}
 
     let badgeClass   = 'pending';
@@ -1841,7 +1950,6 @@ function createForecastCard(data) {
         <div class="forecast-header">
             <div class="forecast-header-left">
                 <div class="league-badge">${league}</div>
-                ${timeStr ? `<div class="card-time-badge"><i class="fas fa-clock" style="font-size:8px;margin-right:3px;"></i>${timeStr}</div>` : ''}
             </div>
             <div class="status-badge ${badgeClass}">${badgeContent}</div>
         </div>
@@ -1859,7 +1967,8 @@ function createForecastCard(data) {
             </div>
             <div class="vs-col">
                 <div class="vs-text">VS</div>
-                <div class="match-date">${formattedDate||data.date||''}</div>
+                <div class="match-date">${formattedDate || data.date || ''}</div>
+                ${timeStr ? `<div class="card-time-badge">${timeStr}</div>` : ''}
             </div>
             <div class="team-col">
                 <div class="team-logo-wrapper">
@@ -1877,7 +1986,7 @@ function createForecastCard(data) {
     return card;
 }
 
-/* ===== Chargement pronostics depuis games_of_day ===== */
+/* ===== Chargement pronostics ===== */
 async function loadForecasts() {
     const container = document.getElementById('forecasts-container');
     container.innerHTML = '';
@@ -1885,17 +1994,27 @@ async function loadForecasts() {
     const games = await fetchGamesOfDay();
     if (games.length > 0) {
         games.forEach(g => {
+            const homeTeam = g.home?.team  || 'Domicile';
+            const awayTeam = g.away?.team  || 'Extérieur';
+            const homeLogo = g.home?.logo  || '';
+            const awayLogo = g.away?.logo  || '';
+            const league   = (g.league || '').replace(/_/g, ' ');
+            const odds     = g.odds || {};
+            const probaH   = odds.home ? Math.round(100 / odds.home) : 0;
+            const probaD   = odds.draw ? Math.round(100 / odds.draw) : 0;
+            const probaA   = odds.away ? Math.round(100 / odds.away) : 0;
+
             const adapted = {
-                HomeTeam  : g.home?.team  || 'Domicile',
-                AwayTeam  : g.away?.team  || 'Extérieur',
-                HomeLogo  : g.home?.logo  || '',
-                AwayLogo  : g.away?.logo  || '',
-                league    : (g.league||'').replace(/_/g,' '),
-                date      : g.date ? g.date + (g.time_utc ? ' ' + g.time_utc : '') : '',
+                HomeTeam  : homeTeam,
+                AwayTeam  : awayTeam,
+                HomeLogo  : homeLogo,
+                AwayLogo  : awayLogo,
+                league    : league,
+                date      : g.date || '',
                 status    : 'pending',
-                probaHome : g.odds?.home ? Math.round(100/g.odds.home) : 0,
-                probaDraw : g.odds?.draw ? Math.round(100/g.odds.draw) : 0,
-                probaAway : g.odds?.away ? Math.round(100/g.odds.away) : 0,
+                probaHome : probaH,
+                probaDraw : probaD,
+                probaAway : probaA,
                 _game     : g
             };
             container.appendChild(createForecastCard(adapted));
@@ -1903,7 +2022,6 @@ async function loadForecasts() {
         return;
     }
 
-    /* Fallback JSON pronostics classiques */
     for (let i = 0; i <= 2; i++) {
         const data = await fetchGitHub(getDateString(i));
         if (data) {
@@ -1931,17 +2049,24 @@ function adjustDetailScroll() {
 
 function openDetail(data) {
     selectedForecast = data;
-    const homeTeam = data.HomeTeam||data.homeTeam||'Domicile';
-    const awayTeam = data.AwayTeam||data.awayTeam||'Extérieur';
-    const homeLogo = data.HomeLogo||data.homeLogo||'';
-    const awayLogo = data.AwayLogo||data.awayLogo||'';
-    const status   = data.status||'pending';
+    const g        = data._game || null;
+    const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
+    const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
+    const homeLogo = data.HomeLogo || data.homeLogo || '';
+    const awayLogo = data.AwayLogo || data.awayLogo || '';
+    const status   = data.status || 'pending';
+    const league   = data.league || data.League || 'Compétition';
+
+    let detailTime = '';
+    if (g?.time_ci)  detailTime = g.time_ci.substring(0,5);
+    else if (g?.time_utc) detailTime = g.time_utc.substring(0,5);
+    else if (data.date?.split(' ')[1]) detailTime = data.date.split(' ')[1].substring(0,5);
 
     document.getElementById('detail-header-title').textContent = `${homeTeam} vs ${awayTeam}`;
-    document.getElementById('detail-league').textContent = data.league||data.League||'Compétition';
-    document.getElementById('detail-time').textContent   = data.date||'';
-    document.getElementById('detail-home-team').textContent = homeTeam;
-    document.getElementById('detail-away-team').textContent = awayTeam;
+    document.getElementById('detail-league').textContent       = league.replace(/_/g,' ');
+    document.getElementById('detail-time').textContent         = detailTime || '--:--';
+    document.getElementById('detail-home-team').textContent    = homeTeam;
+    document.getElementById('detail-away-team').textContent    = awayTeam;
 
     document.getElementById('detail-home-logo').innerHTML = homeLogo
         ? `<img src="${homeLogo}" alt="${homeTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
@@ -2009,45 +2134,193 @@ function renderProbabilites(data) {
 
 function renderStats(data) { document.getElementById('stats-panel').innerHTML = ''; }
 
+/* ===== Render Matchs — logique venue corrigée ===== */
+/*
+ * venue = "vs"  → l'équipe principale joue À DOMICILE  (opponent = extérieur, à droite)
+ * venue = "@"   → l'équipe principale joue À L'EXTÉRIEUR (opponent = domicile, à gauche)
+ *
+ * Affichage toujours : [équipe principale] [score] [adversaire]
+ * Score brut ESPN : home_score - away_score
+ *   - si venue "vs" : équipe principale = home  → score déjà correct
+ *   - si venue "@"  : équipe principale = away  → on inverse l'affichage du score
+ */
 function renderMatches(data) {
     const container = document.getElementById('matches-list');
     container.innerHTML = '';
-    const list = data.recentMatches||data.matches||[];
-    if (!list.length) {
-        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
+    const g = data._game || null;
+
+    let homeFive = g?.home?.last_five || [];
+    let awayFive = g?.away?.last_five || [];
+    const homeTeam = data.HomeTeam || data.homeTeam || '';
+    const awayTeam = data.AwayTeam || data.awayTeam || '';
+    const homeLogo = data.HomeLogo || data.homeLogo || '';
+    const awayLogo = data.AwayLogo || data.awayLogo || '';
+
+    if (!homeFive.length && !awayFive.length) {
+        const list = data.recentMatches || data.matches || [];
+        if (!list.length) {
+            container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
+            return;
+        }
+        list.forEach((m, idx) => {
+            const div = document.createElement('div');
+            div.className = 'match-item';
+            div.style.animationDelay = `${idx * 0.06}s`;
+            const resClass = m.result==='win'?'win':m.result==='loss'?'loss':'draw';
+            const resLabel = m.result==='win'?'Victoire':m.result==='loss'?'Défaite':'Nul';
+            div.innerHTML = `
+                <div class="match-item-header">
+                    <span class="match-item-comp">${m.competition||''}</span>
+                    <span class="match-item-date">${m.date||''}</span>
+                </div>
+                <div class="match-item-teams">
+                    <div class="match-team">
+                        ${m.homeLogo?`<img class="match-team-logo" src="${m.homeLogo}" alt="">`:''}<span>${m.homeTeam||''}</span>
+                    </div>
+                    <div class="match-score-block">
+                        <span class="match-score">${m.score||'-'}</span>
+                        <span class="result-chip ${resClass}">${resLabel}</span>
+                    </div>
+                    <div class="match-team away">
+                        ${m.awayLogo?`<img class="match-team-logo" src="${m.awayLogo}" alt="">`:''}<span>${m.awayTeam||''}</span>
+                    </div>
+                </div>`;
+            container.appendChild(div);
+        });
         return;
     }
-    list.forEach(m => {
+
+    /* ── Helper : construire un match-item depuis last_five ── */
+    function buildMatchItem(m, mainTeam, mainLogo, mainTeamId, idx) {
+        /*
+         * venue = "vs" → main team played at HOME → raw score = mainScore-oppScore → correct
+         * venue = "@"  → main team played AWAY    → raw score = oppScore-mainScore → invert
+         */
+        const isHome   = m.venue === 'vs';
+        const rawScore = (m.score || '').trim();  // toujours "homeRaw - awayRaw" dans ESPN
+        let   dispScore = rawScore;
+
+        if (rawScore && rawScore.includes('-')) {
+            const parts = rawScore.split('-').map(s => s.trim());
+            if (parts.length === 2) {
+                const [a, b] = parts;
+                // Si @ : l'équipe principale est l'away → on inverse pour afficher [main]-[opp]
+                dispScore = isHome ? `${a} - ${b}` : `${b} - ${a}`;
+            }
+        }
+
+        const oppId   = isHome ? m.away_team_id : m.home_team_id;
+        const oppSlug = (m.opponent_slug || '').replace(/-/g,' ');
+        const oppLogo = oppId ? `https://a.espncdn.com/i/teamlogos/soccer/500/${oppId}.png` : '';
+
+        const res      = m.result || 'D';
+        const resClass = res==='W'?'win':res==='L'?'loss':'draw';
+        const resLabel = res==='W'?'Victoire':res==='L'?'Défaite':'Nul';
+
         const div = document.createElement('div');
         div.className = 'match-item';
-        const resultLabel = m.result==='win'?'Victoire':m.result==='loss'?'Défaite':'Nul';
+        div.style.animationDelay = `${idx * 0.06}s`;
         div.innerHTML = `
-            <div class="match-item-header"><span>${m.date||''}</span><span class="result-chip ${m.result||'draw'}">${resultLabel}</span></div>
+            <div class="match-item-header">
+                <span class="match-item-comp">${m.competition||''}</span>
+                <span class="match-item-date">${m.date||''}</span>
+            </div>
             <div class="match-item-teams">
-                <div class="match-team">${m.homeLogo?`<img class="match-team-logo" src="${m.homeLogo}" alt="">`:''}<span>${m.homeTeam||''}</span></div>
-                <div class="match-score">${m.score||'-'}</div>
-                <div class="match-team">${m.awayLogo?`<img class="match-team-logo" src="${m.awayLogo}" alt="">`:''}<span>${m.awayTeam||''}</span></div>
+                <div class="match-team">
+                    <img class="match-team-logo" src="${mainLogo}" alt="" onerror="this.style.display='none'">
+                    <span>${mainTeam}</span>
+                </div>
+                <div class="match-score-block">
+                    <span class="match-score">${dispScore || '-'}</span>
+                    <span class="result-chip ${resClass}">${resLabel}</span>
+                </div>
+                <div class="match-team away">
+                    ${oppLogo ? `<img class="match-team-logo" src="${oppLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                    <span>${oppSlug}</span>
+                </div>
             </div>`;
-        container.appendChild(div);
-    });
+        return div;
+    }
+
+    /* Section domicile */
+    if (homeFive.length) {
+        const sectionTitle = document.createElement('div');
+        sectionTitle.className = 'odds-section-title';
+        sectionTitle.innerHTML = `<i class="fas fa-home"></i> ${homeTeam || 'Domicile'}`;
+        container.appendChild(sectionTitle);
+        homeFive.forEach((m, idx) => {
+            container.appendChild(buildMatchItem(m, homeTeam, homeLogo, g?.home?.team_id, idx));
+        });
+    }
+
+    /* Section extérieur */
+    if (awayFive.length) {
+        const sectionTitle2 = document.createElement('div');
+        sectionTitle2.className = 'odds-section-title';
+        sectionTitle2.style.marginTop = '16px';
+        sectionTitle2.innerHTML = `<i class="fas fa-plane"></i> ${awayTeam || 'Extérieur'}`;
+        container.appendChild(sectionTitle2);
+        awayFive.forEach((m, idx) => {
+            container.appendChild(buildMatchItem(m, awayTeam, awayLogo, g?.away?.team_id, idx));
+        });
+    }
 }
 
+/* ===== Render H2H — vainqueur en vert, pas de chip résultat ===== */
 function renderH2H(data) {
     const container = document.getElementById('h2h-list');
     container.innerHTML = '';
-    if (!data.h2h||!data.h2h.length) {
+    const g   = data._game || null;
+    const h2h = g?.h2h || data.h2h || [];
+
+    if (!h2h.length) {
         container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-exchange-alt"></i><h3>Pas d'historique H2H</h3></div>`;
         return;
     }
-    data.h2h.forEach(m => {
+
+    h2h.forEach((m, idx) => {
+        const h2hHomeSlug = (m.h2h_home?.team_slug || '').replace(/-/g,' ');
+        const h2hAwaySlug = (m.h2h_away?.team_slug || '').replace(/-/g,' ');
+        const h2hHomeId   = m.h2h_home?.team_id || null;
+        const h2hAwayId   = m.h2h_away?.team_id || null;
+
+        const scoreHome = m.score?.home ?? null;
+        const scoreAway = m.score?.away ?? null;
+        const scoreDisp = (scoreHome !== null && scoreAway !== null) ? `${scoreHome} - ${scoreAway}` : '-';
+
+        /*
+         * result_home = résultat de h2h_home ('W','L','D')
+         * W → h2h_home a gagné  → h2h_home est le vainqueur
+         * L → h2h_away a gagné  → h2h_away est le vainqueur
+         * D → nul               → personne de coloré
+         */
+        const res = m.result_home || 'D';
+        const homeWins = res === 'W';
+        const awayWins = res === 'L';
+
+        const logoHome = h2hHomeId ? `https://a.espncdn.com/i/teamlogos/soccer/500/${h2hHomeId}.png` : '';
+        const logoAway = h2hAwayId ? `https://a.espncdn.com/i/teamlogos/soccer/500/${h2hAwayId}.png` : '';
+
         const div = document.createElement('div');
-        div.className = 'match-item';
+        div.className = 'h2h-item';
+        div.style.animationDelay = `${idx * 0.06}s`;
         div.innerHTML = `
-            <div class="match-item-header"><span>${m.date||''}</span><span>${m.competition||''}</span></div>
-            <div class="match-item-teams">
-                <div class="match-team"><span>${m.homeTeam||''}</span></div>
-                <div class="match-score">${m.score||'-'}</div>
-                <div class="match-team"><span>${m.awayTeam||''}</span></div>
+            <div class="h2h-header">
+                <span class="h2h-comp">${m.competition||''}</span>
+                <span class="h2h-date">${m.date||''}</span>
+            </div>
+            <div class="h2h-teams">
+                <div class="h2h-team${homeWins?' winner':''}">
+                    ${logoHome ? `<img class="h2h-team-logo" src="${logoHome}" alt="" onerror="this.style.display='none'">` : ''}
+                    <span>${h2hHomeSlug}</span>
+                </div>
+                <div class="h2h-score-block">
+                    <span class="h2h-score">${scoreDisp}</span>
+                </div>
+                <div class="h2h-team away${awayWins?' winner':''}">
+                    ${logoAway ? `<img class="h2h-team-logo" src="${logoAway}" alt="" onerror="this.style.display='none'">` : ''}
+                    <span>${h2hAwaySlug}</span>
+                </div>
             </div>`;
         container.appendChild(div);
     });
@@ -2075,27 +2348,28 @@ function renderRanking(data) {
     container.appendChild(table);
 }
 
-/* ===== Render Infos — Design professionnel ===== */
+/* ===== Render Infos ===== */
 function renderInfos(data) {
     const panel = document.getElementById('infos-panel');
     panel.innerHTML = '';
 
-    const game      = data._game || null;
-    const matchUrl  = game?.match_url || data.match_url || null;
-    const odds      = game?.odds || data.odds || null;
+    const g         = data._game || null;
+    const odds      = g?.odds || data.odds || null;
     const homeTeam  = data.HomeTeam || data.homeTeam || 'Domicile';
     const awayTeam  = data.AwayTeam || data.awayTeam || 'Extérieur';
     const league    = data.league || data.League || null;
-    const matchDate = game?.date || (data.date ? data.date.split(' ')[0] : null);
-    const matchTime = game?.time_utc || (data.date?.split(' ')[1] || null);
+    const matchDate = g?.date || (data.date ? data.date.split(' ')[0] : null);
+    let   matchTime = '';
+    if (g?.time_ci)  matchTime = g.time_ci.substring(0,5);
+    else if (g?.time_utc) matchTime = g.time_utc.substring(0,5);
+    else if (data.date?.split(' ')[1]) matchTime = data.date.split(' ')[1].substring(0,5);
 
-    /* ── Bloc méta-infos du match ── */
     const metaRows = [];
-    if (league)    metaRows.push({ icon:'fa-trophy',    key:'Compétition',  val: league.replace(/_/g,' ') });
-    if (matchDate) metaRows.push({ icon:'fa-calendar',  key:'Date',         val: matchDate });
-    if (matchTime) metaRows.push({ icon:'fa-clock',     key:'Heure (UTC)',  val: matchTime.substring(0,5) });
-    metaRows.push({ icon:'fa-home',      key:'Domicile',   val: homeTeam });
-    metaRows.push({ icon:'fa-plane',     key:'Extérieur',  val: awayTeam });
+    if (league)    metaRows.push({ icon:'fa-trophy',   key:'Compétition', val: league.replace(/_/g,' ') });
+    if (matchDate) metaRows.push({ icon:'fa-calendar', key:'Date',        val: matchDate });
+    if (matchTime) metaRows.push({ icon:'fa-clock',    key:'Heure (CI)',  val: matchTime });
+    metaRows.push({ icon:'fa-home',  key:'Domicile',  val: homeTeam });
+    metaRows.push({ icon:'fa-plane', key:'Extérieur', val: awayTeam });
 
     if (metaRows.length) {
         const metaTitle = document.createElement('div');
@@ -2106,14 +2380,13 @@ function renderInfos(data) {
         const metaBlock = document.createElement('div');
         metaBlock.className = 'infos-match-meta';
         metaBlock.innerHTML = metaRows.map((r, i) => `
-            <div class="infos-meta-row" style="animation-delay:${i * 0.05}s">
+            <div class="infos-meta-row" style="animation-delay:${i * 0.06}s">
                 <span class="infos-meta-key"><i class="fas ${r.icon}"></i>${r.key}</span>
                 <span class="infos-meta-val">${r.val}</span>
             </div>`).join('');
         panel.appendChild(metaBlock);
     }
 
-    /* ── Section cotes ── */
     const oddsTitle = document.createElement('div');
     oddsTitle.className = 'odds-section-title';
     oddsTitle.innerHTML = '<i class="fas fa-tags"></i> Cotes 1 X 2';
@@ -2275,7 +2548,18 @@ function setupListeners() {
     document.getElementById('side-menu-overlay').addEventListener('click', closeSideMenu);
 
     const sideNav = id => { closeSideMenu(); showSection(id); };
-    document.getElementById('menu-install').addEventListener('click',   () => { closeSideMenu(); installApp(); });
+
+    document.getElementById('menu-install-share').addEventListener('click', () => {
+        closeSideMenu();
+        handleInstallShare();
+    });
+
+    /* Abonnement — bientôt */
+    document.getElementById('menu-abonnement').addEventListener('click', () => {
+        closeSideMenu();
+        showToast('Abonnement bientôt disponible !', 'info');
+    });
+
     document.getElementById('menu-secrets').addEventListener('click',   () => sideNav('secrets'));
     document.getElementById('menu-history').addEventListener('click',   () => sideNav('history'));
     document.getElementById('menu-interface').addEventListener('click', () => sideNav('interface'));
@@ -2319,7 +2603,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupLiquidGlass();
     initPWA();
 
-    console.log('Starky Sports v3.9.4 — Infos redesign + heure carte + micro-animations');
+    console.log('Starky Sports v4.1.0 — venue logic fix + H2H winner highlight + menu abonnement');
 
     loadAndCacheLogo();
     showSection('forecasts');
