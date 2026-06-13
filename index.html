@@ -440,7 +440,7 @@
             width:100%;max-width:90px;
         }
 
-        /* VS col — heure en bas au centre */
+        /* VS col */
         .vs-col{display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;padding-top:6px;min-width:52px;gap:4px}
         .vs-text{font-size:14px;font-weight:800;color:var(--text-inactive)}
         .match-date{font-size:10px;color:var(--text-muted);text-align:center}
@@ -498,7 +498,7 @@
             width:64px;height:64px;background:var(--logo-bg);border-radius:16px;
             border:2px solid var(--border);display:flex;align-items:center;justify-content:center;
             margin-bottom:8px;overflow:hidden;
-            transition:background 0.4s,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring);
+            transition:background 0.4t,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring);
         }
         .detail-logo-box:hover{transform:scale(1.06)}
         .detail-logo-box img{width:100%;height:100%;object-fit:cover;border-radius:14px}
@@ -572,7 +572,6 @@
             color:#fff;
         }
         .detail-scroll{position:absolute;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
-        /* Tab panel — animation ralentie */
         .tab-panel{display:none;padding:16px}
         .tab-panel.active{display:block;animation:fadeSlideUp 0.55s var(--lg-ease)}
 
@@ -701,7 +700,6 @@
         }
         .h2h-team.away{justify-content:flex-end;flex-direction:row-reverse}
         .h2h-team span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}
-        /* Couleur verte pour le vainqueur H2H */
         .h2h-team.winner span{color:var(--success);text-shadow:0 0 8px rgba(79,255,176,0.3)}
         .h2h-team-logo{
             width:22px;height:22px;border-radius:4px;object-fit:contain;
@@ -916,7 +914,6 @@
         .side-item-desc{font-size:11px;color:var(--text-muted);margin-top:1px}
         .side-item-arrow{font-size:12px;color:var(--text-inactive);transition:transform 0.22s var(--lg-ease)}
         .side-item:hover .side-item-arrow{transform:translateX(3px)}
-        /* Badge bientôt */
         .side-item-soon{
             font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;
             background:rgba(123,110,246,0.15);color:var(--primary);
@@ -980,7 +977,7 @@
             width:32px;height:32px;border-radius:8px;
             background:var(--bg-elevated);border:1px solid var(--border);
             display:flex;align-items:center;justify-content:center;font-size:16px;
-            transition:background 0.4s,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring);
+            transition:background 0.4t,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring);
         }
         .setting-row:hover .setting-icon{transform:scale(1.1) rotate(-4deg)}
         body.liquid-glass .setting-icon{background:rgba(255,255,255,0.06);backdrop-filter:blur(8px);border:1px solid var(--lg-bdr-d);box-shadow:0 2px 8px rgba(0,0,0,0.20), 0 1px 0 rgba(255,255,255,0.07) inset}
@@ -1111,12 +1108,12 @@
         body.liquid-glass .pros-match-card::after{content:'';position:absolute;top:2px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.14),transparent);pointer-events:none;z-index:2}
         body.light-mode.liquid-glass .pros-match-card{background:rgba(255,255,255,0.65);backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));-webkit-backdrop-filter:blur(var(--lg-blur)) saturate(var(--lg-sat-l));border:1px solid var(--lg-bdr-l);box-shadow:var(--lg-shadow-card-l)}
         .pros-star-badge{position:absolute;top:12px;right:12px;font-size:16px;background:linear-gradient(135deg,#FFB830,#FF8C00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 4px rgba(255,184,48,0.5))}
-        .pros-match-league{font-size:11px;color:var(--text-muted);background:var(--bg-elevated);border:1px solid var(--border);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;transition:background 0.4s,border-color 0.4t}
+        .pros-match-league{font-size:11px;color:var(--text-muted);background:var(--bg-elevated);border:1px solid var(--border);padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:12px;transition:background 0.4s,border-color 0.4s}
         body.liquid-glass .pros-match-league{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid var(--lg-bdr-d)}
         body.light-mode.liquid-glass .pros-match-league{background:rgba(255,255,255,0.68);border:1px solid var(--lg-bdr-l)}
         .pros-match-teams{display:flex;align-items:center;justify-content:space-between;gap:8px}
         .pros-team-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
-        .pros-team-logo{width:44px;height:44px;background:var(--logo-bg);border-radius:10px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px;transition:background 0.4t,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring)}
+        .pros-team-logo{width:44px;height:44px;background:var(--logo-bg);border-radius:10px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:6px;transition:background 0.4s,border-color 0.4s,box-shadow 0.4s,transform 0.3s var(--lg-spring)}
         .pros-team-logo:hover{transform:scale(1.1)}
         body.liquid-glass .pros-team-logo{background:rgba(255,255,255,0.05);backdrop-filter:blur(8px);border:1px solid var(--lg-bdr-d);box-shadow:0 2px 10px rgba(0,0,0,0.24), 0 1px 0 rgba(255,255,255,0.08) inset}
         body.light-mode.liquid-glass .pros-team-logo{background:rgba(255,255,255,0.72);border:1px solid var(--lg-bdr-l);box-shadow:0 2px 10px rgba(100,90,200,0.08), 0 1px 0 rgba(255,255,255,0.95) inset}
@@ -1490,7 +1487,7 @@
                     <div class="page-subtitle">Pronostics sportifs avancés propulsés par l'IA</div>
                 </div>
                 <div class="content-block"><h2>Notre Mission</h2><p>Démocratiser l'accès aux analyses sportives avancées grâce à l'intelligence artificielle.</p></div>
-                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 4.0.0 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p>Application créée par <strong>Starky.Ai</strong></p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+                <div class="content-block"><h2>Informations Techniques</h2><p><strong>Version :</strong> 4.1.0 · <strong>PWA</strong> compatible tous navigateurs modernes.</p><p>Application créée par <strong>Starky.Ai</strong></p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
             </div>
         </div>
     </div>
@@ -1534,7 +1531,6 @@
                 </div>
             </div>
         </div>
-        <!-- TABS -->
         <div class="detail-tabs-bar">
             <div class="dtab active" data-tab="probabilites"><i class="fas fa-percentage"></i> Probabilités</div>
             <div class="dtab" data-tab="stats"><i class="fas fa-chart-bar"></i> Stats</div>
@@ -1797,8 +1793,9 @@ async function fetchGamesOfDay() {
     try {
         const res = await fetch(GAMES_OF_DAY_URL, { cache:'no-cache' });
         if (!res.ok) return [];
-        gamesCache = await res.json();
-        return Array.isArray(gamesCache) ? gamesCache : [];
+        const data = await res.json();
+        gamesCache = Array.isArray(data) ? data : [];
+        return gamesCache;
     } catch { return []; }
 }
 
@@ -1826,6 +1823,12 @@ function teamIcon(name) {
     if (n.includes('basket')||n.includes('nba')) return 'fas fa-basketball-ball';
     if (n.includes('tennis')) return 'fas fa-table-tennis';
     return 'fas fa-futbol';
+}
+
+/* ===== ESPN logo par ID ===== */
+function espnLogo(teamId) {
+    if (!teamId) return '';
+    return `https://a.espncdn.com/i/teamlogos/soccer/500/${teamId}.png`;
 }
 
 /* ===== Compute probabilities ===== */
@@ -2134,29 +2137,35 @@ function renderProbabilites(data) {
 
 function renderStats(data) { document.getElementById('stats-panel').innerHTML = ''; }
 
-/* ===== Render Matchs — logique venue corrigée ===== */
-/*
- * venue = "vs"  → l'équipe principale joue À DOMICILE  (opponent = extérieur, à droite)
- * venue = "@"   → l'équipe principale joue À L'EXTÉRIEUR (opponent = domicile, à gauche)
- *
- * Affichage toujours : [équipe principale] [score] [adversaire]
- * Score brut ESPN : home_score - away_score
- *   - si venue "vs" : équipe principale = home  → score déjà correct
- *   - si venue "@"  : équipe principale = away  → on inverse l'affichage du score
- */
+/* ===================================================================
+   RENDER MATCHES — Nouvelle structure last_five ESPN
+   Structure d'un item last_five :
+   {
+     date, competition, match_url, result (W/L/D vu par l'équipe suivie),
+     team_home, team_home_id, team_home_logo,
+     team_away, team_away_id, team_away_logo,
+     home_score, away_score, status
+   }
+   L'équipe suivie (home ou away du match principal) peut être
+   team_home OU team_away dans chaque item last_five.
+   On identifie quelle équipe est "la nôtre" par l'ID.
+   =================================================================== */
 function renderMatches(data) {
     const container = document.getElementById('matches-list');
     container.innerHTML = '';
     const g = data._game || null;
 
-    let homeFive = g?.home?.last_five || [];
-    let awayFive = g?.away?.last_five || [];
-    const homeTeam = data.HomeTeam || data.homeTeam || '';
-    const awayTeam = data.AwayTeam || data.awayTeam || '';
-    const homeLogo = data.HomeLogo || data.homeLogo || '';
-    const awayLogo = data.AwayLogo || data.awayLogo || '';
+    const homeFive  = g?.home?.last_five || [];
+    const awayFive  = g?.away?.last_five || [];
+    const homeTeam  = data.HomeTeam || data.homeTeam || '';
+    const awayTeam  = data.AwayTeam || data.awayTeam || '';
+    const homeId    = g?.home?.team_id || null;
+    const awayId    = g?.away?.team_id || null;
+    const homeLogo  = data.HomeLogo || data.homeLogo || '';
+    const awayLogo  = data.AwayLogo || data.awayLogo || '';
 
     if (!homeFive.length && !awayFive.length) {
+        /* Fallback anciennes données */
         const list = data.recentMatches || data.matches || [];
         if (!list.length) {
             container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
@@ -2190,57 +2199,70 @@ function renderMatches(data) {
         return;
     }
 
-    /* ── Helper : construire un match-item depuis last_five ── */
-    function buildMatchItem(m, mainTeam, mainLogo, mainTeamId, idx) {
-        /*
-         * venue = "vs" → main team played at HOME → raw score = mainScore-oppScore → correct
-         * venue = "@"  → main team played AWAY    → raw score = oppScore-mainScore → invert
-         */
-        const isHome   = m.venue === 'vs';
-        const rawScore = (m.score || '').trim();  // toujours "homeRaw - awayRaw" dans ESPN
-        let   dispScore = rawScore;
+    /*
+     * buildMatchItem — nouvelle structure ESPN last_five
+     *
+     * Chaque item last_five contient :
+     *   team_home / team_home_id / team_home_logo  (équipe qui joue à domicile dans ce match)
+     *   team_away / team_away_id / team_away_logo  (équipe qui joue à l'extérieur dans ce match)
+     *   home_score / away_score
+     *   result : W/L/D vu par l'équipe principale (celle du bloc home ou away du match du jour)
+     *
+     * On veut afficher : [équipe principale] score [adversaire]
+     * Pour ça, on identifie si l'équipe principale est home ou away dans ce sous-match
+     * via son ID (mainTeamId).
+     */
+    function buildMatchItem(m, mainTeamId, mainTeamName, mainTeamLogo, idx) {
+    const hId   = m.team_home_id || null;
+    const aId   = m.team_away_id || null;
+    const hName = m.team_home    || '';
+    const aName = m.team_away    || '';
+    const hLogo = m.team_home_logo || (hId ? espnLogo(hId) : '');
+    const aLogo = m.team_away_logo || (aId ? espnLogo(aId) : '');
 
-        if (rawScore && rawScore.includes('-')) {
-            const parts = rawScore.split('-').map(s => s.trim());
-            if (parts.length === 2) {
-                const [a, b] = parts;
-                // Si @ : l'équipe principale est l'away → on inverse pour afficher [main]-[opp]
-                dispScore = isHome ? `${a} - ${b}` : `${b} - ${a}`;
-            }
-        }
+    /* L'équipe principale est-elle home ou away dans ce sous-match ? */
+    const mainIsHome = String(hId) === String(mainTeamId);
 
-        const oppId   = isHome ? m.away_team_id : m.home_team_id;
-        const oppSlug = (m.opponent_slug || '').replace(/-/g,' ');
-        const oppLogo = oppId ? `https://a.espncdn.com/i/teamlogos/soccer/500/${oppId}.png` : '';
+    /* Noms affichés — résolution du nom si absent */
+    const leftName  = mainIsHome ? (hName || mainTeamName) : hName;
+    const rightName = mainIsHome ? aName : (aName || mainTeamName);
+    const leftLogo  = mainIsHome ? (hLogo || mainTeamLogo) : hLogo;
+    const rightLogo = mainIsHome ? aLogo : (aLogo || mainTeamLogo);
 
-        const res      = m.result || 'D';
-        const resClass = res==='W'?'win':res==='L'?'loss':'draw';
-        const resLabel = res==='W'?'Victoire':res==='L'?'Défaite':'Nul';
+    /* Score affiché dans l'ordre JSON : home_score - away_score */
+    const sLeft  = m.home_score ?? '';
+    const sRight = m.away_score ?? '';
+    const scoreDisp = (sLeft !== '' && sRight !== '') ? `${sLeft} - ${sRight}` : '-';
 
-        const div = document.createElement('div');
-        div.className = 'match-item';
-        div.style.animationDelay = `${idx * 0.06}s`;
-        div.innerHTML = `
-            <div class="match-item-header">
-                <span class="match-item-comp">${m.competition||''}</span>
-                <span class="match-item-date">${m.date||''}</span>
+    /* Résultat vu par l'équipe principale pour le chip */
+    const res      = m.result || 'D';
+    const resClass = res==='W'?'win':res==='L'?'loss':'draw';
+    const resLabel = res==='W'?'Victoire':res==='L'?'Défaite':'Nul';
+
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    div.style.animationDelay = `${idx * 0.06}s`;
+    div.innerHTML = `
+        <div class="match-item-header">
+            <span class="match-item-comp">${m.competition||''}</span>
+            <span class="match-item-date">${m.date||''}</span>
+        </div>
+        <div class="match-item-teams">
+            <div class="match-team">
+                ${leftLogo ? `<img class="match-team-logo" src="${leftLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                <span>${leftName}</span>
             </div>
-            <div class="match-item-teams">
-                <div class="match-team">
-                    <img class="match-team-logo" src="${mainLogo}" alt="" onerror="this.style.display='none'">
-                    <span>${mainTeam}</span>
-                </div>
-                <div class="match-score-block">
-                    <span class="match-score">${dispScore || '-'}</span>
-                    <span class="result-chip ${resClass}">${resLabel}</span>
-                </div>
-                <div class="match-team away">
-                    ${oppLogo ? `<img class="match-team-logo" src="${oppLogo}" alt="" onerror="this.style.display='none'">` : ''}
-                    <span>${oppSlug}</span>
-                </div>
-            </div>`;
-        return div;
-    }
+            <div class="match-score-block">
+                <span class="match-score">${scoreDisp}</span>
+                <span class="result-chip ${resClass}">${resLabel}</span>
+            </div>
+            <div class="match-team away">
+                ${rightLogo ? `<img class="match-team-logo" src="${rightLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                <span>${rightName}</span>
+            </div>
+        </div>`;
+    return div;
+}
 
     /* Section domicile */
     if (homeFive.length) {
@@ -2249,7 +2271,7 @@ function renderMatches(data) {
         sectionTitle.innerHTML = `<i class="fas fa-home"></i> ${homeTeam || 'Domicile'}`;
         container.appendChild(sectionTitle);
         homeFive.forEach((m, idx) => {
-            container.appendChild(buildMatchItem(m, homeTeam, homeLogo, g?.home?.team_id, idx));
+            container.appendChild(buildMatchItem(m, homeId, homeTeam, homeLogo, idx));
         });
     }
 
@@ -2261,12 +2283,24 @@ function renderMatches(data) {
         sectionTitle2.innerHTML = `<i class="fas fa-plane"></i> ${awayTeam || 'Extérieur'}`;
         container.appendChild(sectionTitle2);
         awayFive.forEach((m, idx) => {
-            container.appendChild(buildMatchItem(m, awayTeam, awayLogo, g?.away?.team_id, idx));
+            container.appendChild(buildMatchItem(m, awayId, awayTeam, awayLogo, idx));
         });
     }
 }
 
-/* ===== Render H2H — vainqueur en vert, pas de chip résultat ===== */
+/* ===================================================================
+   RENDER H2H — Nouvelle structure ESPN
+   Structure d'un item h2h :
+   {
+     date, competition, match_url,
+     team_home : null  (souvent null !)  → team_home_id : "10149"
+     team_away : null                    → team_away_id : "17814"
+     team_home_logo, team_away_logo,
+     home_score, away_score, status
+   }
+   Les noms sont null → on les reconstitue depuis les IDs
+   en comparant avec les IDs des équipes du match principal.
+   =================================================================== */
 function renderH2H(data) {
     const container = document.getElementById('h2h-list');
     container.innerHTML = '';
@@ -2278,28 +2312,53 @@ function renderH2H(data) {
         return;
     }
 
-    h2h.forEach((m, idx) => {
-        const h2hHomeSlug = (m.h2h_home?.team_slug || '').replace(/-/g,' ');
-        const h2hAwaySlug = (m.h2h_away?.team_slug || '').replace(/-/g,' ');
-        const h2hHomeId   = m.h2h_home?.team_id || null;
-        const h2hAwayId   = m.h2h_away?.team_id || null;
+    /* IDs et noms/logos des deux équipes du match du jour */
+    const mainHomeId   = String(g?.home?.team_id || '');
+    const mainAwayId   = String(g?.away?.team_id || '');
+    const mainHomeName = data.HomeTeam || data.homeTeam || '';
+    const mainAwayName = data.AwayTeam || data.awayTeam || '';
+    const mainHomeLogo = data.HomeLogo || data.homeLogo || '';
+    const mainAwayLogo = data.AwayLogo || data.awayLogo || '';
 
-        const scoreHome = m.score?.home ?? null;
-        const scoreAway = m.score?.away ?? null;
-        const scoreDisp = (scoreHome !== null && scoreAway !== null) ? `${scoreHome} - ${scoreAway}` : '-';
+    h2h.forEach((m, idx) => {
+        const hId   = String(m.team_home_id || '');
+        const aId   = String(m.team_away_id || '');
+        const hLogo = m.team_home_logo || (hId ? espnLogo(hId) : '');
+        const aLogo = m.team_away_logo || (aId ? espnLogo(aId) : '');
+
+        /* Résolution des noms à partir des IDs */
+        let hName = m.team_home || '';
+        let aName = m.team_away || '';
+
+        if (!hName) {
+            if (hId === mainHomeId) hName = mainHomeName;
+            else if (hId === mainAwayId) hName = mainAwayName;
+            else hName = `Équipe ${hId}`;
+        }
+        if (!aName) {
+            if (aId === mainHomeId) aName = mainHomeName;
+            else if (aId === mainAwayId) aName = mainAwayName;
+            else aName = `Équipe ${aId}`;
+        }
+
+        const hScore = m.home_score ?? '';
+        const aScore = m.away_score ?? '';
+        const scoreDisp = (hScore !== '' && aScore !== '') ? `${hScore} - ${aScore}` : '-';
 
         /*
-         * result_home = résultat de h2h_home ('W','L','D')
-         * W → h2h_home a gagné  → h2h_home est le vainqueur
-         * L → h2h_away a gagné  → h2h_away est le vainqueur
-         * D → nul               → personne de coloré
+         * Détermination du vainqueur pour colorer en vert
+         * On compare home_score et away_score
          */
-        const res = m.result_home || 'D';
-        const homeWins = res === 'W';
-        const awayWins = res === 'L';
-
-        const logoHome = h2hHomeId ? `https://a.espncdn.com/i/teamlogos/soccer/500/${h2hHomeId}.png` : '';
-        const logoAway = h2hAwayId ? `https://a.espncdn.com/i/teamlogos/soccer/500/${h2hAwayId}.png` : '';
+        let homeWins = false;
+        let awayWins = false;
+        if (hScore !== '' && aScore !== '') {
+            const hs = parseInt(hScore, 10);
+            const as = parseInt(aScore, 10);
+            if (!isNaN(hs) && !isNaN(as)) {
+                if (hs > as) homeWins = true;
+                else if (as > hs) awayWins = true;
+            }
+        }
 
         const div = document.createElement('div');
         div.className = 'h2h-item';
@@ -2311,15 +2370,15 @@ function renderH2H(data) {
             </div>
             <div class="h2h-teams">
                 <div class="h2h-team${homeWins?' winner':''}">
-                    ${logoHome ? `<img class="h2h-team-logo" src="${logoHome}" alt="" onerror="this.style.display='none'">` : ''}
-                    <span>${h2hHomeSlug}</span>
+                    ${hLogo ? `<img class="h2h-team-logo" src="${hLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                    <span>${hName}</span>
                 </div>
                 <div class="h2h-score-block">
                     <span class="h2h-score">${scoreDisp}</span>
                 </div>
                 <div class="h2h-team away${awayWins?' winner':''}">
-                    ${logoAway ? `<img class="h2h-team-logo" src="${logoAway}" alt="" onerror="this.style.display='none'">` : ''}
-                    <span>${h2hAwaySlug}</span>
+                    ${aLogo ? `<img class="h2h-team-logo" src="${aLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                    <span>${aName}</span>
                 </div>
             </div>`;
         container.appendChild(div);
@@ -2553,8 +2612,6 @@ function setupListeners() {
         closeSideMenu();
         handleInstallShare();
     });
-
-    /* Abonnement — bientôt */
     document.getElementById('menu-abonnement').addEventListener('click', () => {
         closeSideMenu();
         showToast('Abonnement bientôt disponible !', 'info');
@@ -2603,7 +2660,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupLiquidGlass();
     initPWA();
 
-    console.log('Starky Sports v4.1.0 — venue logic fix + H2H winner highlight + menu abonnement');
+    console.log('Starky Sports v4.2.0 — ESPN last_five + H2H ID resolution');
 
     loadAndCacheLogo();
     showSection('forecasts');
