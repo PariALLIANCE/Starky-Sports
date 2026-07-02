@@ -483,6 +483,49 @@
         .infos-meta-key i{font-size:11px;width:16px;text-align:center;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .infos-meta-val{font-size:12px;font-weight:700;color:var(--text);text-align:right;max-width:55%}
 
+        /* ══ STANDINGS ROW STYLE ══ */
+        .standings-row {
+            display:flex;align-items:center;justify-content:space-between;
+            padding:10px 16px;border-bottom:1px solid var(--border);
+            transition:background 0.18s;
+            animation:fadeSlideIn 0.45s var(--ease) both;
+            gap:10px;
+        }
+        .standings-row:last-child{border-bottom:none}
+        .standings-row:hover{background:rgba(123,110,246,0.04)}
+        .standings-team {
+            display:flex;align-items:center;gap:10px;flex:1;min-width:0;
+        }
+        .standings-team-logo {
+            width:28px;height:28px;border-radius:8px;
+            background:var(--logo-bg);border:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;
+            overflow:hidden;flex-shrink:0;
+        }
+        .standings-team-logo img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+        .standings-team-logo i{font-size:12px;color:var(--primary)}
+        .standings-team-name {
+            font-size:12px;font-weight:700;color:var(--text);
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        }
+        .standings-stats {
+            display:flex;align-items:center;gap:12px;flex-shrink:0;
+        }
+        .standings-stat {
+            display:flex;flex-direction:column;align-items:center;
+            min-width:32px;
+        }
+        .standings-stat-val {
+            font-size:14px;font-weight:800;color:var(--text);
+            line-height:1.2;
+        }
+        .standings-stat-val.pts{color:var(--primary)}
+        .standings-stat-val.pos{color:var(--warning)}
+        .standings-stat-label {
+            font-size:8px;font-weight:600;color:var(--text-inactive);
+            text-transform:uppercase;letter-spacing:0.5px;
+        }
+
         /* ══ MATCH PREVIEW BOTTOM SHEET ══ */
         .match-preview {
             position:fixed;inset:0;z-index:500;
@@ -611,33 +654,6 @@
         }
         .mp-no-stats i { font-size:26px;opacity:0.35; }
         .mp-no-stats span { font-size:12px;font-weight:600; }
-        .mp-standings-block {
-            background:var(--bg-card);border:1px solid var(--border);
-            border-radius:12px;padding:14px;margin-bottom:10px;
-            transition:background 0.4s,border-color 0.4s;
-        }
-        .mp-standings-team {
-            display:flex;align-items:center;gap:8px;margin-bottom:10px;
-        }
-        .mp-standings-team-logo {
-            width:28px;height:28px;border-radius:7px;
-            background:var(--logo-bg);border:1px solid var(--border);
-            display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;
-        }
-        .mp-standings-team-logo img { width:100%;height:100%;object-fit:cover;border-radius:5px; }
-        .mp-standings-team-logo i { font-size:13px;color:var(--primary); }
-        .mp-standings-team-name { font-size:13px;font-weight:700;color:var(--text); }
-        .mp-standings-grid {
-            display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
-        }
-        .mp-st-cell {
-            display:flex;flex-direction:column;align-items:center;gap:2px;
-            background:var(--bg-elevated);border-radius:8px;padding:8px 4px;
-        }
-        .mp-st-val { font-size:14px;font-weight:800;color:var(--text); }
-        .mp-st-label { font-size:9px;font-weight:600;color:var(--text-inactive); }
-        .mp-st-cell.pts .mp-st-val { color:var(--primary); }
-        .mp-st-cell.pos .mp-st-val { color:var(--warning); }
 
         /* ══ SIDE MENU ══ */
         .side-menu{
@@ -1626,7 +1642,7 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo) {
     document.getElementById('mp-home-name').textContent = hName;
     document.getElementById('mp-away-name').textContent = aName;
 
-    /* — Corps : stats + classement — */
+    /* — Corps : stats uniquement (plus de classement) — */
     const body = document.getElementById('mp-body');
     body.innerHTML = '';
 
@@ -1671,53 +1687,6 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo) {
         noStats.className = 'mp-no-stats';
         noStats.innerHTML = `<i class="fas fa-chart-bar"></i><span>Statistiques non disponibles</span>`;
         body.appendChild(noStats);
-    }
-
-    /* — Classement si dispo (standings dans le match preview) — */
-    const standings = m._standings || null;
-    if (standings) {
-        const stTitle = document.createElement('div');
-        stTitle.className = 'mp-section-title';
-        stTitle.style.marginTop = '18px';
-        stTitle.innerHTML = '<i class="fas fa-list-ol"></i> Classement';
-        body.appendChild(stTitle);
-
-        [
-            { logo: hLogo, name: hName, st: standings.home },
-            { logo: aLogo, name: aName, st: standings.away }
-        ].forEach(entry => {
-            if (!entry.st) return;
-            const block = document.createElement('div');
-            block.className = 'mp-standings-block';
-            block.innerHTML = `
-                <div class="mp-standings-team">
-                    <div class="mp-standings-team-logo">
-                        ${entry.logo
-                            ? `<img src="${entry.logo}" alt="" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
-                            : '<i class="fas fa-futbol"></i>'}
-                    </div>
-                    <span class="mp-standings-team-name">${entry.name}</span>
-                </div>
-                <div class="mp-standings-grid">
-                    <div class="mp-st-cell pos">
-                        <span class="mp-st-val">${entry.st.position_current ?? '-'}</span>
-                        <span class="mp-st-label">Rang</span>
-                    </div>
-                    <div class="mp-st-cell">
-                        <span class="mp-st-val">${entry.st.played ?? '-'}</span>
-                        <span class="mp-st-label">Joués</span>
-                    </div>
-                    <div class="mp-st-cell">
-                        <span class="mp-st-val">${entry.st.gd != null ? (entry.st.gd > 0 ? '+'+entry.st.gd : entry.st.gd) : '-'}</span>
-                        <span class="mp-st-label">DB</span>
-                    </div>
-                    <div class="mp-st-cell pts">
-                        <span class="mp-st-val">${entry.st.points ?? '-'}</span>
-                        <span class="mp-st-label">Pts</span>
-                    </div>
-                </div>`;
-            body.appendChild(block);
-        });
     }
 
     document.getElementById('match-preview').classList.add('active');
@@ -2085,7 +2054,7 @@ function renderMatches(data) {
     }
 }
 
-/* ===== Render H2H avec preview au clic ===== */
+/* ===== Render H2H avec preview au clic (SANS classement) ===== */
 function renderH2H(data) {
     const container = document.getElementById('h2h-list');
     container.innerHTML = '';
@@ -2103,10 +2072,6 @@ function renderH2H(data) {
     const mainAwayName = data.AwayTeam || data.awayTeam || '';
     const mainHomeLogo = data.HomeLogo || data.homeLogo || '';
     const mainAwayLogo = data.AwayLogo || data.awayLogo || '';
-
-    /* Standings de chaque équipe pour les passer au preview */
-    const homeStandings = g?.home?.standings || null;
-    const awayStandings = g?.away?.standings || null;
 
     h2h.forEach((m, idx) => {
         const hId   = String(m.team_home_id || '');
@@ -2165,17 +2130,9 @@ function renderH2H(data) {
                 </div>
             </div>`;
 
-        /* — Clic : ouvre la prévisualisation avec standings si dispo — */
+        /* — Clic : ouvre la prévisualisation SANS standings — */
         div.addEventListener('click', () => {
-            const enriched = Object.assign({}, m);
-            /* Injecte standings si les IDs correspondent aux équipes principales */
-            if (homeStandings || awayStandings) {
-                enriched._standings = {
-                    home: (hId === mainHomeId ? homeStandings : (hId === mainAwayId ? awayStandings : null)),
-                    away: (aId === mainHomeId ? homeStandings : (aId === mainAwayId ? awayStandings : null)),
-                };
-            }
-            openMatchPreview(enriched, hName, aName, hLogo, aLogo);
+            openMatchPreview(m, hName, aName, hLogo, aLogo);
         });
 
         container.appendChild(div);
@@ -2204,7 +2161,7 @@ function renderRanking(data) {
     container.appendChild(table);
 }
 
-/* ===== Render Infos ===== */
+/* ===== Render Infos avec classements intégrés (logo + une ligne) ===== */
 function renderInfos(data) {
     const panel = document.getElementById('infos-panel');
     panel.innerHTML = '';
@@ -2213,6 +2170,8 @@ function renderInfos(data) {
     const odds      = g?.odds || data.odds || null;
     const homeTeam  = data.HomeTeam || data.homeTeam || 'Domicile';
     const awayTeam  = data.AwayTeam || data.awayTeam || 'Extérieur';
+    const homeLogo  = data.HomeLogo || data.homeLogo || '';
+    const awayLogo  = data.AwayLogo || data.awayLogo || '';
     const league    = data.league || data.League || null;
     const matchDate = g?.date || (data.date ? data.date.split(' ')[0] : null);
     let   matchTime = '';
@@ -2243,7 +2202,7 @@ function renderInfos(data) {
         panel.appendChild(metaBlock);
     }
 
-    /* --- AJOUT : Classements dans la partie Infos --- */
+    /* --- Classements avec logo + tout sur une ligne --- */
     const homeStandings = g?.home?.standings || null;
     const awayStandings = g?.away?.standings || null;
 
@@ -2256,33 +2215,81 @@ function renderInfos(data) {
 
         const stBlock = document.createElement('div');
         stBlock.className = 'infos-match-meta';
-        let stHTML = '';
 
         if (homeStandings) {
-            stHTML += `
-                <div class="infos-meta-row">
-                    <span class="infos-meta-key"><i class="fas fa-home"></i>${homeTeam}</span>
-                    <span class="infos-meta-val">
-                        Rang ${homeStandings.position_current ?? '-'} · ${homeStandings.points ?? 0} pts · ${homeStandings.played ?? 0} J
-                        ${homeStandings.gd != null ? ` · DB ${homeStandings.gd > 0 ? '+'+homeStandings.gd : homeStandings.gd}` : ''}
-                    </span>
-                </div>`;
+            const row = document.createElement('div');
+            row.className = 'standings-row';
+            row.style.animationDelay = '0.06s';
+            row.innerHTML = `
+                <div class="standings-team">
+                    <div class="standings-team-logo">
+                        ${homeLogo
+                            ? `<img src="${homeLogo}" alt="${homeTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
+                            : '<i class="fas fa-futbol"></i>'}
+                    </div>
+                    <span class="standings-team-name">${homeTeam}</span>
+                </div>
+                <div class="standings-stats">
+                    <div class="standings-stat">
+                        <span class="standings-stat-val pos">${homeStandings.position_current ?? '-'}</span>
+                        <span class="standings-stat-label">Rang</span>
+                    </div>
+                    <div class="standings-stat">
+                        <span class="standings-stat-val">${homeStandings.played ?? 0}</span>
+                        <span class="standings-stat-label">J</span>
+                    </div>
+                    <div class="standings-stat">
+                        <span class="standings-stat-val">${homeStandings.gd != null ? (homeStandings.gd > 0 ? '+'+homeStandings.gd : homeStandings.gd) : 0}</span>
+                        <span class="standings-stat-label">DB</span>
+                    </div>
+                    <div class="standings-stat">
+                        <span class="standings-stat-val pts">${homeStandings.points ?? 0}</span>
+                        <span class="standings-stat-label">Pts</span>
+                    </div>
+                </div>
+            `;
+            stBlock.appendChild(row);
         }
+
         if (awayStandings) {
-            stHTML += `
-                <div class="infos-meta-row">
-                    <span class="infos-meta-key"><i class="fas fa-plane"></i>${awayTeam}</span>
-                    <span class="infos-meta-val">
-                        Rang ${awayStandings.position_current ?? '-'} · ${awayStandings.points ?? 0} pts · ${awayStandings.played ?? 0} J
-                        ${awayStandings.gd != null ? ` · DB ${awayStandings.gd > 0 ? '+'+awayStandings.gd : awayStandings.gd}` : ''}
-                    </span>
-                </div>`;
+            const row = document.createElement('div');
+            row.className = 'standings-row';
+            row.style.animationDelay = '0.12s';
+            row.innerHTML = `
+                <div class="standings-team">
+                    <div class="standings-team-logo">
+                        ${awayLogo
+                            ? `<img src="${awayLogo}" alt="${awayTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
+                            : '<i class="fas fa-futbol"></i>'}
+                    </div>
+                    <span class="standings-team-name">${awayTeam}</span>
+                </div>
+                <div class="standings-stats">
+                    <div class="standings-stat">
+                        <span class="standings-stat-val pos">${awayStandings.position_current ?? '-'}</span>
+                        <span class="standings-stat-label">Rang</span>
+                    </div>
+                    <div class="standings-stat">
+                        <span class="standings-stat-val">${awayStandings.played ?? 0}</span>
+                        <span class="standings-stat-label">J</span>
+                    </div>
+                    <div class="standings-stat">
+                        <span class="standings-stat-val">${awayStandings.gd != null ? (awayStandings.gd > 0 ? '+'+awayStandings.gd : awayStandings.gd) : 0}</span>
+                        <span class="standings-stat-label">DB</span>
+                    </div>
+                    <div class="standings-stat">
+                        <span class="standings-stat-val pts">${awayStandings.points ?? 0}</span>
+                        <span class="standings-stat-label">Pts</span>
+                    </div>
+                </div>
+            `;
+            stBlock.appendChild(row);
         }
-        stBlock.innerHTML = stHTML;
+
         panel.appendChild(stBlock);
     }
-    /* --- FIN AJOUT --- */
 
+    /* --- Cotes --- */
     const oddsTitle = document.createElement('div');
     oddsTitle.className = 'odds-section-title';
     oddsTitle.innerHTML = '<i class="fas fa-tags"></i> Cotes 1 X 2';
@@ -2500,7 +2507,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupDarkMode();
     initPWA();
 
-    console.log('Starky Sports v4.3.0 — match preview sheet');
+    console.log('Starky Sports v4.3.0 — match preview sheet (sans classement)');
 
     loadAndCacheLogo();
     showSection('forecasts');
