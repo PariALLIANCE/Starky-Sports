@@ -97,6 +97,15 @@
             from{opacity:0;transform:translateX(-6px)}
             to{opacity:1;transform:translateX(0)}
         }
+        /* ══ MORPH OPEN/CLOSE (style One UI 8.5 app launch) ══ */
+        .morph-source-fade{
+            transition:opacity 0.30s var(--ease), transform 0.30s var(--ease);
+            will-change:opacity,transform;
+        }
+        .morph-source-fade.faded{
+            opacity:0;
+            transform:scale(0.90);
+        }
         @keyframes pulseGlow {
             0%,100%{box-shadow:0 0 0 0 rgba(123,110,246,0)}
             50%{box-shadow:0 0 0 4px rgba(123,110,246,0.15)}
@@ -521,6 +530,7 @@
         }
         .standings-stat-val.pts{color:var(--primary)}
         .standings-stat-val.pos{color:var(--warning)}
+        .standings-stat-val.matchday{color:var(--cyan);font-size:12px}
         .standings-stat-label {
             font-size:8px;font-weight:600;color:var(--text-inactive);
             text-transform:uppercase;letter-spacing:0.5px;
@@ -549,11 +559,14 @@
             border-radius:22px 22px 0 0;
             max-height:85vh;
             display:flex;flex-direction:column;
-            transform:translateY(100%);
-            transition:transform 0.38s cubic-bezier(0.23,1,0.32,1);
+            opacity:0;
+            transform:translateY(8%) scale(0.92);
+            transform-origin:center center;
             box-shadow:0 -10px 50px rgba(0,0,0,0.6);
+            will-change:transform,opacity;
         }
-        .match-preview.active .mp-sheet { transform:translateY(0); }
+        /* Le morph d'ouverture/fermeture est entièrement piloté en JS (morphOpen / morphClose)
+           pour reproduire l'effet "zoom depuis la carte" façon One UI 8.5. */
         .mp-handle {
             width:36px;height:4px;border-radius:2px;
             background:rgba(255,255,255,0.12);
@@ -987,7 +1000,7 @@
 <!-- MATCH PREVIEW BOTTOM SHEET -->
 <div class="match-preview" id="match-preview">
     <div class="mp-backdrop" id="mp-backdrop"></div>
-    <div class="mp-sheet">
+    <div class="mp-sheet" id="mp-sheet">
         <div class="mp-handle"></div>
         <div class="mp-topbar">
             <div class="mp-comp-info">
@@ -1345,6 +1358,8 @@ const STAT_ICONS = {
 };
 
 let selectedForecast   = null;
+let detailSourceCard   = null;
+let previewSourceCard  = null;
 let currentSection     = 'forecasts';
 let hasNewEvents       = false;
 let selectedAvatar     = localStorage.getItem('starky_avatar') || 'king1';
@@ -1599,7 +1614,105 @@ function buildBarWrap(widthPct, barClass, valueText, labelText) {
 }
 
 /* ===== MATCH PREVIEW BOTTOM SHEET ===== */
-function openMatchPreview(m, hName, aName, hLogo, aLogo) {
+/* ===================================================================
+   MORPH OPEN / CLOSE — animation "zoom + fade" façon One UI 8.5
+   Le panneau (page détail ou bottom-sheet) semble jaillir de la carte
+   cliquée à l'ouverture (la carte s'estompe/rétrécit — fade out), et
+   revient s'y fondre à la fermeture (la carte réapparaît — fade in).
+   =================================================================== */
+function morphOpen(panelEl, sourceEl, opts = {}) {
+    if (!panelEl) return;
+    if (sourceEl && !sourceEl.isConnected) sourceEl = null;
+    const openMs = opts.openMs || 420;
+
+    panelEl.classList.add('active');
+    panelEl.style.transition = 'none';
+    panelEl.style.opacity = '0';
+
+    if (sourceEl) {
+        const sRect = sourceEl.getBoundingClientRect();
+        const tRect = panelEl.getBoundingClientRect();
+        const scaleX = Math.max(sRect.width  / Math.max(tRect.width, 1),  0.06);
+        const scaleY = Math.max(sRect.height / Math.max(tRect.height, 1), 0.06);
+        const dx = (sRect.left + sRect.width  / 2) - (tRect.left + tRect.width  / 2);
+        const dy = (sRect.top  + sRect.height / 2) - (tRect.top  + tRect.height / 2);
+        panelEl.style.transformOrigin = 'center center';
+        panelEl.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+    } else {
+        panelEl.style.transformOrigin = 'center center';
+        panelEl.style.transform = 'scale(0.92)';
+    }
+
+    /* — La carte source s'estompe (fade out) pendant que le panneau émerge — */
+    if (sourceEl) {
+        sourceEl.classList.add('morph-source-fade');
+        void sourceEl.offsetWidth;
+        requestAnimationFrame(() => sourceEl.classList.add('faded'));
+    }
+
+    void panelEl.offsetWidth; /* reflow forcé */
+
+    panelEl.style.transition = `transform ${openMs}ms var(--spring), opacity ${Math.round(openMs*0.72)}ms var(--ease)`;
+    requestAnimationFrame(() => {
+        panelEl.style.transform = 'translate(0px,0px) scale(1,1)';
+        panelEl.style.opacity   = '1';
+    });
+
+    panelEl.addEventListener('transitionend', function handler(e) {
+        if (e.target !== panelEl) return;
+        panelEl.style.transition = '';
+        panelEl.removeEventListener('transitionend', handler);
+    });
+}
+
+function morphClose(panelEl, sourceEl, opts = {}) {
+    if (!panelEl) return;
+    if (sourceEl && !sourceEl.isConnected) sourceEl = null;
+    const closeMs = opts.closeMs || 360;
+
+    let dx = 0, dy = 0, scaleX = 0.4, scaleY = 0.4;
+    if (sourceEl) {
+        const sRect = sourceEl.getBoundingClientRect();
+        const tRect = panelEl.getBoundingClientRect();
+        scaleX = Math.max(sRect.width  / Math.max(tRect.width, 1),  0.06);
+        scaleY = Math.max(sRect.height / Math.max(tRect.height, 1), 0.06);
+        dx = (sRect.left + sRect.width  / 2) - (tRect.left + tRect.width  / 2);
+        dy = (sRect.top  + sRect.height / 2) - (tRect.top  + tRect.height / 2);
+    }
+
+    panelEl.style.transformOrigin = 'center center';
+    panelEl.style.transition = `transform ${closeMs}ms var(--ease), opacity ${Math.round(closeMs*0.8)}ms var(--ease)`;
+    requestAnimationFrame(() => {
+        panelEl.style.transform = sourceEl
+            ? `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})`
+            : 'scale(0.92)';
+        panelEl.style.opacity = '0';
+    });
+
+    const finish = () => {
+        panelEl.classList.remove('active');
+        panelEl.style.transition     = '';
+        panelEl.style.transform      = '';
+        panelEl.style.opacity        = '';
+        panelEl.style.transformOrigin= '';
+        /* — La carte source réapparaît (fade in) une fois le panneau refermé — */
+        if (sourceEl) {
+            sourceEl.classList.remove('faded');
+            setTimeout(() => sourceEl.classList.remove('morph-source-fade'), 320);
+        }
+    };
+
+    let done = false;
+    panelEl.addEventListener('transitionend', function handler(e) {
+        if (e.target !== panelEl || done) return;
+        done = true;
+        panelEl.removeEventListener('transitionend', handler);
+        finish();
+    });
+    setTimeout(() => { if (!done) { done = true; finish(); } }, closeMs + 140);
+}
+
+function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
     /* — Compétition & date — */
     document.getElementById('mp-comp-name').textContent = m.competition || '';
     document.getElementById('mp-comp-date').textContent = m.date        || '';
@@ -1642,9 +1755,48 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo) {
     document.getElementById('mp-home-name').textContent = hName;
     document.getElementById('mp-away-name').textContent = aName;
 
-    /* — Corps : stats uniquement (plus de classement) — */
+    /* — Corps : cotes puis stats (plus de classement) — */
     const body = document.getElementById('mp-body');
     body.innerHTML = '';
+
+    /* — Cotes 1X2 de ce match passé (last_five / h2h) — */
+    const mOdds = m.odds || null;
+    const oH = mOdds && mOdds.home != null ? +mOdds.home : null;
+    const oD = mOdds && mOdds.draw != null ? +mOdds.draw : null;
+    const oA = mOdds && mOdds.away != null ? +mOdds.away : null;
+
+    if (oH !== null || oD !== null || oA !== null) {
+        const oddsTitleEl = document.createElement('div');
+        oddsTitleEl.className = 'mp-section-title';
+        oddsTitleEl.innerHTML = '<i class="fas fa-tags"></i> Cotes 1 X 2';
+        body.appendChild(oddsTitleEl);
+
+        const oddsCard = document.createElement('div');
+        oddsCard.className = 'odds-card';
+        oddsCard.style.marginBottom = '20px';
+        oddsCard.innerHTML = `
+            <div class="odds-grid">
+                ${oH !== null ? `
+                <div class="odds-cell">
+                    <span class="odds-cell-label">1</span>
+                    <span class="odds-cell-outcome">Domicile</span>
+                    <span class="odds-cell-val">${oH.toFixed(2)}</span>
+                </div>` : ''}
+                ${oD !== null ? `
+                <div class="odds-cell">
+                    <span class="odds-cell-label">X</span>
+                    <span class="odds-cell-outcome">Nul</span>
+                    <span class="odds-cell-val">${oD.toFixed(2)}</span>
+                </div>` : ''}
+                ${oA !== null ? `
+                <div class="odds-cell">
+                    <span class="odds-cell-label">2</span>
+                    <span class="odds-cell-outcome">Extérieur</span>
+                    <span class="odds-cell-val">${oA.toFixed(2)}</span>
+                </div>` : ''}
+            </div>`;
+        body.appendChild(oddsCard);
+    }
 
     const stats    = m.stats    || {};
     const statKeys = Object.keys(stats);
@@ -1689,18 +1841,27 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo) {
         body.appendChild(noStats);
     }
 
+    /* — Ouverture : le bottom-sheet jaillit depuis la carte cliquée — */
+    previewSourceCard = sourceEl || null;
     document.getElementById('match-preview').classList.add('active');
+    morphOpen(document.getElementById('mp-sheet'), previewSourceCard, { openMs: 400 });
 }
 
 function closeMatchPreview() {
-    document.getElementById('match-preview').classList.remove('active');
+    const matchPreviewEl = document.getElementById('match-preview');
+    const sheetEl = document.getElementById('mp-sheet');
+    /* — Fermeture : le bottom-sheet se rétracte et se fond dans la carte d'origine — */
+    morphClose(sheetEl, previewSourceCard, { closeMs: 340 });
+    /* Le fond (backdrop) suit le même timing que la fermeture du sheet */
+    matchPreviewEl.classList.remove('active');
+    previewSourceCard = null;
 }
 
 /* ===== Carte pronostic ===== */
 function createForecastCard(data) {
     const card = document.createElement('div');
     card.className = 'forecast-card';
-    card.addEventListener('click', () => openDetail(data));
+    card.addEventListener('click', () => openDetail(data, card));
 
     const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
     const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
@@ -1840,8 +2001,9 @@ function adjustDetailScroll() {
     if (header && scroll) scroll.style.top = header.offsetHeight + 'px';
 }
 
-function openDetail(data) {
+function openDetail(data, sourceEl) {
     selectedForecast = data;
+    detailSourceCard = sourceEl || null;
     const g        = data._game || null;
     const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
     const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
@@ -1884,13 +2046,16 @@ function openDetail(data) {
     renderRanking(data);
     renderInfos(data);
     switchTab('probabilites');
-    document.getElementById('forecast-detail').classList.add('active');
+    /* — Ouverture : la page détail jaillit depuis la carte cliquée dans la liste — */
+    morphOpen(document.getElementById('forecast-detail'), detailSourceCard, { openMs: 440 });
     requestAnimationFrame(adjustDetailScroll);
 }
 
 function closeDetail() {
-    document.getElementById('forecast-detail').classList.remove('active');
+    /* — Fermeture : la page détail se rétracte et se fond dans la carte d'origine — */
+    morphClose(document.getElementById('forecast-detail'), detailSourceCard, { closeMs: 380 });
     selectedForecast = null;
+    detailSourceCard = null;
 }
 
 function switchTab(name) {
@@ -1973,7 +2138,7 @@ function renderMatches(data) {
                         ${m.awayLogo?`<img class="match-team-logo" src="${m.awayLogo}" alt="">`:''}<span>${m.awayTeam||''}</span>
                     </div>
                 </div>`;
-            div.addEventListener('click', () => openMatchPreview(m, m.homeTeam||'', m.awayTeam||'', m.homeLogo||'', m.awayLogo||''));
+            div.addEventListener('click', () => openMatchPreview(m, m.homeTeam||'', m.awayTeam||'', m.homeLogo||'', m.awayLogo||'', div));
             container.appendChild(div);
         });
         return;
@@ -2026,7 +2191,7 @@ function renderMatches(data) {
 
         /* — Clic : ouvre la prévisualisation — */
         div.addEventListener('click', () => {
-            openMatchPreview(m, leftName, rightName, leftLogo, rightLogo);
+            openMatchPreview(m, leftName, rightName, leftLogo, rightLogo, div);
         });
 
         return div;
@@ -2132,7 +2297,7 @@ function renderH2H(data) {
 
         /* — Clic : ouvre la prévisualisation SANS standings — */
         div.addEventListener('click', () => {
-            openMatchPreview(m, hName, aName, hLogo, aLogo);
+            openMatchPreview(m, hName, aName, hLogo, aLogo, div);
         });
 
         container.appendChild(div);
@@ -2205,6 +2370,8 @@ function renderInfos(data) {
     /* --- Classements avec logo + tout sur une ligne --- */
     const homeStandings = g?.home?.standings || null;
     const awayStandings = g?.away?.standings || null;
+    const homeMatchday  = g?.home?.matchday ?? null;
+    const awayMatchday  = g?.away?.matchday ?? null;
 
     if (homeStandings || awayStandings) {
         const stTitle = document.createElement('div');
@@ -2230,6 +2397,11 @@ function renderInfos(data) {
                     <span class="standings-team-name">${homeTeam}</span>
                 </div>
                 <div class="standings-stats">
+                    ${homeMatchday != null ? `
+                    <div class="standings-stat">
+                        <span class="standings-stat-val matchday">J${homeMatchday}</span>
+                        <span class="standings-stat-label">Journée</span>
+                    </div>` : ''}
                     <div class="standings-stat">
                         <span class="standings-stat-val pos">${homeStandings.position_current ?? '-'}</span>
                         <span class="standings-stat-label">Rang</span>
@@ -2265,6 +2437,11 @@ function renderInfos(data) {
                     <span class="standings-team-name">${awayTeam}</span>
                 </div>
                 <div class="standings-stats">
+                    ${awayMatchday != null ? `
+                    <div class="standings-stat">
+                        <span class="standings-stat-val matchday">J${awayMatchday}</span>
+                        <span class="standings-stat-label">Journée</span>
+                    </div>` : ''}
                     <div class="standings-stat">
                         <span class="standings-stat-val pos">${awayStandings.position_current ?? '-'}</span>
                         <span class="standings-stat-label">Rang</span>
