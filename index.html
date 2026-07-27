@@ -326,6 +326,9 @@
         .detail-scroll{position:absolute;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
         .tab-panel{display:none;padding:16px}
         .tab-panel.active{display:block;animation:fadeSlideUp 0.55s var(--ease)}
+        /* — Sections Matchs & H2H : plus aucun fade in / fade out — */
+        #matches-content.active,
+        #h2h-content.active{animation:none}
 
         /* ══ ANALYSIS BLOCKS ══ */
         .analysis-block{
@@ -351,12 +354,11 @@
         .fdot.D{background:rgba(255,184,48,0.2);color:var(--warning)}
         .fdot.L{background:rgba(255,77,109,0.15);color:var(--danger)}
 
-        /* ══ MATCH ITEM ══ */
+        /* ══ MATCH ITEM (pas d'animation d'entrée) ══ */
         .match-item{
             background:var(--bg-card);border:1px solid var(--border);
             border-radius:10px;padding:11px 14px;margin-bottom:8px;
             transition:background 0.4s,border-color 0.25s;
-            animation:fadeSlideUp 0.55s var(--ease) both;
             cursor:pointer;
         }
         .match-item:hover{border-color:var(--border-bright)}
@@ -383,11 +385,10 @@
         .result-chip.loss{background:rgba(255,77,109,0.10);color:var(--danger)}
         .result-chip.draw{background:rgba(255,184,48,0.10);color:var(--warning)}
 
-        /* ══ H2H ITEM ══ */
+        /* ══ H2H ITEM (pas d'animation d'entrée) ══ */
         .h2h-item{
             background:var(--bg-card);border:1px solid var(--border);
             border-radius:10px;padding:11px 14px;margin-bottom:8px;
-            animation:fadeSlideUp 0.55s var(--ease) both;
             transition:background 0.4s,border-color 0.25s;
             cursor:pointer;
         }
@@ -565,8 +566,6 @@
             box-shadow:0 -10px 50px rgba(0,0,0,0.6);
             will-change:transform,opacity;
         }
-        /* Le morph d'ouverture/fermeture est entièrement piloté en JS (morphOpen / morphClose)
-           pour reproduire l'effet "zoom depuis la carte" façon One UI 8.5. */
         .mp-handle {
             width:36px;height:4px;border-radius:2px;
             background:rgba(255,255,255,0.12);
@@ -1624,12 +1623,17 @@ function morphOpen(panelEl, sourceEl, opts = {}) {
     if (!panelEl) return;
     if (sourceEl && !sourceEl.isConnected) sourceEl = null;
     const openMs = opts.openMs || 420;
+    /* openFromCenter : le panneau jaillit toujours du milieu de l'app,
+       peu importe la carte source (utilisé pour les cartes de matchs) */
+    const openFromCenter = !!opts.openFromCenter;
+    /* fadeSource : si false, la carte source ne s'estompe pas à l'ouverture */
+    const fadeSource = opts.fadeSource !== false;
 
     panelEl.classList.add('active');
     panelEl.style.transition = 'none';
     panelEl.style.opacity = '0';
 
-    if (sourceEl) {
+    if (sourceEl && !openFromCenter) {
         const sRect = sourceEl.getBoundingClientRect();
         const tRect = panelEl.getBoundingClientRect();
         const scaleX = Math.max(sRect.width  / Math.max(tRect.width, 1),  0.06);
@@ -1644,7 +1648,7 @@ function morphOpen(panelEl, sourceEl, opts = {}) {
     }
 
     /* — La carte source s'estompe (fade out) pendant que le panneau émerge — */
-    if (sourceEl) {
+    if (sourceEl && fadeSource) {
         sourceEl.classList.add('morph-source-fade');
         void sourceEl.offsetWidth;
         requestAnimationFrame(() => sourceEl.classList.add('faded'));
@@ -1669,6 +1673,8 @@ function morphClose(panelEl, sourceEl, opts = {}) {
     if (!panelEl) return;
     if (sourceEl && !sourceEl.isConnected) sourceEl = null;
     const closeMs = opts.closeMs || 360;
+    /* fadeSource : si false, la carte source ne réapparaît pas en fade in */
+    const fadeSource = opts.fadeSource !== false;
 
     let dx = 0, dy = 0, scaleX = 0.4, scaleY = 0.4;
     if (sourceEl) {
@@ -1696,7 +1702,7 @@ function morphClose(panelEl, sourceEl, opts = {}) {
         panelEl.style.opacity        = '';
         panelEl.style.transformOrigin= '';
         /* — La carte source réapparaît (fade in) une fois le panneau refermé — */
-        if (sourceEl) {
+        if (sourceEl && fadeSource) {
             sourceEl.classList.remove('faded');
             setTimeout(() => sourceEl.classList.remove('morph-source-fade'), 320);
         }
@@ -1841,17 +1847,17 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
         body.appendChild(noStats);
     }
 
-    /* — Ouverture : le bottom-sheet jaillit depuis la carte cliquée — */
+    /* — Ouverture : le bottom-sheet jaillit du milieu de l'app (sans fade sur la carte source) — */
     previewSourceCard = sourceEl || null;
     document.getElementById('match-preview').classList.add('active');
-    morphOpen(document.getElementById('mp-sheet'), previewSourceCard, { openMs: 400 });
+    morphOpen(document.getElementById('mp-sheet'), previewSourceCard, { openMs: 400, openFromCenter: true, fadeSource: false });
 }
 
 function closeMatchPreview() {
     const matchPreviewEl = document.getElementById('match-preview');
     const sheetEl = document.getElementById('mp-sheet');
-    /* — Fermeture : le bottom-sheet se rétracte et se fond dans la carte d'origine — */
-    morphClose(sheetEl, previewSourceCard, { closeMs: 340 });
+    /* — Fermeture : le bottom-sheet se rétracte et se fond dans la carte d'origine (sans fade) — */
+    morphClose(sheetEl, previewSourceCard, { closeMs: 340, fadeSource: false });
     /* Le fond (backdrop) suit le même timing que la fermeture du sheet */
     matchPreviewEl.classList.remove('active');
     previewSourceCard = null;
@@ -2093,7 +2099,7 @@ function renderProbabilites(data) {
 function renderStats(data) { document.getElementById('stats-panel').innerHTML = ''; }
 
 /* ===================================================================
-   RENDER MATCHES — last_five ESPN avec preview au clic
+   RENDER MATCHES — last_five ESPN avec preview au clic (sans animation d'entrée)
    =================================================================== */
 function renderMatches(data) {
     const container = document.getElementById('matches-list');
@@ -2115,10 +2121,9 @@ function renderMatches(data) {
             container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
             return;
         }
-        list.forEach((m, idx) => {
+        list.forEach((m) => {
             const div = document.createElement('div');
             div.className = 'match-item';
-            div.style.animationDelay = `${idx * 0.06}s`;
             const resClass = m.result==='win'?'win':m.result==='loss'?'loss':'draw';
             const resLabel = m.result==='win'?'Victoire':m.result==='loss'?'Défaite':'Nul';
             div.innerHTML = `
@@ -2144,7 +2149,7 @@ function renderMatches(data) {
         return;
     }
 
-    function buildMatchItem(m, mainTeamId, mainTeamName, mainTeamLogo, idx) {
+    function buildMatchItem(m, mainTeamId, mainTeamName, mainTeamLogo) {
         const hId   = m.team_home_id || null;
         const aId   = m.team_away_id || null;
         const hName = m.team_home    || '';
@@ -2168,7 +2173,6 @@ function renderMatches(data) {
 
         const div = document.createElement('div');
         div.className = 'match-item';
-        div.style.animationDelay = `${idx * 0.06}s`;
         div.innerHTML = `
             <div class="match-item-header">
                 <span class="match-item-comp">${m.competition||''}</span>
@@ -2189,7 +2193,6 @@ function renderMatches(data) {
                 </div>
             </div>`;
 
-        /* — Clic : ouvre la prévisualisation — */
         div.addEventListener('click', () => {
             openMatchPreview(m, leftName, rightName, leftLogo, rightLogo, div);
         });
@@ -2202,8 +2205,8 @@ function renderMatches(data) {
         sectionTitle.className = 'odds-section-title';
         sectionTitle.innerHTML = `<i class="fas fa-home"></i> ${homeTeam || 'Domicile'}`;
         container.appendChild(sectionTitle);
-        homeFive.forEach((m, idx) => {
-            container.appendChild(buildMatchItem(m, homeId, homeTeam, homeLogo, idx));
+        homeFive.forEach((m) => {
+            container.appendChild(buildMatchItem(m, homeId, homeTeam, homeLogo));
         });
     }
 
@@ -2213,13 +2216,13 @@ function renderMatches(data) {
         sectionTitle2.style.marginTop = '16px';
         sectionTitle2.innerHTML = `<i class="fas fa-plane"></i> ${awayTeam || 'Extérieur'}`;
         container.appendChild(sectionTitle2);
-        awayFive.forEach((m, idx) => {
-            container.appendChild(buildMatchItem(m, awayId, awayTeam, awayLogo, idx));
+        awayFive.forEach((m) => {
+            container.appendChild(buildMatchItem(m, awayId, awayTeam, awayLogo));
         });
     }
 }
 
-/* ===== Render H2H avec preview au clic (SANS classement) ===== */
+/* ===== Render H2H avec preview au clic (SANS animation d'entrée) ===== */
 function renderH2H(data) {
     const container = document.getElementById('h2h-list');
     container.innerHTML = '';
@@ -2238,7 +2241,7 @@ function renderH2H(data) {
     const mainHomeLogo = data.HomeLogo || data.homeLogo || '';
     const mainAwayLogo = data.AwayLogo || data.awayLogo || '';
 
-    h2h.forEach((m, idx) => {
+    h2h.forEach((m) => {
         const hId   = String(m.team_home_id || '');
         const aId   = String(m.team_away_id || '');
         const hLogo = m.team_home_logo || (hId ? espnLogo(hId) : '');
@@ -2275,7 +2278,6 @@ function renderH2H(data) {
 
         const div = document.createElement('div');
         div.className = 'h2h-item';
-        div.style.animationDelay = `${idx * 0.06}s`;
         div.innerHTML = `
             <div class="h2h-header">
                 <span class="h2h-comp">${m.competition||''}</span>
@@ -2295,7 +2297,6 @@ function renderH2H(data) {
                 </div>
             </div>`;
 
-        /* — Clic : ouvre la prévisualisation SANS standings — */
         div.addEventListener('click', () => {
             openMatchPreview(m, hName, aName, hLogo, aLogo, div);
         });
