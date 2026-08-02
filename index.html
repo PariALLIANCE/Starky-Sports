@@ -19,60 +19,38 @@
             --magenta:        #E040FB;
             --grad:           linear-gradient(135deg,#7B6EF6 0%,#00D4FF 50%,#E040FB 100%);
             --grad-soft:      linear-gradient(135deg,rgba(123,110,246,0.18) 0%,rgba(0,212,255,0.12) 100%);
-            --bg:             #000000;
-            --bg-surface:     rgba(46,46,66,0.4);
-            --bg-card:        rgba(52,52,74,0.42);
-            --bg-elevated:    rgba(60,60,84,0.46);
-            --text:           #F0F0FF;
-            --text-muted:     #8A8AB0;
-            --text-inactive:  #5A5A80;
-            --border:         rgba(255,255,255,0.14);
-            --border-bright:  rgba(255,255,255,0.32);
+            --bg:             #EEEEF8;
+            --bg-surface:     rgba(255,255,255,0.16);
+            --bg-card:        rgba(255,255,255,0.22);
+            --bg-elevated:    rgba(255,255,255,0.28);
+            --text:           #0E0E2A;
+            --text-muted:     #5A5A80;
+            --text-inactive:  #9090B0;
+            --border:         rgba(255,255,255,0.4);
+            --border-bright:  rgba(123,110,246,0.45);
             --success:        #4FFFB0;
             --danger:         #FF4D6D;
             --warning:        #FFB830;
-            --logo-bg:        rgba(60,60,84,0.4);
-            --header-bg:      rgba(20,20,32,0.5);
-            --nav-bg:         rgba(24,24,38,0.42);
-            --glass-fill:     rgba(255,255,255,0.07);
-            --glass-fill-strong: rgba(255,255,255,0.14);
-            --glass-border:   rgba(255,255,255,0.16);
+            --logo-bg:        rgba(255,255,255,0.22);
+            --header-bg:      rgba(238,238,248,0.28);
+            --nav-bg:         rgba(238,238,248,0.22);
+            --glass-fill:     rgba(255,255,255,0.16);
+            --glass-fill-strong: rgba(255,255,255,0.3);
+            --glass-border:   rgba(255,255,255,0.4);
             --glass-blur:     26px;
             --notif-dot:      #FF4D6D;
-            --side-bg:        rgba(18,18,28,0.5);
-            --side-hover:     rgba(255,255,255,0.08);
-            --side-active:    rgba(255,255,255,0.14);
+            --side-bg:        rgba(238,238,248,0.28);
+            --side-hover:     rgba(123,110,246,0.08);
+            --side-active:    rgba(123,110,246,0.14);
             --home-color:     #FF4D6D;
             --away-color:     #00D4FF;
-            --shadow:         rgba(0,0,0,0.7);
-            --overlay-bg:     rgba(0,0,0,0.55);
+            --shadow:         rgba(0,0,0,0.10);
+            --overlay-bg:     rgba(0,0,0,0.45);
             --proba-home:     #0066FF;
             --proba-away:     #8800FF;
             --ease:           cubic-bezier(0.23,1,0.32,1);
             --spring:         cubic-bezier(0.34,1.56,0.64,1);
             --spring-soft:    cubic-bezier(0.32,1.12,0.44,1);
-        }
-        body.light-mode {
-            --bg:             #EEEEF8;
-            --bg-surface:     rgba(255,255,255,0.32);
-            --bg-card:        rgba(255,255,255,0.4);
-            --bg-elevated:    rgba(255,255,255,0.5);
-            --text:           #0E0E2A;
-            --text-muted:     #5A5A80;
-            --text-inactive:  #9090B0;
-            --border:         rgba(255,255,255,0.55);
-            --border-bright:  rgba(123,110,246,0.45);
-            --logo-bg:        rgba(255,255,255,0.4);
-            --header-bg:      rgba(238,238,248,0.5);
-            --nav-bg:         rgba(238,238,248,0.4);
-            --glass-fill:     rgba(255,255,255,0.35);
-            --glass-fill-strong: rgba(255,255,255,0.55);
-            --glass-border:   rgba(255,255,255,0.55);
-            --side-bg:        rgba(238,238,248,0.5);
-            --side-hover:     rgba(123,110,246,0.08);
-            --side-active:    rgba(123,110,246,0.14);
-            --shadow:         rgba(0,0,0,0.10);
-            --overlay-bg:     rgba(0,0,0,0.55);
         }
         *, *::before, *::after {
             box-sizing: border-box;
@@ -96,7 +74,7 @@
                 radial-gradient(circle at 15% 8%,#8b5cf740,transparent 40%),
                 radial-gradient(circle at 92% 12%,#e0505028,transparent 35%),
                 radial-gradient(circle at 80% 92%,#a855f728,transparent 40%),
-                linear-gradient(165deg,#000000,#020203,#030304);
+                linear-gradient(165deg,#d6d9e0,#e0e2e8,#eceef2);
             color: var(--text);
             overflow: hidden;
             width: 100%; height: 100vh;
@@ -104,13 +82,6 @@
             font-weight: 500;
             -webkit-touch-callout: none;
             transition: background 0.4s, color 0.4s;
-        }
-        body.light-mode {
-            background:
-                radial-gradient(circle at 15% 8%,#8b5cf740,transparent 40%),
-                radial-gradient(circle at 92% 12%,#e0505028,transparent 35%),
-                radial-gradient(circle at 80% 92%,#a855f728,transparent 40%),
-                linear-gradient(165deg,#d6d9e0,#e0e2e8,#eceef2);
         }
         .app-orb{position:fixed;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}
         .app-orb-1{width:420px;height:420px;background:#8b3ff755;top:-140px;right:-140px}
@@ -253,18 +224,16 @@
 
         /* ══ FORECAST CARD — liquid glass ══ */
         .forecast-card {
-            background:rgba(20,20,34,0.4);border:1px solid var(--glass-border);
+            background:rgba(255,255,255,0.2);border:1px solid var(--glass-border);
             backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);
             border-radius:22px;padding:16px 18px 14px;cursor:pointer;
             position:relative;overflow:hidden;
-            box-shadow:inset 0 1px 0 rgba(255,255,255,0.14),0 14px 30px rgba(0,0,0,0.16);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 14px 30px rgba(0,0,0,0.08);
             transition:border-color 0.22s,background 0.2s,box-shadow 0.45s,transform 0.16s cubic-bezier(.25,.8,.4,1);
             flex-shrink:0;-webkit-tap-highlight-color:transparent;
             will-change:transform,opacity;transform:translateZ(0);
         }
-        .forecast-card.pressed{border-color:var(--border-bright);background:rgba(30,30,48,0.5);transform:scale(1.015,.985)}
-        body.light-mode .forecast-card{background:rgba(255,255,255,0.4);box-shadow:inset 0 1px 0 rgba(255,255,255,0.5),0 14px 30px rgba(0,0,0,0.08)}
-        body.light-mode .forecast-card.pressed{background:rgba(255,255,255,0.6)}
+        .forecast-card.pressed{border-color:var(--border-bright);background:rgba(255,255,255,0.32);transform:scale(1.015,.985)}
         .forecast-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
         .forecast-header-left{display:flex;align-items:center;gap:7px}
         .league-badge{
@@ -319,13 +288,10 @@
         /* ══ DETAIL PAGE ══ */
         .forecast-detail{
             position:fixed;inset:0;z-index:200;
-            background:rgba(20,20,34,0.4);
+            background:rgba(255,255,255,0.2);
             backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);
             display:none;flex-direction:column;
             transition:background 0.4s;
-        }
-        body.light-mode .forecast-detail{
-            background:rgba(255,255,255,0.4);
         }
         .forecast-detail.active{display:flex}
         .detail-header{
@@ -509,7 +475,6 @@
             gap:6px;transition:background 0.22s,transform 0.2s var(--spring);
             cursor:default;
         }
-        body.light-mode .odds-cell{background:var(--bg-card)}
         .odds-cell:hover{background:var(--bg-elevated);transform:translateY(-2px)}
         .odds-cell-label{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-inactive)}
         .odds-cell-outcome{font-size:10px;font-weight:600;color:var(--text-muted);white-space:nowrap}
@@ -620,10 +585,9 @@
         }
         .mp-handle {
             width:36px;height:4px;border-radius:2px;
-            background:rgba(255,255,255,0.12);
+            background:rgba(0,0,0,0.14);
             margin:10px auto 0;flex-shrink:0;
         }
-        body.light-mode .mp-handle { background:rgba(0,0,0,0.12); }
         .mp-topbar {
             display:flex;align-items:center;justify-content:space-between;
             padding:12px 16px 4px;flex-shrink:0;
@@ -1178,17 +1142,6 @@
                     </div>
                 </div>
                 <div class="iface-block">
-                    <div class="iface-title"><i class="fas fa-moon"></i> Mode d'affichage</div>
-                    <div class="iface-subtitle">Basculez entre le mode sombre et clair</div>
-                    <div class="setting-row">
-                        <div class="setting-left">
-                            <div class="setting-icon"><i class="fas fa-moon" style="color:var(--primary);"></i></div>
-                            <div><div class="setting-label">Mode sombre</div></div>
-                        </div>
-                        <label class="switch"><input type="checkbox" id="dark-toggle" checked><span class="slider"></span></label>
-                    </div>
-                </div>
-                <div class="iface-block">
                     <div class="iface-title"><i class="fas fa-users"></i> Communauté</div>
                     <div class="iface-subtitle">Rejoignez-nous sur nos réseaux</div>
                     <div class="social-btns">
@@ -1521,19 +1474,6 @@ function shareApp() {
     }
 }
 
-/* ===== Dark mode ===== */
-function applyDarkMode(isDark) { document.body.classList.toggle('light-mode', !isDark); }
-function setupDarkMode() {
-    const toggle = document.getElementById('dark-toggle');
-    const isDark = localStorage.getItem('starkyDarkMode') !== 'false';
-    toggle.checked = isDark;
-    applyDarkMode(isDark);
-    toggle.addEventListener('change', function() {
-        localStorage.setItem('starkyDarkMode', this.checked ? 'true' : 'false');
-        applyDarkMode(this.checked);
-    });
-}
-
 /* ===== Dates ===== */
 function getDateString(offset=0) {
     const d = new Date();
@@ -1633,14 +1573,13 @@ function computeDNB(pH, pA) {
         .pbar span{font-size:9px;font-weight:800;color:#fff;white-space:nowrap}
         .pbar-label{font-size:8px;font-weight:700;color:var(--text-muted);margin-top:3px;text-align:center;white-space:nowrap}
         .pbar-home{background:#0066FF}
-        .pbar-draw{background:transparent;border:1.5px solid rgba(150,140,220,0.35)}
+        .pbar-draw{background:transparent;border:1.5px solid rgba(100,90,180,0.30)}
         .pbar-draw span{color:var(--text-muted)}
         .pbar-away{background:#8800FF}
         .pbar-over{background:#0066FF}
         .pbar-under{background:#8800FF}
         .pbar-btts-yes{background:#0066FF}
         .pbar-btts-no{background:#8800FF}
-        body.light-mode .pbar-draw{border-color:rgba(100,90,180,0.30)}
     `;
     document.head.appendChild(s);
 })();
@@ -2779,11 +2718,10 @@ function initLiquidGlassInteractions() {
 /* ===== INIT ===== */
 document.addEventListener('DOMContentLoaded', async () => {
     setupListeners();
-    setupDarkMode();
     initPWA();
     initLiquidGlassInteractions();
 
-    console.log('Starky Sports v4.4.0 — liquid glass iOS (boutons ronds, nav flottante, animations tactiles)');
+    console.log('Starky Sports v4.5.0 — liquid glass iOS (thème unique, transparence renforcée)');
 
     loadAndCacheLogo();
     showSection('forecasts');
