@@ -3,8 +3,8 @@
   "short_name": "Starky Sports",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#05050F",
-  "theme_color": "#05050F",
+  "background_color": "#EBEDF2",
+  "theme_color": "#E4E6EC",
   "icons": [
     {
       "src": "icon-192x192.png",
