@@ -1,0 +1,52 @@
+{
+  "palettes": [
+    {
+      "id": "starky-classic",
+      "name": "Starky",
+      "type": "palette",
+      "colors": ["#7B6EF6", "#00D4FF", "#E040FB"]
+    },
+    {
+      "id": "sunset",
+      "name": "Sunset",
+      "type": "duo",
+      "colors": ["#FF6B6B", "#FFD93D"]
+    },
+    {
+      "id": "ocean",
+      "name": "Océan",
+      "type": "duo",
+      "colors": ["#00C6FB", "#005BEA"]
+    },
+    {
+      "id": "emerald",
+      "name": "Émeraude",
+      "type": "duo",
+      "colors": ["#0BA360", "#3CBA92"]
+    },
+    {
+      "id": "candy",
+      "name": "Candy",
+      "type": "palette",
+      "colors": ["#FF61D2", "#FE9090", "#FFD86F"]
+    },
+    {
+      "id": "midnight",
+      "name": "Midnight",
+      "type": "palette",
+      "colors": ["#4E54C8", "#8F94FB", "#00C9FF"]
+    },
+    {
+      "id": "fire",
+      "name": "Feu",
+      "type": "duo",
+      "colors": ["#F857A6", "#FF5858"]
+    },
+    {
+      "id": "forest",
+      "name": "Forêt",
+      "type": "duo",
+      "colors": ["#134E5E", "#71B280"]
+    }
+  ]
+}
