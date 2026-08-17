@@ -21,26 +21,26 @@
             --grad:           linear-gradient(135deg,#7B6EF6 0%,#00D4FF 50%,#E040FB 100%);
             --grad-soft:      linear-gradient(135deg,rgba(123,110,246,0.18) 0%,rgba(0,212,255,0.12) 100%);
             --bg:             #EEEEF8;
-            --bg-surface:     rgba(255,255,255,0.11);
-            --bg-card:        rgba(255,255,255,0.15);
-            --bg-elevated:    rgba(255,255,255,0.19);
+            --bg-surface:     rgba(255,255,255,0.02);
+            --bg-card:        rgba(255,255,255,0.03);
+            --bg-elevated:    rgba(255,255,255,0.045);
             --text:           #0E0E2A;
             --text-muted:     #5A5A80;
             --text-inactive:  #9090B0;
-            --border:         rgba(255,255,255,0.28);
+            --border:         rgba(255,255,255,0.06);
             --border-bright:  rgba(123,110,246,0.45);
             --success:        #4FFFB0;
             --danger:         #FF4D6D;
             --warning:        #FFB830;
-            --logo-bg:        rgba(255,255,255,0.15);
-            --header-bg:      rgba(238,238,248,0.18);
-            --nav-bg:         rgba(238,238,248,0.14);
-            --glass-fill:     rgba(255,255,255,0.11);
-            --glass-fill-strong: rgba(255,255,255,0.20);
-            --glass-border:   rgba(255,255,255,0.28);
-            --glass-blur:     26px;
+            --logo-bg:        rgba(255,255,255,0.02);
+            --header-bg:      rgba(238,238,248,0.16);
+            --nav-bg:         rgba(238,238,248,0.13);
+            --glass-fill:     rgba(255,255,255,0.02);
+            --glass-fill-strong: rgba(255,255,255,0.045);
+            --glass-border:   rgba(255,255,255,0.06);
+            --glass-blur:     12px;
             --notif-dot:      #FF4D6D;
-            --side-bg:        rgba(238,238,248,0.18);
+            --side-bg:        rgba(238,238,248,0.13);
             --side-hover:     rgba(123,110,246,0.08);
             --side-active:    rgba(123,110,246,0.14);
             --home-color:     #FF4D6D;
@@ -54,21 +54,13 @@
             --spring-soft:    cubic-bezier(0.25,0.46,0.45,0.94);
             --glass-edge-3d:  0 0 0 rgba(0,0,0,0);
         }
-        /* ══ EFFET 3D — variables activées quand <body> porte la classe .theme-3d ══ */
+        /* ══ EFFET 3D — variables activées quand <body> porte la classe .theme-3d ══
+           La transparence (bg-*, glass-*, border, header/nav/side) est
+           désormais identique à celle du thème normal, dans tous les modes
+           (clair/sombre) : seul le relief (glass-edge-3d) et le flou
+           distinguent encore l'effet 3D. */
         body.theme-3d {
-            --bg-surface:     rgba(255,255,255,0.05);
-            --bg-card:        rgba(255,255,255,0.065);
-            --bg-elevated:    rgba(255,255,255,0.095);
-            --border:         rgba(255,255,255,0.16);
-            --border-bright:  rgba(123,110,246,0.4);
-            --logo-bg:        rgba(255,255,255,0.075);
-            --header-bg:      rgba(238,238,248,0.085);
-            --nav-bg:         rgba(238,238,248,0.065);
-            --glass-fill:     rgba(255,255,255,0.045);
-            --glass-fill-strong: rgba(255,255,255,0.12);
-            --glass-border:   rgba(255,255,255,0.15);
             --glass-blur:     18px;
-            --side-bg:        rgba(238,238,248,0.085);
             --glass-edge-3d:  inset 0 6px 10px -4px rgba(255,255,255,0.65),
                                inset 0 -8px 14px -6px rgba(0,0,0,0.1),
                                inset 6px 0 10px -6px rgba(255,255,255,0.3),
@@ -118,11 +110,9 @@
         .app-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;display:none;opacity:0.4}
         body.bg-style-orbs .app-orb{display:block}
         body.bg-black.bg-style-orbs .app-orb{opacity:0.5}
-        .app-orb-1{width:340px;height:340px;background:var(--primary);top:-60px;left:-50px}
-        .app-orb-2{width:300px;height:300px;background:var(--cyan);top:10%;right:-60px}
-        .app-orb-3{width:320px;height:320px;background:var(--magenta);bottom:20%;right:-70px}
-        .app-orb-4{width:280px;height:280px;background:var(--primary);bottom:-50px;left:-60px}
-        .app-orb-5{width:240px;height:240px;background:var(--cyan);bottom:-30px;right:22%}
+        .app-orb-1{width:340px;height:340px;background:var(--primary);top:-30px;left:-30px}
+        .app-orb-2{width:300px;height:300px;background:var(--cyan);top:14%;right:-50px}
+        .app-orb-3{width:320px;height:320px;background:var(--magenta);bottom:-20px;left:18%}
 
         .bg-spark-big{position:fixed;pointer-events:none;z-index:0;display:none;opacity:0.55}
         body.bg-style-sparks .bg-spark-big{display:block}
@@ -1157,47 +1147,30 @@
             --text:            #F2F2FA;
             --text-muted:      #B6B6D6;
             --text-inactive:   #78789A;
-            --bg-surface:      rgba(255,255,255,0.055);
-            --bg-card:         rgba(255,255,255,0.08);
-            --bg-elevated:     rgba(255,255,255,0.11);
-            --border:          rgba(255,255,255,0.14);
-            --border-bright:   rgba(148,138,255,0.55);
-            --header-bg:       rgba(14,14,26,0.4);
-            --nav-bg:          rgba(14,14,26,0.36);
-            --glass-fill:      rgba(255,255,255,0.055);
-            --glass-fill-strong: rgba(255,255,255,0.11);
-            --glass-border:    rgba(255,255,255,0.14);
-            --logo-bg:         rgba(255,255,255,0.07);
-            --side-bg:         rgba(14,14,26,0.36);
-            --side-hover:      rgba(148,138,255,0.14);
-            --side-active:     rgba(148,138,255,0.22);
-            --shadow:          rgba(0,0,0,0.5);
-            --overlay-bg:      rgba(0,0,0,0.65);
-        }
-        /* sans effet 3D : les cartes prennent exactement le même style
-           (couleur/transparence) que la barre de navigation en bas,
-           pour une cohérence visuelle totale en thème sombre. */
-        body.bg-black:not(.theme-3d){
-            --bg-card:    var(--nav-bg);
-            --bg-surface: var(--nav-bg);
-            --bg-elevated: var(--nav-bg);
-        }
-        /* combiné à l'effet 3D : encore plus transparent, et sans lueurs
-           (les reflets/halos blancs de l'effet 3D n'ont plus lieu d'être
-           sur un fond noir — cf. règles forecast-card::before/after et
-           glass-edge-3d ci-dessous). */
-        body.theme-3d.bg-black{
-            background:#000;
             --bg-surface:      rgba(255,255,255,0.035);
             --bg-card:         rgba(255,255,255,0.05);
             --bg-elevated:     rgba(255,255,255,0.07);
             --border:          rgba(255,255,255,0.09);
+            --border-bright:   rgba(148,138,255,0.55);
             --header-bg:       rgba(14,14,26,0.26);
             --nav-bg:          rgba(14,14,26,0.22);
             --glass-fill:      rgba(255,255,255,0.035);
             --glass-fill-strong: rgba(255,255,255,0.07);
             --glass-border:    rgba(255,255,255,0.09);
+            --logo-bg:         rgba(255,255,255,0.035);
             --side-bg:         rgba(14,14,26,0.22);
+            --side-hover:      rgba(148,138,255,0.14);
+            --side-active:     rgba(148,138,255,0.22);
+            --shadow:          rgba(0,0,0,0.5);
+            --overlay-bg:      rgba(0,0,0,0.65);
+        }
+        /* sans effet 3D comme avec : la transparence est identique partout
+           en mode sombre — mêmes bg-surface/bg-card/bg-elevated/glass-*
+           que l'effet 3D sur fond noir, sur tous les éléments. Seuls le
+           relief (glass-edge-3d) et les lueurs distinguent encore l'effet
+           3D — cf. ci-dessous. */
+        body.theme-3d.bg-black{
+            background:#000;
             --glass-edge-3d:   inset 0 6px 10px -4px rgba(255,255,255,0.18),
                                inset 0 -8px 14px -6px rgba(0,0,0,0.4),
                                inset 6px 0 10px -6px rgba(255,255,255,0.08),
@@ -1231,8 +1204,6 @@
 <div class="app-orb app-orb-1"></div>
 <div class="app-orb app-orb-2"></div>
 <div class="app-orb app-orb-3"></div>
-<div class="app-orb app-orb-4"></div>
-<div class="app-orb app-orb-5"></div>
 <img class="bg-spark-big bg-spark-big-1" id="bg-spark-1" alt="">
 <img class="bg-spark-big bg-spark-big-2" id="bg-spark-2" alt="">
 <img class="bg-spark-big bg-spark-big-3" id="bg-spark-3" alt="">
@@ -1407,13 +1378,13 @@
                     <div class="iface-title"><i class="fas fa-palette"></i> Thème</div>
                     <div class="iface-subtitle">Palette couleur exclusive du logo STARKY SPORTS</div>
                     <div class="theme-card">
-                        <div class="theme-dots">
-                            <div class="theme-dot" style="background:#7B6EF6;"></div>
-                            <div class="theme-dot" style="background:#00D4FF;"></div>
-                            <div class="theme-dot" style="background:#E040FB;"></div>
+                        <div class="theme-dots" id="theme-dots">
+                            <div class="theme-dot" id="theme-dot-1" style="background:#7B6EF6;"></div>
+                            <div class="theme-dot" id="theme-dot-2" style="background:#00D4FF;"></div>
+                            <div class="theme-dot" id="theme-dot-3" style="background:#E040FB;"></div>
                         </div>
-                        <div class="theme-card-title">Violet · Bleu · Cyan · Magenta</div>
-                        <div class="theme-card-desc">Palette exclusive Starky Sports</div>
+                        <div class="theme-card-title" id="theme-card-title">Violet · Bleu · Cyan · Magenta</div>
+                        <div class="theme-card-desc" id="theme-card-desc">Palette exclusive Starky Sports</div>
                     </div>
                     <div class="setting-row" style="margin-top:16px;">
                         <div class="setting-left">
@@ -1789,6 +1760,34 @@ function updateInstallShareButton() {
     }
 }
 
+/* Icône "installer" dans l'en-tête, visible uniquement sur l'écran
+   Paramètres : remplace la loupe par un bouton d'installation PWA, qui
+   devient une coche dès que l'app est installée. */
+function updateHeaderInstallIcon() {
+    const icon = document.getElementById('header-first-icon');
+    if (!icon || currentSection !== 'interface') return;
+    icon.className = appIsInstalled ? 'fas fa-check' : 'fas fa-download';
+}
+function handlePwaInstallHeaderBtn() {
+    if (appIsInstalled) {
+        showToast('Application déjà installée', 'success', 1800);
+        return;
+    }
+    if (deferredInstall) {
+        deferredInstall.prompt();
+        deferredInstall.userChoice.then(choice => {
+            if (choice.outcome === 'accepted') {
+                appIsInstalled = true;
+                deferredInstall = null;
+                updateInstallShareButton();
+                updateHeaderInstallIcon();
+            }
+        });
+    } else {
+        showToast('Installation indisponible sur ce navigateur', 'info', 2200);
+    }
+}
+
 function initPWA() {
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
         appIsInstalled = true;
@@ -1797,12 +1796,14 @@ function initPWA() {
         appIsInstalled = true;
         deferredInstall = null;
         updateInstallShareButton();
+        updateHeaderInstallIcon();
     });
     window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault();
         deferredInstall = e;
         appIsInstalled = false;
         updateInstallShareButton();
+        updateHeaderInstallIcon();
     });
     updateInstallShareButton();
 }
@@ -2862,8 +2863,10 @@ function showSection(id) {
     if (mainSections.includes(id)) {
         previousMainSection = id;
         backBtn.style.display = 'none';
+        const isSettings = (id === 'interface');
+        const firstIconClass = isSettings ? (appIsInstalled ? 'fas fa-check' : 'fas fa-download') : 'fas fa-search';
         hActions.innerHTML = `
-            <div class="icon-btn" id="search-btn"><i class="fas fa-search"></i></div>
+            <div class="icon-btn" id="search-btn"><i class="${firstIconClass}" id="header-first-icon"></i></div>
             <div class="icon-btn" id="events-btn">
                 <i class="fas fa-bell"></i>
                 <div class="notif-dot${hasNewEvents?' active':''}" id="events-dot"></div>
@@ -2872,7 +2875,7 @@ function showSection(id) {
             showSection('events');
             hasNewEvents = false;
         });
-        document.getElementById('search-btn').addEventListener('click', openSearchBar);
+        document.getElementById('search-btn').addEventListener('click', isSettings ? handlePwaInstallHeaderBtn : openSearchBar);
         bottomNav.classList.remove('hidden');
         mainContent.classList.remove('no-nav');
     } else {
@@ -3217,6 +3220,26 @@ function hexToRgba(hex, alpha) {
     const b = parseInt(full.substring(4, 6), 16) || 0;
     return `rgba(${r},${g},${b},${alpha})`;
 }
+/* Met à jour la mini-prévisualisation "Thème" (Paramètres) pour qu'elle
+   reflète toujours la palette réellement active, au lieu d'un aperçu
+   figé — couleurs des 3 pastilles + nom affichés dynamiquement. */
+function updateThemeCardPreview(colors, name) {
+    const defaultColors = ['#7B6EF6', '#00D4FF', '#E040FB'];
+    const c = (colors && colors.length) ? colors : defaultColors;
+    ['theme-dot-1', 'theme-dot-2', 'theme-dot-3'].forEach((id, i) => {
+        const dot = document.getElementById(id);
+        if (dot) dot.style.background = c[i] || c[c.length - 1];
+    });
+    const title = document.getElementById('theme-card-title');
+    const desc  = document.getElementById('theme-card-desc');
+    if (colors && colors.length) {
+        if (title) title.textContent = name || 'Palette personnalisée';
+        if (desc)  desc.textContent  = 'Palette active actuellement';
+    } else {
+        if (title) title.textContent = 'Violet · Bleu · Cyan · Magenta';
+        if (desc)  desc.textContent  = 'Palette exclusive Starky Sports';
+    }
+}
 function applyPalette(palette) {
     const colors = (palette && palette.colors && palette.colors.length) ? palette.colors : null;
     if (!colors) return;
@@ -3240,7 +3263,13 @@ function resetPalette() {
 function applyStoredPalette() {
     try {
         const colors = JSON.parse(localStorage.getItem('starky_custom_palette_colors') || 'null');
-        if (colors && colors.length) applyPalette({ colors });
+        const name = localStorage.getItem('starky_custom_palette_name');
+        if (colors && colors.length) {
+            applyPalette({ colors });
+            updateThemeCardPreview(colors, name);
+        } else {
+            updateThemeCardPreview(null, null);
+        }
     } catch(e){}
 }
 
@@ -3279,8 +3308,10 @@ function renderPaletteGrid() {
             document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
             el.classList.add('active');
             applyPalette(p);
+            updateThemeCardPreview(p.colors, p.name || pid);
             try {
                 localStorage.setItem('starky_custom_palette_id', pid);
+                localStorage.setItem('starky_custom_palette_name', p.name || pid);
                 localStorage.setItem('starky_custom_palette_colors', JSON.stringify(p.colors || []));
             } catch(e){}
             showToast(`Palette « ${p.name || pid} » appliquée`, 'success', 1800);
@@ -3294,8 +3325,10 @@ function initPaletteReset() {
     btn.addEventListener('click', () => {
         resetPalette();
         document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
+        updateThemeCardPreview(null, null);
         try {
             localStorage.removeItem('starky_custom_palette_id');
+            localStorage.removeItem('starky_custom_palette_name');
             localStorage.removeItem('starky_custom_palette_colors');
         } catch(e){}
         showToast('Palette par défaut restaurée', 'success', 1800);
@@ -3325,7 +3358,7 @@ function buildBgSparks() {
         const el = document.getElementById(id);
         if (!el) return;
         const color = colors[i % colors.length];
-        el.src = `https://api.iconify.design/lucide/sparkle.svg?color=${encodeURIComponent(color)}`;
+        el.src = `https://api.iconify.design/ph/sparkle-fill.svg?color=${encodeURIComponent(color)}`;
     });
 }
 
