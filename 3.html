@@ -3,109 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Google (Frontend uniquement)</title>
-    <!-- 1. Charger le SDK Google Identity Services -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <title>Connexion Google</title>
+
     <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
-        #user-info { display: none; margin-top: 20px; text-align: center; border: 1px solid #ddd; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        #user-info img { border-radius: 50%; width: 80px; height: 80px; }
-        .hidden { display: none !important; }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        #user-info {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #user-info img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #login-btn {
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        #login-btn:hover {
+            background: #f5f5f5;
+        }
+
+        #logout-btn {
+            margin-top: 15px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
 
     <h2>Connexion à l'application</h2>
 
-    <!-- 2. Configuration du bouton Google -->
-    <!-- Remplacez data-client_id par le vôtre si nécessaire -->
-    <div id="g_id_onload"
-         data-client_id="358570694819-viki04q687btigc3e5daskt43evf005o.apps.googleusercontent.com"
-         data-context="signin"
-         data-ux_mode="popup"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
-    </div>
+    <!-- Bouton Google -->
+    <button id="login-btn">
+        Continuer avec Google
+    </button>
 
-    <!-- 3. Affichage du bouton -->
-    <div class="g_id_signin"
-         data-type="standard"
-         data-shape="rectangular"
-         data-theme="outline"
-         data-text="signin_with"
-         data-size="large"
-         data-logo_alignment="left">
-    </div>
-
-    <!-- 4. Zone d'affichage des informations utilisateur -->
+    <!-- Informations utilisateur -->
     <div id="user-info">
+
         <img id="user-picture" src="" alt="Photo de profil">
+
         <h3 id="user-name"></h3>
+
         <p id="user-email"></p>
-        <button onclick="deconnexion()" style="margin-top: 15px; padding: 8px 16px; cursor: pointer;">Se déconnecter</button>
+
+        <button id="logout-btn">
+            Se déconnecter
+        </button>
+
     </div>
 
-    <script>
-        // 5. Fonction appelée par Google après une connexion réussie
-        function handleCredentialResponse(response) {
-            // Le token JWT est dans response.credential
-            const jwt = response.credential;
-            
-            // Décoder le JWT (partie payload) pour afficher les infos
-            const userInfo = decodeJwt(jwt);
-            
-            // Afficher les informations à l'écran
-            document.getElementById('user-name').textContent = userInfo.name;
-            document.getElementById('user-email').textContent = userInfo.email;
-            document.getElementById('user-picture').src = userInfo.picture;
-            
-            // Masquer le bouton, afficher les infos
-            document.querySelector('.g_id_signin').classList.add('hidden');
-            document.getElementById('user-info').style.display = 'block';
 
-            // Sauvegarder le token dans le localStorage pour garder la session
-            localStorage.setItem('google_id_token', jwt);
-            
-            console.log("Token JWT reçu :", userInfo);
-        }
+    <!-- Firebase -->
+    <script type="module">
 
-        // Fonction utilitaire pour décoder un JWT sans librairie externe
-        function decodeJwt(token) {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        }
+        // ==========================================
+        // IMPORTS FIREBASE
+        // ==========================================
 
-        // Fonction de déconnexion simple
-        function deconnexion() {
-            localStorage.removeItem('google_id_token');
-            document.getElementById('user-info').style.display = 'none';
-            document.querySelector('.g_id_signin').classList.remove('hidden');
-            
-            // Révoquer la session Google côté navigateur (optionnel mais recommandé)
-            google.accounts.id.disableAutoSelect();
-        }
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 
-        // 6. Vérifier au chargement de la page si l'utilisateur est déjà connecté
-        window.onload = function () {
-            const savedToken = localStorage.getItem('google_id_token');
-            if (savedToken) {
-                const userInfo = decodeJwt(savedToken);
-                // Vérifier que le token n'est pas expiré (exp est en secondes)
-                if (userInfo.exp > Date.now() / 1000) {
-                    document.getElementById('user-name').textContent = userInfo.name;
-                    document.getElementById('user-email').textContent = userInfo.email;
-                    document.getElementById('user-picture').src = userInfo.picture;
-                    document.querySelector('.g_id_signin').classList.add('hidden');
-                    document.getElementById('user-info').style.display = 'block';
-                } else {
-                    localStorage.removeItem('google_id_token'); // Token expiré
-                }
-            }
+        import {
+            getAuth,
+            GoogleAuthProvider,
+            signInWithPopup,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
+        // ==========================================
+        // CONFIGURATION FIREBASE
+        // ==========================================
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyDBHk48OQPJwhQHIx4HB1CRXFPz_7RniTo",
+
+            authDomain: "starky-9a047.firebaseapp.com",
+
+            projectId: "starky-9a047",
+
+            storageBucket: "starky-9a047.firebasestorage.app",
+
+            messagingSenderId: "262815518493",
+
+            appId: "1:262815518493:web:ddd7356384e699fd1c5bf4",
+
+            measurementId: "G-91Q0VZS76P"
         };
+
+
+        // ==========================================
+        // INITIALISATION FIREBASE
+        // ==========================================
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+
+        const provider = new GoogleAuthProvider();
+
+
+        // ==========================================
+        // ELEMENTS HTML
+        // ==========================================
+
+        const loginBtn = document.getElementById("login-btn");
+
+        const userInfo = document.getElementById("user-info");
+
+        const userPicture = document.getElementById("user-picture");
+
+        const userName = document.getElementById("user-name");
+
+        const userEmail = document.getElementById("user-email");
+
+        const logoutBtn = document.getElementById("logout-btn");
+
+
+        // ==========================================
+        // CONNEXION GOOGLE
+        // ==========================================
+
+        loginBtn.addEventListener("click", async () => {
+
+            try {
+
+                const result = await signInWithPopup(
+                    auth,
+                    provider
+                );
+
+                const user = result.user;
+
+                console.log(
+                    "Utilisateur connecté :",
+                    user
+                );
+
+                afficherUtilisateur(user);
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Erreur de connexion Google :",
+                    error
+                );
+
+                alert(
+                    "Impossible de se connecter avec Google."
+                );
+
+            }
+
+        });
+
+
+        // ==========================================
+        // AFFICHER UTILISATEUR
+        // ==========================================
+
+        function afficherUtilisateur(user) {
+
+            userName.textContent =
+                user.displayName || "Utilisateur";
+
+            userEmail.textContent =
+                user.email || "";
+
+            userPicture.src =
+                user.photoURL || "";
+
+            loginBtn.classList.add("hidden");
+
+            userInfo.style.display = "block";
+
+        }
+
+
+        // ==========================================
+        // DECONNEXION
+        // ==========================================
+
+        logoutBtn.addEventListener("click", async () => {
+
+            try {
+
+                await signOut(auth);
+
+                console.log(
+                    "Utilisateur déconnecté"
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Erreur de déconnexion :",
+                    error
+                );
+
+            }
+
+        });
+
+
+        // ==========================================
+        // SURVEILLER L'ETAT DE CONNEXION
+        // ==========================================
+
+        onAuthStateChanged(auth, (user) => {
+
+            if (user) {
+
+                // Utilisateur connecté
+                afficherUtilisateur(user);
+
+                console.log(
+                    "Session Firebase active :",
+                    user.uid
+                );
+
+            }
+
+            else {
+
+                // Aucun utilisateur connecté
+                loginBtn.classList.remove("hidden");
+
+                userInfo.style.display = "none";
+
+                userName.textContent = "";
+
+                userEmail.textContent = "";
+
+                userPicture.src = "";
+
+            }
+
+        });
+
     </script>
+
 </body>
 </html>
