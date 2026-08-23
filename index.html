@@ -1177,19 +1177,94 @@
                                inset -6px 0 12px -6px rgba(0,0,0,0.28),
                                0 1px 2px rgba(255,255,255,0.08);
         }
+
+        /* ══════════════════════════════════════════════════════════════
+           ══ AUTHENTIFICATION OBLIGATOIRE — overlay Google par-dessus
+           l'app floutée en arrière-plan. Reste affiché tant que Firebase
+           n'a pas confirmé une session active.
+           ══════════════════════════════════════════════════════════════ */
+        body.auth-locked > *:not(#auth-overlay):not(script):not(.app-orb):not(.bg-spark-big){
+            filter: blur(22px) saturate(120%);
+            pointer-events: none !important;
+            user-select: none !important;
+            transition: filter 0.4s var(--ease);
+        }
+        #auth-overlay{
+            position: fixed; inset: 0; z-index: 9999;
+            display: none;
+            align-items: center; justify-content: center;
+            background: rgba(6,6,16,0.55);
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            padding: 24px;
+            animation: fadeSlideUp 0.35s var(--ease);
+        }
+        body.auth-locked #auth-overlay{ display: flex; }
+        .auth-card{
+            width: 100%; max-width: 340px;
+            background: var(--glass-fill-strong);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45), var(--glass-edge-3d);
+            padding: 36px 28px 30px;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center;
+        }
+        .auth-card-logo{
+            width: 64px; height: 64px; border-radius: 20px;
+            background: var(--grad);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 24px var(--primary-glow);
+        }
+        .auth-card-logo i{ font-size: 26px; color: #fff; }
+        .auth-card-title{
+            font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .auth-card-sub{
+            font-size: 13.5px; color: var(--text-muted); margin-bottom: 26px;
+            line-height: 1.4;
+        }
+        #auth-google-btn{
+            width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: rgba(255,255,255,0.92);
+            color: #1f1f1f;
+            border: none; border-radius: 16px;
+            padding: 14px 18px;
+            font-size: 15px; font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s var(--spring), box-shadow 0.15s var(--spring);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        }
+        #auth-google-btn:active{ transform: scale(0.96); }
+        #auth-google-btn.loading{ opacity: 0.7; pointer-events: none; }
+        #auth-google-btn img{ width: 20px; height: 20px; }
+        .auth-card-foot{
+            margin-top: 20px; font-size: 11.5px; color: var(--text-inactive); line-height: 1.5;
+        }
     </style>
 </head>
 <body>
 <script>try{
-    if(localStorage.getItem('starky_theme_3d')==='1')document.body.classList.add('theme-3d');
-    var isDark = localStorage.getItem('starky_bg_black')==='1';
+    /* Thème par défaut : 3D + sombre + étincelles (sauf si l'utilisateur
+       a explicitement choisi une autre configuration dans Paramètres). */
+    if(localStorage.getItem('starky_theme_3d')!=='0')document.body.classList.add('theme-3d');
+    var isDark = localStorage.getItem('starky_bg_black')!=='0';
     if(isDark)document.body.classList.add('bg-black');
     var tcMeta = document.getElementById('theme-color-meta');
     if(tcMeta) tcMeta.setAttribute('content', isDark ? '#000000' : '#EEEEF8');
     var asbMeta = document.getElementById('apple-status-bar-meta');
     if(asbMeta) asbMeta.setAttribute('content', isDark ? 'black-translucent' : 'default');
-    var bgs = localStorage.getItem('starky_bg_style');
+    var bgs = localStorage.getItem('starky_bg_style') || 'sparks';
     if(bgs === 'orbs' || bgs === 'sparks') document.body.classList.add('bg-style-' + bgs);
+    /* Verrouillage : l'app reste floutée derrière l'overlay Google tant
+       que Firebase n'a pas confirmé une session (évite un flash de
+       contenu visible avant la vérification). */
+    document.body.classList.add('auth-locked');
     var pc = JSON.parse(localStorage.getItem('starky_custom_palette_colors') || 'null');
     if (pc && pc.length) {
         var c0 = pc[0], c1 = pc[1] || pc[0], c2 = pc[2] || c1;
@@ -1207,6 +1282,19 @@
 <img class="bg-spark-big bg-spark-big-1" id="bg-spark-1" alt="">
 <img class="bg-spark-big bg-spark-big-2" id="bg-spark-2" alt="">
 <img class="bg-spark-big bg-spark-big-3" id="bg-spark-3" alt="">
+
+<!-- AUTHENTIFICATION OBLIGATOIRE (overlay Google) -->
+<div id="auth-overlay">
+    <div class="auth-card">
+        <div class="auth-card-title">Bienvenue sur Starky Sports</div>
+        <div class="auth-card-sub">Connectez-vous pour accéder à vos pronostics et analyses.</div>
+        <button id="auth-google-btn" type="button">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+            <span id="auth-google-btn-label">Continuer avec Google</span>
+        </button>
+        <div class="auth-card-foot">En continuant, vous acceptez les conditions d'utilisation de Starky Sports.</div>
+    </div>
+</div>
 
 <!-- MODALS AVATAR -->
 <div class="av-viewer-modal" id="av-viewer-modal">
@@ -1475,7 +1563,7 @@
                 </div>
                 <div class="iface-block">
                     <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
-                    <div class="iface-subtitle">Gérez votre compte Starky Sports</div>
+                    <div class="iface-subtitle" id="account-email-display">Gérez votre compte Starky Sports</div>
                     <button id="logout-btn" class="btn">Se déconnecter</button>
                     <button id="delete-account-btn" class="btn danger">Supprimer mon compte</button>
                 </div>
@@ -2996,7 +3084,10 @@ function setupListeners() {
 
     document.getElementById('logout-btn').addEventListener('click', () => showDialog('logout-confirm-dialog'));
     document.getElementById('logout-cancel').addEventListener('click', () => hideDialog('logout-confirm-dialog'));
-    document.getElementById('logout-confirm').addEventListener('click', () => { hideDialog('logout-confirm-dialog'); showToast('Fonctionnalité désactivée', 'info'); });
+    document.getElementById('logout-confirm').addEventListener('click', () => {
+        hideDialog('logout-confirm-dialog');
+        if (window.starkyAuth && window.starkyAuth.signOut) window.starkyAuth.signOut();
+    });
     document.getElementById('delete-account-btn').addEventListener('click', () => showDialog('delete-confirm-dialog'));
     document.getElementById('delete-cancel').addEventListener('click', () => hideDialog('delete-confirm-dialog'));
     document.getElementById('delete-confirm').addEventListener('click', () => { hideDialog('delete-confirm-dialog'); showToast('Fonctionnalité désactivée', 'info'); });
@@ -3363,8 +3454,8 @@ function buildBgSparks() {
 }
 
 function initBgStyle() {
-    let saved = 'none';
-    try { saved = localStorage.getItem('starky_bg_style') || 'none'; } catch(e){}
+    let saved = 'sparks';
+    try { saved = localStorage.getItem('starky_bg_style') || 'sparks'; } catch(e){}
     document.body.classList.toggle('bg-style-orbs', saved === 'orbs');
     document.body.classList.toggle('bg-style-sparks', saved === 'sparks');
     if (saved === 'sparks') buildBgSparks();
@@ -3428,6 +3519,186 @@ document.addEventListener('DOMContentLoaded', async () => {
     showSection('forecasts');
     await loadForecasts();
 });
+</script>
+
+<!-- ══ AUTHENTIFICATION FIREBASE / GOOGLE — obligatoire avant accès ══ -->
+<script type="module">
+
+    // ==========================================
+    // IMPORTS FIREBASE
+    // ==========================================
+
+    import {
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+    import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
+    // ==========================================
+    // CONFIGURATION FIREBASE
+    // ==========================================
+
+    const firebaseConfig = {
+
+        apiKey: "AIzaSyDBHk48OQPJwhQHIx4HB1CRXFPz_7RniTo",
+
+        authDomain: "starky-9a047.firebaseapp.com",
+
+        projectId: "starky-9a047",
+
+        storageBucket: "starky-9a047.firebasestorage.app",
+
+        messagingSenderId: "262815518493",
+
+        appId: "1:262815518493:web:ddd7356384e699fd1c5bf4",
+
+        measurementId: "G-91Q0VZS76P"
+    };
+
+
+    // ==========================================
+    // INITIALISATION FIREBASE
+    // ==========================================
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
+    const provider = new GoogleAuthProvider();
+
+
+    // ==========================================
+    // ELEMENTS HTML
+    // ==========================================
+
+    const loginBtn = document.getElementById("auth-google-btn");
+
+    const accountDisplay = document.getElementById("account-email-display");
+
+
+    // ==========================================
+    // CONNEXION GOOGLE
+    // ==========================================
+
+    loginBtn.addEventListener("click", async () => {
+
+        try {
+
+            const result = await signInWithPopup(
+                auth,
+                provider
+            );
+
+            const user = result.user;
+
+            console.log(
+                "Utilisateur connecté :",
+                user
+            );
+
+            afficherUtilisateur(user);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Erreur de connexion Google :",
+                error
+            );
+
+            alert(
+                "Impossible de se connecter avec Google."
+            );
+
+        }
+
+    });
+
+
+    // ==========================================
+    // AFFICHER UTILISATEUR
+    // ==========================================
+
+    function afficherUtilisateur(user) {
+
+        document.body.classList.remove("auth-locked");
+
+        if (accountDisplay) {
+            accountDisplay.textContent = user.email
+                ? `Connecté en tant que ${user.email}`
+                : "Gérez votre compte Starky Sports";
+        }
+
+    }
+
+
+    // ==========================================
+    // DECONNEXION
+    // ==========================================
+
+    window.starkyAuth = {
+        signOut: async () => {
+
+            try {
+
+                await signOut(auth);
+
+                console.log(
+                    "Utilisateur déconnecté"
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Erreur de déconnexion :",
+                    error
+                );
+
+            }
+
+        }
+    };
+
+
+    // ==========================================
+    // SURVEILLER L'ETAT DE CONNEXION
+    // ==========================================
+
+    onAuthStateChanged(auth, (user) => {
+
+        if (user) {
+
+            // Utilisateur connecté
+            afficherUtilisateur(user);
+
+            console.log(
+                "Session Firebase active :",
+                user.uid
+            );
+
+        }
+
+        else {
+
+            // Aucun utilisateur connecté
+            document.body.classList.add("auth-locked");
+
+            if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
+
+        }
+
+    });
+
 </script>
 </body>
 </html>
