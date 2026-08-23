@@ -747,6 +747,20 @@
         }
         .mp-no-stats i { font-size:26px;opacity:0.35; }
         .mp-no-stats span { font-size:12px;font-weight:600; }
+        .mp-ai-coming{
+            display:flex;flex-direction:column;align-items:center;gap:14px;
+            padding:32px 20px;text-align:center;
+        }
+        .mp-ai-coming-icon{
+            width:56px;height:56px;border-radius:18px;
+            background:var(--grad);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 8px 24px var(--primary-glow);
+            animation:mpAiPulse 2.4s ease-in-out infinite;
+        }
+        .mp-ai-coming-icon i{ font-size:22px;color:#fff; }
+        .mp-ai-coming span{ font-size:12.5px;font-weight:600;color:var(--text-muted); }
+        @keyframes mpAiPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
 
         /* ══ SIDE MENU ══ */
         .side-menu{
@@ -852,8 +866,8 @@
         .plan-features li{font-size:12.5px;color:var(--text-muted);display:flex;align-items:center;gap:8px}
         .plan-features li i{color:var(--success);font-size:11px}
         .plan-cta{
-            width:100%;padding:12px;border-radius:14px;border:1px solid var(--glass-border);
-            background:var(--glass-fill);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
+            width:100%;padding:12px;border-radius:14px;border:1px solid var(--border);
+            background:var(--bg-elevated);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
             transition:transform 0.15s var(--spring),background 0.2s;
         }
         .plan-cta:active{transform:scale(0.97)}
@@ -1763,6 +1777,7 @@
                 <div class="content-block"><h2>3. Utilisation responsable</h2><p>Les pronostics fournis sont à des fins de divertissement uniquement. Pariez uniquement ce que vous pouvez vous permettre de perdre. Interdit aux mineurs de moins de 18 ans.</p></div>
                 <div class="content-block"><h2>4. Responsabilités</h2><p>Starky Sports décline toute responsabilité en cas de pertes financières. L'utilisateur est seul responsable de ses décisions de paris.</p></div>
                 <div class="content-block"><h2>5. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+                <div class="content-block"><h2>6. Interdiction de revente et de partage</h2><p>Les pronostics, analyses et contenus fournis par Starky Sports sont strictement réservés à un usage personnel et non commercial au sein de l'application. Toute revente, redistribution, republication ou tout partage de ces contenus en dehors de l'application — à titre gratuit ou payant, notamment sur les réseaux sociaux, groupes de discussion ou plateformes tierces — est strictement interdit.</p><p>Toute violation de cette clause pourra entraîner la suspension immédiate et définitive du compte concerné, sans préavis ni remboursement.</p></div>
             </div>
         </div>
     </div>
@@ -2417,6 +2432,19 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
         noStats.innerHTML = `<i class="fas fa-chart-bar"></i><span>Statistiques non disponibles</span>`;
         body.appendChild(noStats);
     }
+
+    /* — Analyse IA (à venir) — */
+    const aiTitleEl = document.createElement('div');
+    aiTitleEl.className = 'mp-section-title';
+    aiTitleEl.innerHTML = '<i class="fas fa-magic"></i> IA';
+    body.appendChild(aiTitleEl);
+
+    const aiComing = document.createElement('div');
+    aiComing.className = 'mp-ai-coming';
+    aiComing.innerHTML = `
+        <div class="mp-ai-coming-icon"><i class="fas fa-magic"></i></div>
+        <span>Bientôt disponible</span>`;
+    body.appendChild(aiComing);
 
     /* — Ouverture : le bottom-sheet jaillit depuis la carte cliquée — */
     previewSourceCard = sourceEl || null;
@@ -3089,6 +3117,7 @@ function showSection(id) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     closeSearchBar();
+    closeAllDialogs();
 
     const section = document.getElementById(`${id}-section`);
     if (section) section.classList.add('active');
@@ -3205,6 +3234,11 @@ function hideDialog(id) {
     document.getElementById(id).classList.remove('active');
     document.getElementById('overlay').classList.remove('active');
 }
+function closeAllDialogs() {
+    document.querySelectorAll('.confirm-dialog.active').forEach(d => d.classList.remove('active'));
+    const ov = document.getElementById('overlay');
+    if (ov) ov.classList.remove('active');
+}
 function copyPromo(code) {
     navigator.clipboard?.writeText(code)
         .then(() => showToast('Code copié !', 'success'))
@@ -3221,6 +3255,7 @@ function setupListeners() {
     document.getElementById('menu-secrets').addEventListener('click', () => showSection('secrets'));
     document.getElementById('menu-history').addEventListener('click', () => showSection('history'));
     document.getElementById('history-settings-close').addEventListener('click', () => hideDialog('history-settings-dialog'));
+    document.getElementById('overlay').addEventListener('click', closeAllDialogs);
     document.getElementById('menu-terms').addEventListener('click',   () => showSection('terms'));
     document.getElementById('menu-about').addEventListener('click',   () => showSection('about'));
 
