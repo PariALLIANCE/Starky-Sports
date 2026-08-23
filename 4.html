@@ -1286,7 +1286,6 @@
 <!-- AUTHENTIFICATION OBLIGATOIRE (overlay Google) -->
 <div id="auth-overlay">
     <div class="auth-card">
-        <div class="auth-card-logo"><i class="fas fa-bolt"></i></div>
         <div class="auth-card-title">Bienvenue sur Starky Sports</div>
         <div class="auth-card-sub">Connectez-vous pour accéder à vos pronostics et analyses.</div>
         <button id="auth-google-btn" type="button">
@@ -3524,76 +3523,182 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 <!-- ══ AUTHENTIFICATION FIREBASE / GOOGLE — obligatoire avant accès ══ -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+    // ==========================================
+    // IMPORTS FIREBASE
+    // ==========================================
+
     import {
-        getAuth, GoogleAuthProvider, signInWithPopup,
-        onAuthStateChanged, signOut
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+    import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        onAuthStateChanged,
+        signOut
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
+
+    // ==========================================
+    // CONFIGURATION FIREBASE
+    // ==========================================
+
     const firebaseConfig = {
+
         apiKey: "AIzaSyDBHk48OQPJwhQHIx4HB1CRXFPz_7RniTo",
+
         authDomain: "starky-9a047.firebaseapp.com",
+
         projectId: "starky-9a047",
+
         storageBucket: "starky-9a047.firebasestorage.app",
+
         messagingSenderId: "262815518493",
+
         appId: "1:262815518493:web:ddd7356384e699fd1c5bf4",
+
         measurementId: "G-91Q0VZS76P"
     };
 
-    const app      = initializeApp(firebaseConfig);
-    const auth     = getAuth(app);
+
+    // ==========================================
+    // INITIALISATION FIREBASE
+    // ==========================================
+
+    const app = initializeApp(firebaseConfig);
+
+    const auth = getAuth(app);
+
     const provider = new GoogleAuthProvider();
 
-    const googleBtn      = document.getElementById('auth-google-btn');
-    const googleBtnLabel = document.getElementById('auth-google-btn-label');
-    const accountDisplay = document.getElementById('account-email-display');
 
-    function lockApp() {
-        document.body.classList.add('auth-locked');
-    }
-    function unlockApp(user) {
-        document.body.classList.remove('auth-locked');
+    // ==========================================
+    // ELEMENTS HTML
+    // ==========================================
+
+    const loginBtn = document.getElementById("auth-google-btn");
+
+    const accountDisplay = document.getElementById("account-email-display");
+
+
+    // ==========================================
+    // CONNEXION GOOGLE
+    // ==========================================
+
+    loginBtn.addEventListener("click", async () => {
+
+        try {
+
+            const result = await signInWithPopup(
+                auth,
+                provider
+            );
+
+            const user = result.user;
+
+            console.log(
+                "Utilisateur connecté :",
+                user
+            );
+
+            afficherUtilisateur(user);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Erreur de connexion Google :",
+                error
+            );
+
+            alert(
+                "Impossible de se connecter avec Google."
+            );
+
+        }
+
+    });
+
+
+    // ==========================================
+    // AFFICHER UTILISATEUR
+    // ==========================================
+
+    function afficherUtilisateur(user) {
+
+        document.body.classList.remove("auth-locked");
+
         if (accountDisplay) {
             accountDisplay.textContent = user.email
                 ? `Connecté en tant que ${user.email}`
-                : 'Gérez votre compte Starky Sports';
+                : "Gérez votre compte Starky Sports";
         }
+
     }
 
-    googleBtn.addEventListener('click', async () => {
-        googleBtn.classList.add('loading');
-        googleBtnLabel.textContent = 'Connexion en cours…';
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.error('Erreur de connexion Google :', error);
-            if (typeof showToast === 'function') {
-                showToast("Impossible de se connecter avec Google", 'error');
-            } else {
-                alert("Impossible de se connecter avec Google.");
+
+    // ==========================================
+    // DECONNEXION
+    // ==========================================
+
+    window.starkyAuth = {
+        signOut: async () => {
+
+            try {
+
+                await signOut(auth);
+
+                console.log(
+                    "Utilisateur déconnecté"
+                );
+
             }
-        } finally {
-            googleBtn.classList.remove('loading');
-            googleBtnLabel.textContent = 'Continuer avec Google';
+
+            catch (error) {
+
+                console.error(
+                    "Erreur de déconnexion :",
+                    error
+                );
+
+            }
+
         }
-    });
+    };
+
+
+    // ==========================================
+    // SURVEILLER L'ETAT DE CONNEXION
+    // ==========================================
 
     onAuthStateChanged(auth, (user) => {
+
         if (user) {
-            unlockApp(user);
-            console.log('Session Firebase active :', user.uid);
-        } else {
-            lockApp();
-            if (accountDisplay) accountDisplay.textContent = 'Gérez votre compte Starky Sports';
+
+            // Utilisateur connecté
+            afficherUtilisateur(user);
+
+            console.log(
+                "Session Firebase active :",
+                user.uid
+            );
+
         }
+
+        else {
+
+            // Aucun utilisateur connecté
+            document.body.classList.add("auth-locked");
+
+            if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
+
+        }
+
     });
 
-    // Exposé pour le bouton "Se déconnecter" déjà présent dans Paramètres.
-    window.starkyAuth = {
-        signOut: () => signOut(auth).catch((error) => {
-            console.error('Erreur de déconnexion :', error);
-        })
-    };
 </script>
 </body>
 </html>
