@@ -838,6 +838,9 @@
         }
         .iface-title{font-size:16px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:var(--text)}
         .iface-subtitle{font-size:12px;color:var(--text-muted);margin-bottom:16px}
+        .account-profile{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 20px}
+        .account-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--glass-fill);border:2px solid var(--glass-border);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+        .account-email{font-size:13.5px;font-weight:600;color:var(--text-muted);text-align:center;word-break:break-word}
         .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;transition:background 0.18s;border-radius:8px;padding:2px 0}
         .setting-row+.setting-row{margin-top:14px;padding-top:14px;border-top:1px solid rgba(123,110,246,0.10)}
         .setting-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
@@ -1201,6 +1204,8 @@
         }
         body.auth-locked #auth-overlay{ display: flex; }
         .auth-card{
+            position: relative;
+            isolation: isolate;
             width: 100%; max-width: 340px;
             background: var(--glass-fill-strong);
             border: 1px solid var(--glass-border);
@@ -1563,9 +1568,11 @@
                 </div>
                 <div class="iface-block">
                     <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
-                    <div class="iface-subtitle" id="account-email-display">Gérez votre compte Starky Sports</div>
-                    <button id="logout-btn" class="btn">Se déconnecter</button>
-                    <button id="delete-account-btn" class="btn danger">Supprimer mon compte</button>
+                    <div class="account-profile">
+                        <img id="account-avatar" class="account-avatar" src="" alt="Photo de profil" referrerpolicy="no-referrer">
+                        <div class="account-email" id="account-email-display">Gérez votre compte Starky Sports</div>
+                    </div>
+                    <button id="logout-btn" class="btn danger"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
                 </div>
             </div>
         </div>
@@ -1715,14 +1722,6 @@
     <div class="confirm-btns">
         <div class="confirm-btn confirm-cancel" id="logout-cancel">Annuler</div>
         <div class="confirm-btn confirm-ok" id="logout-confirm">Déconnecter</div>
-    </div>
-</div>
-<div id="delete-confirm-dialog" class="confirm-dialog">
-    <div class="confirm-title">Supprimer votre compte ?</div>
-    <div class="confirm-text">ATTENTION : Cette action est définitive et irréversible.</div>
-    <div class="confirm-btns">
-        <div class="confirm-btn confirm-cancel" id="delete-cancel">Annuler</div>
-        <div class="confirm-btn confirm-del" id="delete-confirm">Supprimer</div>
     </div>
 </div>
 <div id="overlay" class="overlay"></div>
@@ -3088,9 +3087,6 @@ function setupListeners() {
         hideDialog('logout-confirm-dialog');
         if (window.starkyAuth && window.starkyAuth.signOut) window.starkyAuth.signOut();
     });
-    document.getElementById('delete-account-btn').addEventListener('click', () => showDialog('delete-confirm-dialog'));
-    document.getElementById('delete-cancel').addEventListener('click', () => hideDialog('delete-confirm-dialog'));
-    document.getElementById('delete-confirm').addEventListener('click', () => { hideDialog('delete-confirm-dialog'); showToast('Fonctionnalité désactivée', 'info'); });
 
     /* ── Match Preview Sheet ── */
     document.getElementById('mp-backdrop').addEventListener('click', closeMatchPreview);
@@ -3581,6 +3577,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loginBtn = document.getElementById("auth-google-btn");
 
     const accountDisplay = document.getElementById("account-email-display");
+    const accountAvatar  = document.getElementById("account-avatar");
 
 
     // ==========================================
@@ -3632,9 +3629,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.classList.remove("auth-locked");
 
         if (accountDisplay) {
-            accountDisplay.textContent = user.email
-                ? `Connecté en tant que ${user.email}`
-                : "Gérez votre compte Starky Sports";
+            accountDisplay.textContent = user.email || "Gérez votre compte Starky Sports";
+        }
+
+        if (accountAvatar) {
+            accountAvatar.src = user.photoURL || "";
         }
 
     }
@@ -3694,6 +3693,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.classList.add("auth-locked");
 
             if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
+            if (accountAvatar) accountAvatar.src = "";
 
         }
 
