@@ -828,6 +828,37 @@
         .benefit-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
         .benefit-desc{font-size:11px;color:var(--text-muted);line-height:1.4}
 
+        /* ══ ABONNEMENT — cartes de plans (démo) ══ */
+        .plans-grid{display:flex;flex-direction:column;gap:14px;padding:0 20px 20px}
+        .plan-card{
+            position:relative;
+            background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:20px;
+            transition:background 0.45s,border-color 0.45s,transform 0.3s var(--spring);
+        }
+        .plan-card:hover{transform:translateY(-2px)}
+        .plan-card.featured{border:1.5px solid var(--primary);box-shadow:0 8px 28px var(--primary-glow)}
+        .plan-badge{
+            position:absolute;top:-11px;right:20px;
+            background:var(--grad);color:#fff;font-size:11px;font-weight:800;
+            padding:4px 12px;border-radius:20px;letter-spacing:0.3px;
+            box-shadow:0 4px 12px var(--primary-glow);
+        }
+        .plan-period{font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px}
+        .plan-price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+        .plan-price-amount{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-0.5px}
+        .plan-price-unit{font-size:12.5px;color:var(--text-muted);font-weight:600}
+        .plan-save{display:inline-block;font-size:11px;font-weight:700;color:var(--success);background:rgba(79,255,176,0.12);border:1px solid rgba(79,255,176,0.25);border-radius:20px;padding:3px 10px;margin-bottom:10px}
+        .plan-features{list-style:none;padding:0;margin:12px 0 18px;display:flex;flex-direction:column;gap:8px}
+        .plan-features li{font-size:12.5px;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+        .plan-features li i{color:var(--success);font-size:11px}
+        .plan-cta{
+            width:100%;padding:12px;border-radius:14px;border:1px solid var(--glass-border);
+            background:var(--glass-fill);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
+            transition:transform 0.15s var(--spring),background 0.2s;
+        }
+        .plan-cta:active{transform:scale(0.97)}
+        .plan-cta.primary{background:var(--grad);color:#fff;border:none;box-shadow:0 6px 18px var(--primary-glow)}
+
         /* ══ PARAMÈTRES ══ */
         .interface-container{padding:20px}
         .iface-block{
@@ -838,9 +869,12 @@
         }
         .iface-title{font-size:16px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:var(--text)}
         .iface-subtitle{font-size:12px;color:var(--text-muted);margin-bottom:16px}
-        .account-profile{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 20px}
-        .account-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--glass-fill);border:2px solid var(--glass-border);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
-        .account-email{font-size:13.5px;font-weight:600;color:var(--text-muted);text-align:center;word-break:break-word}
+        .account-profile{display:flex;flex-direction:row;align-items:center;gap:14px;margin:4px 0 16px;text-align:left}
+        .account-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;background:var(--glass-fill);border:2px solid var(--glass-border);box-shadow:0 4px 16px rgba(0,0,0,0.15);flex-shrink:0}
+        .account-email{font-size:14px;font-weight:700;color:var(--text);text-align:left;word-break:break-word;flex:1;min-width:0}
+        .account-status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;margin-bottom:16px;border-radius:14px;background:var(--glass-fill);border:1px solid var(--glass-border)}
+        .account-status-label{font-size:12.5px;font-weight:600;color:var(--text-muted)}
+        .account-plan-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;background:rgba(79,255,176,0.12);color:var(--success);border:1px solid rgba(79,255,176,0.25);white-space:nowrap}
         .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;transition:background 0.18s;border-radius:8px;padding:2px 0}
         .setting-row+.setting-row{margin-top:14px;padding-top:14px;border-top:1px solid rgba(123,110,246,0.10)}
         .setting-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
@@ -975,6 +1009,12 @@
         /* ══ HISTORY ══ */
         .history-wrap{padding:10px}
         .history-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;transition:background 0.45s,border-color 0.45s}
+        .history-duration-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+        .history-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:var(--glass-fill);margin-top:16px;outline:none;cursor:pointer}
+        .history-range::-webkit-slider-runnable-track{height:6px;border-radius:6px;background:var(--glass-fill)}
+        .history-range::-moz-range-track{height:6px;border-radius:6px;background:var(--glass-fill)}
+        .history-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--grad);box-shadow:0 2px 8px var(--primary-glow);border:2px solid #fff;margin-top:-7px}
+        .history-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--grad);box-shadow:0 2px 8px var(--primary-glow);border:2px solid #fff}
         .history-result{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
         .history-result.win{background:rgba(79,255,176,0.15);color:var(--success)}
         .history-result.loss{background:rgba(255,77,109,0.12);color:var(--danger)}
@@ -1186,12 +1226,35 @@
            l'app floutée en arrière-plan. Reste affiché tant que Firebase
            n'a pas confirmé une session active.
            ══════════════════════════════════════════════════════════════ */
-        body.auth-locked > *:not(#auth-overlay):not(script):not(.app-orb):not(.bg-spark-big){
+        body.auth-locked > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
             filter: blur(22px) saturate(120%);
             pointer-events: none !important;
             user-select: none !important;
             transition: filter 0.4s var(--ease);
         }
+        /* Écran de chargement — s'affiche pendant la vérification de la
+           session Firebase, pour ne jamais laisser entrevoir la carte de
+           connexion si l'utilisateur est déjà authentifié. */
+        #auth-splash{
+            position: fixed; inset: 0; z-index: 10000;
+            display: none;
+            align-items: center; justify-content: center;
+            background: rgba(6,6,16,0.94);
+        }
+        body.auth-checking #auth-splash{ display: flex; }
+        .auth-splash-logo{ display: flex; flex-wrap: wrap; justify-content: center; font-size: clamp(34px, 10vw, 54px); font-weight: 800; letter-spacing: 0.5px; padding: 0 20px; }
+        .auth-splash-logo span{
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(22px);
+            animation: authSplashLetter 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .auth-splash-logo .auth-splash-space{ width: 0.3em; }
+        @keyframes authSplashLetter{ to{ opacity: 1; transform: translateY(0); } }
         #auth-overlay{
             position: fixed; inset: 0; z-index: 9999;
             display: none;
@@ -1202,7 +1265,7 @@
             padding: 24px;
             animation: fadeSlideUp 0.35s var(--ease);
         }
-        body.auth-locked #auth-overlay{ display: flex; }
+        body.auth-locked:not(.auth-checking) #auth-overlay{ display: flex; }
         .auth-card{
             position: relative;
             isolation: isolate;
@@ -1270,6 +1333,8 @@
        que Firebase n'a pas confirmé une session (évite un flash de
        contenu visible avant la vérification). */
     document.body.classList.add('auth-locked');
+    document.body.classList.add('auth-checking');
+    window.__authSplashStart = Date.now();
     var pc = JSON.parse(localStorage.getItem('starky_custom_palette_colors') || 'null');
     if (pc && pc.length) {
         var c0 = pc[0], c1 = pc[1] || pc[0], c2 = pc[2] || c1;
@@ -1287,6 +1352,12 @@
 <img class="bg-spark-big bg-spark-big-1" id="bg-spark-1" alt="">
 <img class="bg-spark-big bg-spark-big-2" id="bg-spark-2" alt="">
 <img class="bg-spark-big bg-spark-big-3" id="bg-spark-3" alt="">
+
+<div id="auth-splash">
+    <div class="auth-splash-logo">
+        <span style="animation-delay:.00s">S</span><span style="animation-delay:.16s">t</span><span style="animation-delay:.32s">a</span><span style="animation-delay:.48s">r</span><span style="animation-delay:.64s">k</span><span style="animation-delay:.80s">y</span><span class="auth-splash-space" style="animation-delay:.96s">&nbsp;</span><span style="animation-delay:1.12s">S</span><span style="animation-delay:1.28s">p</span><span style="animation-delay:1.44s">o</span><span style="animation-delay:1.60s">r</span><span style="animation-delay:1.76s">t</span><span style="animation-delay:1.92s">s</span>
+    </div>
+</div>
 
 <!-- AUTHENTIFICATION OBLIGATOIRE (overlay Google) -->
 <div id="auth-overlay">
@@ -1406,6 +1477,61 @@
         </div>
     </div>
 
+    <!-- ABONNEMENT -->
+    <div id="subscription-section" class="section">
+        <div class="scroll-section">
+            <div class="pros-container">
+                <div class="page-hdr">
+                    <div class="page-title"><i class="fas fa-crown"></i> Abonnement</div>
+                    <div class="page-subtitle">Choisissez la formule qui vous convient — accédez à toutes les analyses Premium</div>
+                </div>
+                <div class="plans-grid">
+                    <div class="plan-card">
+                        <div class="plan-period">Journalier</div>
+                        <div class="plan-price"><span class="plan-price-amount">500</span><span class="plan-price-unit">FCFA / jour</span></div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Pronostics Premium du jour</li>
+                            <li><i class="fas fa-check"></i> Analyses détaillées</li>
+                        </ul>
+                        <button type="button" class="plan-cta" data-plan="daily">Choisir</button>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-period">Hebdomadaire</div>
+                        <div class="plan-price"><span class="plan-price-amount">2 500</span><span class="plan-price-unit">FCFA / semaine</span></div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Tout le plan journalier</li>
+                            <li><i class="fas fa-check"></i> Value Bet illimités</li>
+                            <li><i class="fas fa-check"></i> Historique 7 jours</li>
+                        </ul>
+                        <button type="button" class="plan-cta" data-plan="weekly">Choisir</button>
+                    </div>
+                    <div class="plan-card featured">
+                        <div class="plan-badge">Populaire</div>
+                        <div class="plan-period">Mensuel</div>
+                        <div class="plan-price"><span class="plan-price-amount">7 500</span><span class="plan-price-unit">FCFA / mois</span></div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Tout le plan hebdomadaire</li>
+                            <li><i class="fas fa-check"></i> Statistiques avancées 34+ championnats</li>
+                            <li><i class="fas fa-check"></i> Support prioritaire</li>
+                        </ul>
+                        <button type="button" class="plan-cta primary" data-plan="monthly">Choisir</button>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-period">Annuel</div>
+                        <div class="plan-price"><span class="plan-price-amount">60 000</span><span class="plan-price-unit">FCFA / an</span></div>
+                        <div class="plan-save">2 mois offerts</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Tout le plan mensuel</li>
+                            <li><i class="fas fa-check"></i> Historique illimité</li>
+                            <li><i class="fas fa-check"></i> Accès anticipé aux nouveautés</li>
+                        </ul>
+                        <button type="button" class="plan-cta" data-plan="yearly">Choisir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SECRETS -->
     <div id="secrets-section" class="section">
         <div class="scroll-section">
@@ -1438,6 +1564,18 @@
         <div class="scroll-section">
             <div class="interface-container">
                 <div class="iface-block">
+                    <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
+                    <div class="account-profile">
+                        <img id="account-avatar" class="account-avatar" src="" alt="Photo de profil" referrerpolicy="no-referrer">
+                        <div class="account-email" id="account-email-display">Gérez votre compte Starky Sports</div>
+                    </div>
+                    <div class="account-status-row">
+                        <span class="account-status-label">Statut</span>
+                        <span class="account-plan-badge" id="account-plan-badge"><i class="fas fa-check-circle"></i> Plan gratuit actif</span>
+                    </div>
+                    <button id="logout-btn" class="btn danger"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
+                </div>
+                <div class="iface-block">
                     <div class="iface-title"><i class="fas fa-compass"></i> Navigation</div>
                     <div class="iface-subtitle">Tout le contenu de l'application, réuni ici</div>
                     <div class="side-item" id="menu-install-share">
@@ -1454,7 +1592,7 @@
                             <div class="side-item-text">Abonnement</div>
                             <div class="side-item-desc">Plans &amp; accès premium</div>
                         </div>
-                        <span class="side-item-soon">Bientôt</span>
+                        <i class="fas fa-chevron-right side-item-arrow"></i>
                     </div>
                     <div class="side-item" id="menu-secrets">
                         <div class="side-item-icon"><i class="fas fa-lock"></i></div>
@@ -1566,14 +1704,6 @@
                         <i class="fas fa-chevron-right side-item-arrow"></i>
                     </div>
                 </div>
-                <div class="iface-block">
-                    <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
-                    <div class="account-profile">
-                        <img id="account-avatar" class="account-avatar" src="" alt="Photo de profil" referrerpolicy="no-referrer">
-                        <div class="account-email" id="account-email-display">Gérez votre compte Starky Sports</div>
-                    </div>
-                    <button id="logout-btn" class="btn danger"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
-                </div>
             </div>
         </div>
     </div>
@@ -1582,6 +1712,16 @@
     <div id="history-section" class="section">
         <div class="scroll-section">
             <div class="history-wrap" id="history-content">
+                <div class="history-duration-card">
+                    <div class="setting-left">
+                        <div class="setting-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div>
+                            <div class="setting-label">Durée de l'historique</div>
+                            <div class="setting-desc" id="history-duration-desc">Affiche les 14 derniers jours</div>
+                        </div>
+                    </div>
+                    <input type="range" class="history-range" id="history-duration-range" min="1" max="30" step="1" value="14">
+                </div>
                 <div class="empty-state" style="height:auto;padding:60px 20px;">
                     <i class="fas fa-history"></i>
                     <h3>Aucun historique</h3>
@@ -1752,15 +1892,16 @@ const AVATAR_OPTIONS = [
 ];
 
 const SECTION_TITLES = {
-    forecasts : 'Pronostics',
-    icegame   : 'Value Bet',
-    pros      : 'Pro',
-    interface : 'Paramètres',
-    events    : 'Événements',
-    history   : 'Historique',
-    secrets   : 'Secrets',
-    terms     : 'Conditions',
-    about     : 'À propos'
+    forecasts    : 'Pronostics',
+    icegame      : 'Value Bet',
+    pros         : 'Pro',
+    interface    : 'Paramètres',
+    events       : 'Événements',
+    history      : 'Historique',
+    secrets      : 'Secrets',
+    subscription : 'Abonnement',
+    terms        : 'Conditions',
+    about        : 'À propos'
 };
 
 /* Stat icons map */
@@ -3049,8 +3190,9 @@ function copyPromo(code) {
 /* ===== Listeners ===== */
 function setupListeners() {
     document.getElementById('menu-install-share').addEventListener('click', handleInstallShare);
-    document.getElementById('menu-abonnement').addEventListener('click', () => {
-        showToast('Abonnement bientôt disponible !', 'info');
+    document.getElementById('menu-abonnement').addEventListener('click', () => showSection('subscription'));
+    document.querySelectorAll('.plan-cta').forEach(btn => {
+        btn.addEventListener('click', () => showToast('Paiement bientôt disponible !', 'info'));
     });
     document.getElementById('menu-secrets').addEventListener('click', () => showSection('secrets'));
     document.getElementById('menu-history').addEventListener('click', () => showSection('history'));
@@ -3422,6 +3564,31 @@ function initPaletteReset() {
     });
 }
 
+function initHistoryDuration() {
+    const range = document.getElementById('history-duration-range');
+    const desc  = document.getElementById('history-duration-desc');
+    if (!range || !desc) return;
+
+    let saved = 14;
+    try { saved = parseInt(localStorage.getItem('starky_history_days'), 10) || 14; } catch(e){}
+    saved = Math.min(30, Math.max(1, saved));
+    range.value = saved;
+
+    function updateLabel(days) {
+        desc.textContent = days === 1 ? "Affiche le dernier jour" : `Affiche les ${days} derniers jours`;
+    }
+    updateLabel(saved);
+
+    range.addEventListener('input', () => {
+        updateLabel(parseInt(range.value, 10));
+    });
+    range.addEventListener('change', () => {
+        const days = parseInt(range.value, 10);
+        try { localStorage.setItem('starky_history_days', String(days)); } catch(e){}
+        showToast(`Historique réglé sur ${days} jour${days > 1 ? 's' : ''}`, 'success', 1600);
+    });
+}
+
 /* ===== MOTIF DE FOND — Aucun / Orbes / Étincelles (Paramètres) =====
    "Orbes" est du CSS pur (var(--primary)/--cyan/--magenta) : il suit la
    palette instantanément, sans JS. "Étincelles" affiche 3 grandes icônes
@@ -3507,6 +3674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyStoredPalette();
     initBgStyle();
     initPaletteReset();
+    initHistoryDuration();
     loadCustomPalettes();
 
     console.log('Starky Sports v4.7.0 — liquid glass iOS (thème unique, transparence renforcée)');
@@ -3568,6 +3736,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const auth = getAuth(app);
 
     const provider = new GoogleAuthProvider();
+
+    // Durée totale de l'animation lettre par lettre du splash (dernier
+    // délai + durée d'une lettre), avec une petite marge : on ne masque
+    // jamais l'écran de chargement avant qu'elle ne soit terminée, même
+    // si Firebase répond plus vite.
+    const AUTH_SPLASH_MIN_MS = 3300;
+    const authSplashStartedAt = Date.now();
 
 
     // ==========================================
@@ -3675,27 +3850,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     onAuthStateChanged(auth, (user) => {
 
-        if (user) {
+        const elapsed  = Date.now() - authSplashStartedAt;
+        const remaining = Math.max(0, AUTH_SPLASH_MIN_MS - elapsed);
 
-            // Utilisateur connecté
-            afficherUtilisateur(user);
+        setTimeout(() => {
 
-            console.log(
-                "Session Firebase active :",
-                user.uid
-            );
+            // La vérification est terminée ET l'animation a fini de se
+            // jouer : on masque l'écran de chargement et on affiche soit
+            // l'app, soit la carte de connexion.
+            document.body.classList.remove("auth-checking");
 
-        }
+            if (user) {
 
-        else {
+                // Utilisateur connecté
+                afficherUtilisateur(user);
 
-            // Aucun utilisateur connecté
-            document.body.classList.add("auth-locked");
+                console.log(
+                    "Session Firebase active :",
+                    user.uid
+                );
 
-            if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
-            if (accountAvatar) accountAvatar.src = "";
+            }
 
-        }
+            else {
+
+                // Aucun utilisateur connecté
+                document.body.classList.add("auth-locked");
+
+                if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
+                if (accountAvatar) accountAvatar.src = "";
+
+            }
+
+        }, remaining);
 
     });
 
