@@ -79,7 +79,7 @@
         .mp-sheet,.mp-close,.mp-logo,.side-menu,.side-menu-hdr,.side-item-icon,.benefit-card,
         .iface-block,.setting-icon,.btn,.history-card,.confirm-dialog,.av-select-box,.av-opt,
         .av-viewer-btns .av-btn.close,.deposit-box,.bar-track,.ranking-table th,.slider,
-        .promo-box,.side-item.pressed,.dtab{
+        .promo-box,.side-item.pressed,.dtab,.plan-card,.plan-cta{
             backdrop-filter:blur(var(--glass-blur)) saturate(160%);
             -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(160%);
         }
@@ -189,10 +189,16 @@
         /* ══ BARRE DE RECHERCHE ══ */
         .search-bar{
             position:fixed;top:56px;left:0;right:0;z-index:99;
-            padding:0 16px;max-height:0;overflow:hidden;opacity:0;
-            transition:max-height 0.36s var(--spring-soft),opacity 0.28s ease,padding 0.36s var(--spring-soft);
+            padding:10px 16px;
+            opacity:0;visibility:hidden;pointer-events:none;
+            transform:translateY(-14px) scaleY(0.92);transform-origin:top;
+            transition:opacity 0.32s var(--ease),transform 0.38s var(--spring-soft),visibility 0s linear 0.38s;
         }
-        .search-bar.active{max-height:72px;opacity:1;padding:10px 16px}
+        .search-bar.active{
+            opacity:1;visibility:visible;pointer-events:auto;
+            transform:translateY(0) scaleY(1);
+            transition:opacity 0.32s var(--ease),transform 0.38s var(--spring-soft),visibility 0s linear 0s;
+        }
         .search-bar-inner{
             display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;
             background:var(--glass-fill-strong);border:1px solid var(--glass-border);
@@ -747,6 +753,19 @@
         }
         .mp-no-stats i { font-size:26px;opacity:0.35; }
         .mp-no-stats span { font-size:12px;font-weight:600; }
+        .mp-ai-coming{
+            display:flex;flex-direction:column;align-items:center;gap:14px;
+            padding:32px 20px;text-align:center;
+        }
+        .mp-ai-coming-brand{
+            display:flex;align-items:center;gap:10px;
+            padding:11px 22px;border-radius:16px;
+            background:var(--grad);
+            box-shadow:0 8px 24px var(--primary-glow);
+        }
+        .mp-ai-coming-brand i{ font-size:18px;color:#fff; }
+        .mp-ai-coming-brand span{ font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.2px; }
+        .mp-ai-coming-sub{ font-size:12.5px;font-weight:600;color:var(--text-muted); }
 
         /* ══ SIDE MENU ══ */
         .side-menu{
@@ -828,6 +847,37 @@
         .benefit-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--text)}
         .benefit-desc{font-size:11px;color:var(--text-muted);line-height:1.4}
 
+        /* ══ ABONNEMENT — cartes de plans (démo) ══ */
+        .plans-grid{display:flex;flex-direction:column;gap:14px}
+        .plan-card{
+            position:relative;
+            background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:20px;
+            transition:background 0.45s,border-color 0.45s,transform 0.3s var(--spring);
+        }
+        .plan-card:hover{transform:translateY(-2px)}
+        .plan-card.featured{border:1.5px solid var(--primary);box-shadow:0 8px 28px var(--primary-glow)}
+        .plan-badge{
+            position:absolute;top:-11px;right:20px;
+            background:var(--grad);color:#fff;font-size:11px;font-weight:800;
+            padding:4px 12px;border-radius:20px;letter-spacing:0.3px;
+            box-shadow:0 4px 12px var(--primary-glow);
+        }
+        .plan-period{font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px}
+        .plan-price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+        .plan-price-amount{font-size:26px;font-weight:800;color:var(--text);letter-spacing:-0.5px}
+        .plan-price-unit{font-size:12.5px;color:var(--text-muted);font-weight:600}
+        .plan-save{display:inline-block;font-size:11px;font-weight:700;color:var(--success);background:rgba(79,255,176,0.12);border:1px solid rgba(79,255,176,0.25);border-radius:20px;padding:3px 10px;margin-bottom:10px}
+        .plan-features{list-style:none;padding:0;margin:12px 0 18px;display:flex;flex-direction:column;gap:8px}
+        .plan-features li{font-size:12.5px;color:var(--text-muted);display:flex;align-items:center;gap:8px}
+        .plan-features li i{color:var(--success);font-size:11px}
+        .plan-cta{
+            width:100%;padding:12px;border-radius:14px;border:1px solid var(--border);
+            background:var(--bg-elevated);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
+            transition:transform 0.15s var(--spring),background 0.2s;
+        }
+        .plan-cta:active{transform:scale(0.97)}
+        .plan-cta.primary{background:var(--grad);color:#fff;border:none;box-shadow:0 6px 18px var(--primary-glow)}
+
         /* ══ PARAMÈTRES ══ */
         .interface-container{padding:20px}
         .iface-block{
@@ -838,9 +888,12 @@
         }
         .iface-title{font-size:16px;font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:var(--text)}
         .iface-subtitle{font-size:12px;color:var(--text-muted);margin-bottom:16px}
-        .account-profile{display:flex;flex-direction:column;align-items:center;gap:10px;margin:4px 0 20px}
-        .account-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--glass-fill);border:2px solid var(--glass-border);box-shadow:0 4px 16px rgba(0,0,0,0.15)}
-        .account-email{font-size:13.5px;font-weight:600;color:var(--text-muted);text-align:center;word-break:break-word}
+        .account-profile{display:flex;flex-direction:row;align-items:center;gap:14px;margin:4px 0 16px;text-align:left}
+        .account-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;background:var(--glass-fill);border:2px solid var(--glass-border);box-shadow:0 4px 16px rgba(0,0,0,0.15);flex-shrink:0}
+        .account-email{font-size:14px;font-weight:700;color:var(--text);text-align:left;word-break:break-word;flex:1;min-width:0}
+        .account-status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;margin-bottom:16px;border-radius:14px;background:var(--glass-fill);border:1px solid var(--glass-border)}
+        .account-status-label{font-size:12.5px;font-weight:600;color:var(--text-muted)}
+        .account-plan-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;background:rgba(79,255,176,0.12);color:var(--success);border:1px solid rgba(79,255,176,0.25);white-space:nowrap}
         .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;transition:background 0.18s;border-radius:8px;padding:2px 0}
         .setting-row+.setting-row{margin-top:14px;padding-top:14px;border-top:1px solid rgba(123,110,246,0.10)}
         .setting-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
@@ -975,6 +1028,11 @@
         /* ══ HISTORY ══ */
         .history-wrap{padding:10px}
         .history-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;transition:background 0.45s,border-color 0.45s}
+        .history-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:var(--glass-fill);margin-top:16px;outline:none;cursor:pointer}
+        .history-range::-webkit-slider-runnable-track{height:6px;border-radius:6px;background:var(--glass-fill)}
+        .history-range::-moz-range-track{height:6px;border-radius:6px;background:var(--glass-fill)}
+        .history-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--grad);box-shadow:0 2px 8px var(--primary-glow);border:2px solid #fff;margin-top:-7px}
+        .history-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--grad);box-shadow:0 2px 8px var(--primary-glow);border:2px solid #fff}
         .history-result{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
         .history-result.win{background:rgba(79,255,176,0.15);color:var(--success)}
         .history-result.loss{background:rgba(255,77,109,0.12);color:var(--danger)}
@@ -1006,9 +1064,9 @@
         .toast.warning{background:rgba(255,184,48,0.14);color:var(--warning);border:1px solid rgba(255,184,48,0.36)}
 
         /* ══ OVERLAY & DIALOGS ══ */
-        .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);z-index:90;display:none}
+        .overlay{position:fixed;inset:0;background:var(--overlay-bg);backdrop-filter:blur(4px);z-index:90;display:none;transition:background 0.4s}
         .overlay.active{display:block}
-        .confirm-dialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-elevated);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 56px rgba(0,0,0,0.65);width:88%;max-width:320px;padding:24px;z-index:150;display:none;transition:background 0.4s,border-color 0.4s}
+        .confirm-dialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-elevated);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 56px rgba(0,0,0,0.65);width:88%;max-width:320px;padding:24px;z-index:150;display:none;transition:background 0.4s,border-color 0.4s,box-shadow 0.4s}
         .confirm-dialog.active{display:block}
         .confirm-title{font-weight:800;font-size:18px;margin-bottom:14px;text-align:center;color:var(--text)}
         .confirm-text{margin-bottom:22px;text-align:center;line-height:1.5;font-size:14px;color:var(--text-muted)}
@@ -1076,7 +1134,7 @@
         body.theme-3d .mp-sheet,body.theme-3d .mp-close,body.theme-3d .mp-logo,body.theme-3d .side-menu,body.theme-3d .side-menu-hdr,body.theme-3d .side-item-icon,body.theme-3d .benefit-card,
         body.theme-3d .iface-block,body.theme-3d .setting-icon,body.theme-3d .btn,body.theme-3d .history-card,body.theme-3d .confirm-dialog,body.theme-3d .av-select-box,body.theme-3d .av-opt,
         body.theme-3d .av-viewer-btns .av-btn.close,body.theme-3d .deposit-box,body.theme-3d .bar-track,body.theme-3d .ranking-table th,body.theme-3d .slider,
-        body.theme-3d .promo-box,body.theme-3d .side-item.pressed,body.theme-3d .dtab{
+        body.theme-3d .promo-box,body.theme-3d .side-item.pressed,body.theme-3d .dtab,body.theme-3d .plan-card,body.theme-3d .plan-cta{
             backdrop-filter:blur(var(--glass-blur)) saturate(180%);
             -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(180%);
         }
@@ -1186,12 +1244,47 @@
            l'app floutée en arrière-plan. Reste affiché tant que Firebase
            n'a pas confirmé une session active.
            ══════════════════════════════════════════════════════════════ */
-        body.auth-locked > *:not(#auth-overlay):not(script):not(.app-orb):not(.bg-spark-big){
+        body > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
+            transition: filter 0.5s var(--ease);
+        }
+        body.auth-locked > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
             filter: blur(22px) saturate(120%);
             pointer-events: none !important;
             user-select: none !important;
-            transition: filter 0.4s var(--ease);
         }
+        /* Écran de chargement — s'affiche pendant la vérification de la
+           session Firebase, pour ne jamais laisser entrevoir la carte de
+           connexion si l'utilisateur est déjà authentifié. Transition en
+           fondu douce vers le contenu ou la carte de connexion. */
+        #auth-splash{
+            position: fixed; inset: 0; z-index: 10000;
+            display: flex;
+            align-items: center; justify-content: center;
+            background: rgba(6,6,16,0.94);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.6s var(--ease), visibility 0s linear 0.6s;
+        }
+        body.auth-checking #auth-splash{
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: opacity 0.4s var(--ease);
+        }
+        .auth-splash-logo{ display: flex; flex-wrap: wrap; justify-content: center; font-size: clamp(34px, 10vw, 54px); font-weight: 800; letter-spacing: 0.5px; padding: 0 20px; }
+        .auth-splash-logo span{
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(22px);
+            animation: authSplashLetter 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .auth-splash-logo .auth-splash-space{ width: 0.3em; }
+        @keyframes authSplashLetter{ to{ opacity: 1; transform: translateY(0); } }
         #auth-overlay{
             position: fixed; inset: 0; z-index: 9999;
             display: none;
@@ -1200,9 +1293,10 @@
             -webkit-backdrop-filter: blur(2px);
             backdrop-filter: blur(2px);
             padding: 24px;
-            animation: fadeSlideUp 0.35s var(--ease);
+            opacity: 0;
+            animation: fadeSlideUp 0.5s var(--ease) forwards;
         }
-        body.auth-locked #auth-overlay{ display: flex; }
+        body.auth-locked:not(.auth-checking) #auth-overlay{ display: flex; }
         .auth-card{
             position: relative;
             isolation: isolate;
@@ -1270,6 +1364,8 @@
        que Firebase n'a pas confirmé une session (évite un flash de
        contenu visible avant la vérification). */
     document.body.classList.add('auth-locked');
+    document.body.classList.add('auth-checking');
+    window.__authSplashStart = Date.now();
     var pc = JSON.parse(localStorage.getItem('starky_custom_palette_colors') || 'null');
     if (pc && pc.length) {
         var c0 = pc[0], c1 = pc[1] || pc[0], c2 = pc[2] || c1;
@@ -1287,6 +1383,12 @@
 <img class="bg-spark-big bg-spark-big-1" id="bg-spark-1" alt="">
 <img class="bg-spark-big bg-spark-big-2" id="bg-spark-2" alt="">
 <img class="bg-spark-big bg-spark-big-3" id="bg-spark-3" alt="">
+
+<div id="auth-splash">
+    <div class="auth-splash-logo">
+        <span style="animation-delay:.00s">S</span><span style="animation-delay:.16s">t</span><span style="animation-delay:.32s">a</span><span style="animation-delay:.48s">r</span><span style="animation-delay:.64s">k</span><span style="animation-delay:.80s">y</span><span class="auth-splash-space" style="animation-delay:.96s">&nbsp;</span><span style="animation-delay:1.12s">S</span><span style="animation-delay:1.28s">p</span><span style="animation-delay:1.44s">o</span><span style="animation-delay:1.60s">r</span><span style="animation-delay:1.76s">t</span><span style="animation-delay:1.92s">s</span>
+    </div>
+</div>
 
 <!-- AUTHENTIFICATION OBLIGATOIRE (overlay Google) -->
 <div id="auth-overlay">
@@ -1406,6 +1508,61 @@
         </div>
     </div>
 
+    <!-- ABONNEMENT -->
+    <div id="subscription-section" class="section">
+        <div class="scroll-section">
+            <div class="page-wrap">
+                <div class="page-hdr">
+                    <div class="page-title"><i class="fas fa-crown"></i> Abonnement</div>
+                    <div class="page-subtitle">Choisissez la formule qui vous convient — accédez à toutes les analyses Premium</div>
+                </div>
+                <div class="plans-grid">
+                    <div class="plan-card">
+                        <div class="plan-period">Journalier</div>
+                        <div class="plan-price"><span class="plan-price-amount">500</span><span class="plan-price-unit">FCFA / jour</span></div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Pronostics Premium du jour</li>
+                            <li><i class="fas fa-check"></i> Analyses détaillées</li>
+                        </ul>
+                        <button type="button" class="plan-cta btn" data-plan="daily">Choisir</button>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-period">Hebdomadaire</div>
+                        <div class="plan-price"><span class="plan-price-amount">2 500</span><span class="plan-price-unit">FCFA / semaine</span></div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Tout le plan journalier</li>
+                            <li><i class="fas fa-check"></i> Value Bet illimités</li>
+                            <li><i class="fas fa-check"></i> Historique 7 jours</li>
+                        </ul>
+                        <button type="button" class="plan-cta btn" data-plan="weekly">Choisir</button>
+                    </div>
+                    <div class="plan-card featured">
+                        <div class="plan-badge">Populaire</div>
+                        <div class="plan-period">Mensuel</div>
+                        <div class="plan-price"><span class="plan-price-amount">7 500</span><span class="plan-price-unit">FCFA / mois</span></div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Tout le plan hebdomadaire</li>
+                            <li><i class="fas fa-check"></i> Statistiques avancées 34+ championnats</li>
+                            <li><i class="fas fa-check"></i> Support prioritaire</li>
+                        </ul>
+                        <button type="button" class="plan-cta btn primary" data-plan="monthly">Choisir</button>
+                    </div>
+                    <div class="plan-card">
+                        <div class="plan-period">Annuel</div>
+                        <div class="plan-price"><span class="plan-price-amount">60 000</span><span class="plan-price-unit">FCFA / an</span></div>
+                        <div class="plan-save">2 mois offerts</div>
+                        <ul class="plan-features">
+                            <li><i class="fas fa-check"></i> Tout le plan mensuel</li>
+                            <li><i class="fas fa-check"></i> Historique illimité</li>
+                            <li><i class="fas fa-check"></i> Accès anticipé aux nouveautés</li>
+                        </ul>
+                        <button type="button" class="plan-cta btn" data-plan="yearly">Choisir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SECRETS -->
     <div id="secrets-section" class="section">
         <div class="scroll-section">
@@ -1438,6 +1595,17 @@
         <div class="scroll-section">
             <div class="interface-container">
                 <div class="iface-block">
+                    <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
+                    <div class="account-profile">
+                        <img id="account-avatar" class="account-avatar" src="" alt="Photo de profil" referrerpolicy="no-referrer">
+                        <div class="account-email" id="account-email-display">Gérez votre compte Starky Sports</div>
+                    </div>
+                    <div class="account-status-row">
+                        <span class="account-status-label">Statut</span>
+                        <span class="account-plan-badge" id="account-plan-badge"><i class="fas fa-check-circle"></i> Plan gratuit actif</span>
+                    </div>
+                </div>
+                <div class="iface-block">
                     <div class="iface-title"><i class="fas fa-compass"></i> Navigation</div>
                     <div class="iface-subtitle">Tout le contenu de l'application, réuni ici</div>
                     <div class="side-item" id="menu-install-share">
@@ -1454,7 +1622,7 @@
                             <div class="side-item-text">Abonnement</div>
                             <div class="side-item-desc">Plans &amp; accès premium</div>
                         </div>
-                        <span class="side-item-soon">Bientôt</span>
+                        <i class="fas fa-chevron-right side-item-arrow"></i>
                     </div>
                     <div class="side-item" id="menu-secrets">
                         <div class="side-item-icon"><i class="fas fa-lock"></i></div>
@@ -1566,14 +1734,9 @@
                         <i class="fas fa-chevron-right side-item-arrow"></i>
                     </div>
                 </div>
-                <div class="iface-block">
-                    <div class="iface-title"><i class="fas fa-user-circle"></i> Compte</div>
-                    <div class="account-profile">
-                        <img id="account-avatar" class="account-avatar" src="" alt="Photo de profil" referrerpolicy="no-referrer">
-                        <div class="account-email" id="account-email-display">Gérez votre compte Starky Sports</div>
-                    </div>
-                    <button id="logout-btn" class="btn danger"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
-                </div>
+                <button id="logout-btn" class="btn danger" style="width:100%;">
+                    <i class="fas fa-sign-out-alt"></i> Se déconnecter
+                </button>
             </div>
         </div>
     </div>
@@ -1591,6 +1754,7 @@
         </div>
     </div>
 
+
     <!-- CONDITIONS -->
     <div id="terms-section" class="section">
         <div class="scroll-section">
@@ -1604,6 +1768,7 @@
                 <div class="content-block"><h2>3. Utilisation responsable</h2><p>Les pronostics fournis sont à des fins de divertissement uniquement. Pariez uniquement ce que vous pouvez vous permettre de perdre. Interdit aux mineurs de moins de 18 ans.</p></div>
                 <div class="content-block"><h2>4. Responsabilités</h2><p>Starky Sports décline toute responsabilité en cas de pertes financières. L'utilisateur est seul responsable de ses décisions de paris.</p></div>
                 <div class="content-block"><h2>5. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
+                <div class="content-block"><h2>6. Interdiction de revente et de partage</h2><p>Les pronostics, analyses et contenus fournis par Starky Sports sont strictement réservés à un usage personnel et non commercial au sein de l'application. Toute revente, redistribution, republication ou tout partage de ces contenus en dehors de l'application — à titre gratuit ou payant, notamment sur les réseaux sociaux, groupes de discussion ou plateformes tierces — est strictement interdit.</p><p>Toute violation de cette clause pourra entraîner la suspension immédiate et définitive du compte concerné, sans préavis ni remboursement.</p></div>
             </div>
         </div>
     </div>
@@ -1667,6 +1832,7 @@
             <div class="dtab" data-tab="matches"><i class="fas fa-futbol"></i> Matchs</div>
             <div class="dtab" data-tab="h2h"><i class="fas fa-exchange-alt"></i> H2H</div>
             <div class="dtab" data-tab="ranking"><i class="fas fa-trophy"></i> Classement</div>
+            <div class="dtab" data-tab="ia"><i class="fas fa-magic"></i> IA</div>
             <div class="dtab" data-tab="infos"><i class="fas fa-tags"></i> Infos</div>
         </div>
     </div>
@@ -1692,6 +1858,12 @@
         <div class="tab-panel" id="matches-content"><div id="matches-list"></div></div>
         <div class="tab-panel" id="h2h-content"><div id="h2h-list"></div></div>
         <div class="tab-panel" id="ranking-content"><div id="ranking-list"></div></div>
+        <div class="tab-panel" id="ia-content">
+            <div class="mp-ai-coming">
+                <div class="mp-ai-coming-brand"><i class="fas fa-magic"></i><span>Starky.Ai</span></div>
+                <span class="mp-ai-coming-sub">Bientôt disponible</span>
+            </div>
+        </div>
         <div class="tab-panel" id="infos-content">
             <div class="infos-panel" id="infos-panel"></div>
         </div>
@@ -1724,6 +1896,20 @@
         <div class="confirm-btn confirm-ok" id="logout-confirm">Déconnecter</div>
     </div>
 </div>
+<div id="history-settings-dialog" class="confirm-dialog">
+    <div class="confirm-title"><i class="fas fa-sliders-h"></i> Réglages de l'historique</div>
+    <div class="setting-left" style="margin:18px 0 4px;">
+        <div class="setting-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div>
+            <div class="setting-label">Durée de l'historique</div>
+            <div class="setting-desc" id="history-duration-desc">Affiche les 14 derniers jours</div>
+        </div>
+    </div>
+    <input type="range" class="history-range" id="history-duration-range" min="1" max="30" step="1" value="14">
+    <div class="confirm-btns" style="margin-top:22px;">
+        <div class="confirm-btn confirm-ok" id="history-settings-close">Fermer</div>
+    </div>
+</div>
 <div id="overlay" class="overlay"></div>
 <div id="toast" class="toast"></div>
 
@@ -1752,15 +1938,16 @@ const AVATAR_OPTIONS = [
 ];
 
 const SECTION_TITLES = {
-    forecasts : 'Pronostics',
-    icegame   : 'Value Bet',
-    pros      : 'Pro',
-    interface : 'Paramètres',
-    events    : 'Événements',
-    history   : 'Historique',
-    secrets   : 'Secrets',
-    terms     : 'Conditions',
-    about     : 'À propos'
+    forecasts    : 'Pronostics',
+    icegame      : 'Value Bet',
+    pros         : 'Pro',
+    interface    : 'Paramètres',
+    events       : 'Événements',
+    history      : 'Historique',
+    secrets      : 'Secrets',
+    subscription : 'Abonnement',
+    terms        : 'Conditions',
+    about        : 'À propos'
 };
 
 /* Stat icons map */
@@ -2257,6 +2444,19 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
         noStats.innerHTML = `<i class="fas fa-chart-bar"></i><span>Statistiques non disponibles</span>`;
         body.appendChild(noStats);
     }
+
+    /* — Analyse IA (à venir) — */
+    const aiTitleEl = document.createElement('div');
+    aiTitleEl.className = 'mp-section-title';
+    aiTitleEl.innerHTML = '<i class="fas fa-magic"></i> IA';
+    body.appendChild(aiTitleEl);
+
+    const aiComing = document.createElement('div');
+    aiComing.className = 'mp-ai-coming';
+    aiComing.innerHTML = `
+        <div class="mp-ai-coming-brand"><i class="fas fa-magic"></i><span>Starky.Ai</span></div>
+        <span class="mp-ai-coming-sub">Bientôt disponible</span>`;
+    body.appendChild(aiComing);
 
     /* — Ouverture : le bottom-sheet jaillit depuis la carte cliquée — */
     previewSourceCard = sourceEl || null;
@@ -2929,6 +3129,7 @@ function showSection(id) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     closeSearchBar();
+    closeAllDialogs();
 
     const section = document.getElementById(`${id}-section`);
     if (section) section.classList.add('active');
@@ -2967,7 +3168,12 @@ function showSection(id) {
         mainContent.classList.remove('no-nav');
     } else {
         backBtn.style.display = 'flex';
-        hActions.innerHTML = '';
+        if (id === 'history') {
+            hActions.innerHTML = `<div class="icon-btn" id="history-settings-btn"><i class="fas fa-sliders-h"></i></div>`;
+            document.getElementById('history-settings-btn').addEventListener('click', () => showDialog('history-settings-dialog'));
+        } else {
+            hActions.innerHTML = '';
+        }
         bottomNav.classList.add('hidden');
         mainContent.classList.add('no-nav');
     }
@@ -3040,6 +3246,11 @@ function hideDialog(id) {
     document.getElementById(id).classList.remove('active');
     document.getElementById('overlay').classList.remove('active');
 }
+function closeAllDialogs() {
+    document.querySelectorAll('.confirm-dialog.active').forEach(d => d.classList.remove('active'));
+    const ov = document.getElementById('overlay');
+    if (ov) ov.classList.remove('active');
+}
 function copyPromo(code) {
     navigator.clipboard?.writeText(code)
         .then(() => showToast('Code copié !', 'success'))
@@ -3049,11 +3260,13 @@ function copyPromo(code) {
 /* ===== Listeners ===== */
 function setupListeners() {
     document.getElementById('menu-install-share').addEventListener('click', handleInstallShare);
-    document.getElementById('menu-abonnement').addEventListener('click', () => {
-        showToast('Abonnement bientôt disponible !', 'info');
+    document.getElementById('menu-abonnement').addEventListener('click', () => showSection('subscription'));
+    document.querySelectorAll('.plan-cta').forEach(btn => {
+        btn.addEventListener('click', () => showToast('Paiement bientôt disponible !', 'info'));
     });
     document.getElementById('menu-secrets').addEventListener('click', () => showSection('secrets'));
     document.getElementById('menu-history').addEventListener('click', () => showSection('history'));
+    document.getElementById('history-settings-close').addEventListener('click', () => hideDialog('history-settings-dialog'));
     document.getElementById('menu-terms').addEventListener('click',   () => showSection('terms'));
     document.getElementById('menu-about').addEventListener('click',   () => showSection('about'));
 
@@ -3422,6 +3635,31 @@ function initPaletteReset() {
     });
 }
 
+function initHistoryDuration() {
+    const range = document.getElementById('history-duration-range');
+    const desc  = document.getElementById('history-duration-desc');
+    if (!range || !desc) return;
+
+    let saved = 14;
+    try { saved = parseInt(localStorage.getItem('starky_history_days'), 10) || 14; } catch(e){}
+    saved = Math.min(30, Math.max(1, saved));
+    range.value = saved;
+
+    function updateLabel(days) {
+        desc.textContent = days === 1 ? "Affiche le dernier jour" : `Affiche les ${days} derniers jours`;
+    }
+    updateLabel(saved);
+
+    range.addEventListener('input', () => {
+        updateLabel(parseInt(range.value, 10));
+    });
+    range.addEventListener('change', () => {
+        const days = parseInt(range.value, 10);
+        try { localStorage.setItem('starky_history_days', String(days)); } catch(e){}
+        showToast(`Historique réglé sur ${days} jour${days > 1 ? 's' : ''}`, 'success', 1600);
+    });
+}
+
 /* ===== MOTIF DE FOND — Aucun / Orbes / Étincelles (Paramètres) =====
    "Orbes" est du CSS pur (var(--primary)/--cyan/--magenta) : il suit la
    palette instantanément, sans JS. "Étincelles" affiche 3 grandes icônes
@@ -3507,6 +3745,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     applyStoredPalette();
     initBgStyle();
     initPaletteReset();
+    initHistoryDuration();
     loadCustomPalettes();
 
     console.log('Starky Sports v4.7.0 — liquid glass iOS (thème unique, transparence renforcée)');
@@ -3568,6 +3807,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const auth = getAuth(app);
 
     const provider = new GoogleAuthProvider();
+
+    // Durée totale de l'animation lettre par lettre du splash (dernier
+    // délai + durée d'une lettre), avec une petite marge : on ne masque
+    // jamais l'écran de chargement avant qu'elle ne soit terminée, même
+    // si Firebase répond plus vite.
+    const AUTH_SPLASH_MIN_MS = 3300;
+    const authSplashStartedAt = Date.now();
 
 
     // ==========================================
@@ -3675,27 +3921,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     onAuthStateChanged(auth, (user) => {
 
-        if (user) {
+        const elapsed  = Date.now() - authSplashStartedAt;
+        const remaining = Math.max(0, AUTH_SPLASH_MIN_MS - elapsed);
 
-            // Utilisateur connecté
-            afficherUtilisateur(user);
+        setTimeout(() => {
 
-            console.log(
-                "Session Firebase active :",
-                user.uid
-            );
+            // La vérification est terminée ET l'animation a fini de se
+            // jouer : on masque l'écran de chargement et on affiche soit
+            // l'app, soit la carte de connexion.
+            document.body.classList.remove("auth-checking");
 
-        }
+            if (user) {
 
-        else {
+                // Utilisateur connecté
+                afficherUtilisateur(user);
 
-            // Aucun utilisateur connecté
-            document.body.classList.add("auth-locked");
+                console.log(
+                    "Session Firebase active :",
+                    user.uid
+                );
 
-            if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
-            if (accountAvatar) accountAvatar.src = "";
+            }
 
-        }
+            else {
+
+                // Aucun utilisateur connecté
+                document.body.classList.add("auth-locked");
+
+                if (accountDisplay) accountDisplay.textContent = "Gérez votre compte Starky Sports";
+                if (accountAvatar) accountAvatar.src = "";
+
+            }
+
+        }, remaining);
 
     });
 
