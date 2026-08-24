@@ -79,7 +79,7 @@
         .mp-sheet,.mp-close,.mp-logo,.side-menu,.side-menu-hdr,.side-item-icon,.benefit-card,
         .iface-block,.setting-icon,.btn,.history-card,.confirm-dialog,.av-select-box,.av-opt,
         .av-viewer-btns .av-btn.close,.deposit-box,.bar-track,.ranking-table th,.slider,
-        .promo-box,.side-item.pressed,.dtab{
+        .promo-box,.side-item.pressed,.dtab,.plan-card,.plan-cta{
             backdrop-filter:blur(var(--glass-blur)) saturate(160%);
             -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(160%);
         }
@@ -1129,7 +1129,7 @@
         body.theme-3d .mp-sheet,body.theme-3d .mp-close,body.theme-3d .mp-logo,body.theme-3d .side-menu,body.theme-3d .side-menu-hdr,body.theme-3d .side-item-icon,body.theme-3d .benefit-card,
         body.theme-3d .iface-block,body.theme-3d .setting-icon,body.theme-3d .btn,body.theme-3d .history-card,body.theme-3d .confirm-dialog,body.theme-3d .av-select-box,body.theme-3d .av-opt,
         body.theme-3d .av-viewer-btns .av-btn.close,body.theme-3d .deposit-box,body.theme-3d .bar-track,body.theme-3d .ranking-table th,body.theme-3d .slider,
-        body.theme-3d .promo-box,body.theme-3d .side-item.pressed,body.theme-3d .dtab{
+        body.theme-3d .promo-box,body.theme-3d .side-item.pressed,body.theme-3d .dtab,body.theme-3d .plan-card,body.theme-3d .plan-cta{
             backdrop-filter:blur(var(--glass-blur)) saturate(180%);
             -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(180%);
         }
@@ -1519,7 +1519,7 @@
                             <li><i class="fas fa-check"></i> Pronostics Premium du jour</li>
                             <li><i class="fas fa-check"></i> Analyses détaillées</li>
                         </ul>
-                        <button type="button" class="plan-cta" data-plan="daily">Choisir</button>
+                        <button type="button" class="plan-cta btn" data-plan="daily">Choisir</button>
                     </div>
                     <div class="plan-card">
                         <div class="plan-period">Hebdomadaire</div>
@@ -1529,7 +1529,7 @@
                             <li><i class="fas fa-check"></i> Value Bet illimités</li>
                             <li><i class="fas fa-check"></i> Historique 7 jours</li>
                         </ul>
-                        <button type="button" class="plan-cta" data-plan="weekly">Choisir</button>
+                        <button type="button" class="plan-cta btn" data-plan="weekly">Choisir</button>
                     </div>
                     <div class="plan-card featured">
                         <div class="plan-badge">Populaire</div>
@@ -1540,7 +1540,7 @@
                             <li><i class="fas fa-check"></i> Statistiques avancées 34+ championnats</li>
                             <li><i class="fas fa-check"></i> Support prioritaire</li>
                         </ul>
-                        <button type="button" class="plan-cta primary" data-plan="monthly">Choisir</button>
+                        <button type="button" class="plan-cta btn primary" data-plan="monthly">Choisir</button>
                     </div>
                     <div class="plan-card">
                         <div class="plan-period">Annuel</div>
@@ -1551,7 +1551,7 @@
                             <li><i class="fas fa-check"></i> Historique illimité</li>
                             <li><i class="fas fa-check"></i> Accès anticipé aux nouveautés</li>
                         </ul>
-                        <button type="button" class="plan-cta" data-plan="yearly">Choisir</button>
+                        <button type="button" class="plan-cta btn" data-plan="yearly">Choisir</button>
                     </div>
                 </div>
             </div>
@@ -1747,22 +1747,6 @@
         </div>
     </div>
 
-    <!-- RÉGLAGES HISTORIQUE (dialogue ouvert depuis le bouton du header) -->
-    <div id="history-settings-dialog" class="confirm-dialog">
-        <div class="confirm-title"><i class="fas fa-sliders-h"></i> Réglages de l'historique</div>
-        <div class="setting-left" style="margin:18px 0 4px;">
-            <div class="setting-icon"><i class="fas fa-calendar-alt"></i></div>
-            <div>
-                <div class="setting-label">Durée de l'historique</div>
-                <div class="setting-desc" id="history-duration-desc">Affiche les 14 derniers jours</div>
-            </div>
-        </div>
-        <input type="range" class="history-range" id="history-duration-range" min="1" max="30" step="1" value="14">
-        <div class="confirm-btns" style="margin-top:22px;">
-            <div class="confirm-btn confirm-ok" id="history-settings-close">Fermer</div>
-        </div>
-    </div>
-
 
     <!-- CONDITIONS -->
     <div id="terms-section" class="section">
@@ -1841,6 +1825,7 @@
             <div class="dtab" data-tab="matches"><i class="fas fa-futbol"></i> Matchs</div>
             <div class="dtab" data-tab="h2h"><i class="fas fa-exchange-alt"></i> H2H</div>
             <div class="dtab" data-tab="ranking"><i class="fas fa-trophy"></i> Classement</div>
+            <div class="dtab" data-tab="ia"><i class="fas fa-magic"></i> IA</div>
             <div class="dtab" data-tab="infos"><i class="fas fa-tags"></i> Infos</div>
         </div>
     </div>
@@ -1866,6 +1851,12 @@
         <div class="tab-panel" id="matches-content"><div id="matches-list"></div></div>
         <div class="tab-panel" id="h2h-content"><div id="h2h-list"></div></div>
         <div class="tab-panel" id="ranking-content"><div id="ranking-list"></div></div>
+        <div class="tab-panel" id="ia-content">
+            <div class="mp-ai-coming">
+                <div class="mp-ai-coming-icon"><i class="fas fa-magic"></i></div>
+                <span>Bientôt disponible</span>
+            </div>
+        </div>
         <div class="tab-panel" id="infos-content">
             <div class="infos-panel" id="infos-panel"></div>
         </div>
@@ -1896,6 +1887,20 @@
     <div class="confirm-btns">
         <div class="confirm-btn confirm-cancel" id="logout-cancel">Annuler</div>
         <div class="confirm-btn confirm-ok" id="logout-confirm">Déconnecter</div>
+    </div>
+</div>
+<div id="history-settings-dialog" class="confirm-dialog">
+    <div class="confirm-title"><i class="fas fa-sliders-h"></i> Réglages de l'historique</div>
+    <div class="setting-left" style="margin:18px 0 4px;">
+        <div class="setting-icon"><i class="fas fa-calendar-alt"></i></div>
+        <div>
+            <div class="setting-label">Durée de l'historique</div>
+            <div class="setting-desc" id="history-duration-desc">Affiche les 14 derniers jours</div>
+        </div>
+    </div>
+    <input type="range" class="history-range" id="history-duration-range" min="1" max="30" step="1" value="14">
+    <div class="confirm-btns" style="margin-top:22px;">
+        <div class="confirm-btn confirm-ok" id="history-settings-close">Fermer</div>
     </div>
 </div>
 <div id="overlay" class="overlay"></div>
@@ -3255,7 +3260,6 @@ function setupListeners() {
     document.getElementById('menu-secrets').addEventListener('click', () => showSection('secrets'));
     document.getElementById('menu-history').addEventListener('click', () => showSection('history'));
     document.getElementById('history-settings-close').addEventListener('click', () => hideDialog('history-settings-dialog'));
-    document.getElementById('overlay').addEventListener('click', closeAllDialogs);
     document.getElementById('menu-terms').addEventListener('click',   () => showSection('terms'));
     document.getElementById('menu-about').addEventListener('click',   () => showSection('about'));
 
