@@ -189,10 +189,16 @@
         /* ══ BARRE DE RECHERCHE ══ */
         .search-bar{
             position:fixed;top:56px;left:0;right:0;z-index:99;
-            padding:0 16px;max-height:0;overflow:hidden;opacity:0;
-            transition:max-height 0.36s var(--spring-soft),opacity 0.28s ease,padding 0.36s var(--spring-soft);
+            padding:10px 16px;
+            opacity:0;visibility:hidden;pointer-events:none;
+            transform:translateY(-14px) scaleY(0.92);transform-origin:top;
+            transition:opacity 0.32s var(--ease),transform 0.38s var(--spring-soft),visibility 0s linear 0.38s;
         }
-        .search-bar.active{max-height:72px;opacity:1;padding:10px 16px}
+        .search-bar.active{
+            opacity:1;visibility:visible;pointer-events:auto;
+            transform:translateY(0) scaleY(1);
+            transition:opacity 0.32s var(--ease),transform 0.38s var(--spring-soft),visibility 0s linear 0s;
+        }
         .search-bar-inner{
             display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;
             background:var(--glass-fill-strong);border:1px solid var(--glass-border);
@@ -1062,10 +1068,6 @@
         .overlay.active{display:block}
         .confirm-dialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-elevated);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 56px rgba(0,0,0,0.65);width:88%;max-width:320px;padding:24px;z-index:150;display:none;transition:background 0.4s,border-color 0.4s,box-shadow 0.4s}
         .confirm-dialog.active{display:block}
-        /* Carte opaque (pas de verre translucide) : elle doit se démarquer
-           nettement du fond, aussi bien en mode clair qu'en mode sombre */
-        body:not(.bg-black) .confirm-dialog{background:#FFFFFF;border-color:rgba(20,20,45,0.08);box-shadow:0 20px 56px rgba(20,20,50,0.22)}
-        body.bg-black .confirm-dialog{background:#16161F;border-color:rgba(255,255,255,0.10);box-shadow:0 20px 56px rgba(0,0,0,0.7)}
         .confirm-title{font-weight:800;font-size:18px;margin-bottom:14px;text-align:center;color:var(--text)}
         .confirm-text{margin-bottom:22px;text-align:center;line-height:1.5;font-size:14px;color:var(--text-muted)}
         .confirm-btns{display:flex;justify-content:space-between;gap:12px}
