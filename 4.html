@@ -1239,10 +1239,11 @@
            n'a pas confirmé une session active.
            ══════════════════════════════════════════════════════════════ */
         body > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
-            transition: filter 0.5s var(--ease);
+            transition: filter 0.5s var(--ease), opacity 0.5s var(--ease);
         }
         body.auth-locked > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
             filter: blur(22px) saturate(120%);
+            opacity: 0;
             pointer-events: none !important;
             user-select: none !important;
         }
@@ -1766,8 +1767,8 @@
                 <div class="content-block"><h2>2. Description du service</h2><p>Starky Sports est une application de pronostics sportifs qui fournit des analyses et prédictions basées sur des données statistiques et des algorithmes d'intelligence artificielle.</p></div>
                 <div class="content-block"><h2>3. Utilisation responsable</h2><p>Les pronostics fournis sont à des fins de divertissement uniquement. Pariez uniquement ce que vous pouvez vous permettre de perdre. Interdit aux mineurs de moins de 18 ans.</p></div>
                 <div class="content-block"><h2>4. Responsabilités</h2><p>Starky Sports décline toute responsabilité en cas de pertes financières. L'utilisateur est seul responsable de ses décisions de paris.</p></div>
-                <div class="content-block"><h2>5. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
-                <div class="content-block"><h2>6. Interdiction de revente et de partage</h2><p>Les pronostics, analyses et contenus fournis par Starky Sports sont strictement réservés à un usage personnel et non commercial au sein de l'application. Toute revente, redistribution, republication ou tout partage de ces contenus en dehors de l'application — à titre gratuit ou payant, notamment sur les réseaux sociaux, groupes de discussion ou plateformes tierces — est strictement interdit.</p><p>Toute violation de cette clause pourra entraîner la suspension immédiate et définitive du compte concerné, sans préavis ni remboursement.</p></div>
+                <div class="content-block"><h2>5. Interdiction de revente et de partage</h2><p>Les pronostics, analyses et contenus fournis par Starky Sports sont strictement réservés à un usage personnel et non commercial au sein de l'application. Toute revente, redistribution, republication ou tout partage de ces contenus en dehors de l'application — à titre gratuit ou payant, notamment sur les réseaux sociaux, groupes de discussion ou plateformes tierces — est strictement interdit.</p><p>Toute violation de cette clause pourra entraîner la suspension immédiate et définitive du compte concerné, sans préavis ni remboursement.</p></div>
+                <div class="content-block"><h2>6. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
             </div>
         </div>
     </div>
