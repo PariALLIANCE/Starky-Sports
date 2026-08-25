@@ -190,7 +190,7 @@
         .search-bar{
             position:fixed;top:56px;left:0;right:0;z-index:99;
             padding:0 16px;max-height:0;overflow:hidden;opacity:0;
-            transition:max-height 0.36s var(--spring-soft),opacity 0.28s ease,padding 0.36s var(--spring-soft);
+            transition:max-height 0.36s var(--spring-soft),opacity 0.28s ease,padding 0.36s var(--spring-soft),filter 0.5s var(--ease);
         }
         .search-bar.active{max-height:72px;opacity:1;padding:10px 16px}
         .search-bar-inner{
@@ -1238,12 +1238,20 @@
            l'app floutée en arrière-plan. Reste affiché tant que Firebase
            n'a pas confirmé une session active.
            ══════════════════════════════════════════════════════════════ */
-        body > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
+        body > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big):not(.search-bar){
             transition: filter 0.5s var(--ease), opacity 0.5s var(--ease);
         }
-        body.auth-locked > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
+        body.auth-locked > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big):not(.search-bar){
             filter: blur(22px) saturate(120%);
             opacity: 0;
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+        /* La barre de recherche garde sa propre transition (max-height/opacity/
+           padding) : elle est traitée à part pour ne pas se la faire écraser
+           par la règle générique ci-dessus (conflit sur le raccourci transition). */
+        body.auth-locked .search-bar{
+            filter: blur(22px) saturate(120%);
             pointer-events: none !important;
             user-select: none !important;
         }
