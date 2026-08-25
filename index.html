@@ -189,16 +189,10 @@
         /* ══ BARRE DE RECHERCHE ══ */
         .search-bar{
             position:fixed;top:56px;left:0;right:0;z-index:99;
-            padding:10px 16px;
-            opacity:0;visibility:hidden;pointer-events:none;
-            transform:translateY(-14px) scaleY(0.92);transform-origin:top;
-            transition:opacity 0.32s var(--ease),transform 0.38s var(--spring-soft),visibility 0s linear 0.38s;
+            padding:0 16px;max-height:0;overflow:hidden;opacity:0;
+            transition:max-height 0.36s var(--spring-soft),opacity 0.28s ease,padding 0.36s var(--spring-soft);
         }
-        .search-bar.active{
-            opacity:1;visibility:visible;pointer-events:auto;
-            transform:translateY(0) scaleY(1);
-            transition:opacity 0.32s var(--ease),transform 0.38s var(--spring-soft),visibility 0s linear 0s;
-        }
+        .search-bar.active{max-height:72px;opacity:1;padding:10px 16px}
         .search-bar-inner{
             display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;
             background:var(--glass-fill-strong);border:1px solid var(--glass-border);
@@ -264,7 +258,7 @@
             background:var(--glass-fill-strong);
             border:1px solid var(--border-bright);
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.25),0 4px 14px var(--primary-glow);
-            transition:transform 0.32s var(--spring-soft),width 0.32s var(--spring-soft);
+            transition:transform 0.32s var(--spring-soft),width 0.32s var(--spring-soft),opacity 0.22s ease;
             pointer-events:none;z-index:0;
         }
         .nav-item {
@@ -1245,10 +1239,11 @@
            n'a pas confirmé une session active.
            ══════════════════════════════════════════════════════════════ */
         body > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
-            transition: filter 0.5s var(--ease);
+            transition: filter 0.5s var(--ease), opacity 0.5s var(--ease);
         }
         body.auth-locked > *:not(#auth-overlay):not(#auth-splash):not(script):not(.app-orb):not(.bg-spark-big){
             filter: blur(22px) saturate(120%);
+            opacity: 0;
             pointer-events: none !important;
             user-select: none !important;
         }
@@ -1264,8 +1259,13 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transition: opacity 0.6s var(--ease), visibility 0s linear 0.6s;
+            transition: opacity 0.6s var(--ease), visibility 0s linear 0.6s, background 0.4s;
         }
+        /* Suit le mode actif ; transparence pour laisser transparaître
+           uniquement les motifs de fond (orbes/étincelles, non flloutés
+           par auth-locked) derrière le logo, pas le contenu de l'app. */
+        body:not(.bg-black) #auth-splash{ background: rgba(238,238,248,0.55); }
+        body.bg-black #auth-splash{ background: rgba(6,6,16,0.55); }
         body.auth-checking #auth-splash{
             opacity: 1;
             visibility: visible;
@@ -1767,8 +1767,8 @@
                 <div class="content-block"><h2>2. Description du service</h2><p>Starky Sports est une application de pronostics sportifs qui fournit des analyses et prédictions basées sur des données statistiques et des algorithmes d'intelligence artificielle.</p></div>
                 <div class="content-block"><h2>3. Utilisation responsable</h2><p>Les pronostics fournis sont à des fins de divertissement uniquement. Pariez uniquement ce que vous pouvez vous permettre de perdre. Interdit aux mineurs de moins de 18 ans.</p></div>
                 <div class="content-block"><h2>4. Responsabilités</h2><p>Starky Sports décline toute responsabilité en cas de pertes financières. L'utilisateur est seul responsable de ses décisions de paris.</p></div>
-                <div class="content-block"><h2>5. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
-                <div class="content-block"><h2>6. Interdiction de revente et de partage</h2><p>Les pronostics, analyses et contenus fournis par Starky Sports sont strictement réservés à un usage personnel et non commercial au sein de l'application. Toute revente, redistribution, republication ou tout partage de ces contenus en dehors de l'application — à titre gratuit ou payant, notamment sur les réseaux sociaux, groupes de discussion ou plateformes tierces — est strictement interdit.</p><p>Toute violation de cette clause pourra entraîner la suspension immédiate et définitive du compte concerné, sans préavis ni remboursement.</p></div>
+                <div class="content-block"><h2>5. Interdiction de revente et de partage</h2><p>Les pronostics, analyses et contenus fournis par Starky Sports sont strictement réservés à un usage personnel et non commercial au sein de l'application. Toute revente, redistribution, republication ou tout partage de ces contenus en dehors de l'application — à titre gratuit ou payant, notamment sur les réseaux sociaux, groupes de discussion ou plateformes tierces — est strictement interdit.</p><p>Toute violation de cette clause pourra entraîner la suspension immédiate et définitive du compte concerné, sans préavis ni remboursement.</p></div>
+                <div class="content-block"><h2>6. Propriété intellectuelle</h2><p>Tous les contenus de l'application sont protégés par les droits d'auteur et appartiennent à Starky Sports.</p><p><strong>© 2025 Starky Sports</strong> - Tous droits réservés.</p></div>
             </div>
         </div>
     </div>
@@ -3475,7 +3475,8 @@ function updateNavMarker(sectionId) {
     const marker    = document.getElementById('nav-marker');
     if (!bottomNav || !marker) return;
     const activeItem = bottomNav.querySelector(`.nav-item[data-section="${sectionId}"]`);
-    if (!activeItem) { marker.style.width = '0'; return; }
+    if (!activeItem) { marker.style.opacity = '0'; return; } // masqué en fondu, jamais réduit en trait
+    marker.style.opacity = '1';
     const navRect  = bottomNav.getBoundingClientRect();
     const itemRect = activeItem.getBoundingClientRect();
     const firstRun = !marker.dataset.ready;
