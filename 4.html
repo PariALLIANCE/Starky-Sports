@@ -52,6 +52,7 @@
             --ease:           cubic-bezier(0.23,1,0.32,1);
             --spring:         cubic-bezier(0.22,0.61,0.36,1);
             --spring-soft:    cubic-bezier(0.25,0.46,0.45,0.94);
+            --spring-gentle:  cubic-bezier(0.16,0.84,0.30,1);
             --glass-edge-3d:  0 0 0 rgba(0,0,0,0);
         }
         /* ══ EFFET 3D — variables activées quand <body> porte la classe .theme-3d ══
@@ -141,6 +142,43 @@
         .morph-source-fade.faded{
             opacity:0;
             transform:scale(0.90);
+        }
+        /* ── Rebond à la réapparition de la carte/bouton source (fermeture) ── */
+        @keyframes sourceBounceIn {
+            0%{opacity:0;transform:scale(0.90)}
+            58%{opacity:1;transform:scale(1.035)}
+            100%{opacity:1;transform:scale(1)}
+        }
+        .morph-source-fade.bounce-in{
+            animation:sourceBounceIn 0.52s var(--ease) both;
+        }
+        /* ── Rebond du bouton notifications à la fermeture du panneau ── */
+        @keyframes notifBounceIn {
+            0%{opacity:0;transform:scale(0.72)}
+            55%{opacity:1;transform:scale(1.16)}
+            78%{transform:scale(0.95)}
+            100%{opacity:1;transform:scale(1)}
+        }
+        .notif-bounce-in{animation:notifBounceIn 0.52s var(--ease) both}
+        /* ── Pulsion du switch mode sombre/clair ── */
+        @keyframes switchPulseRing{
+            0%{box-shadow:0 0 0 0 var(--primary-glow)}
+            65%{box-shadow:0 0 0 12px rgba(123,110,246,0)}
+            100%{box-shadow:0 0 0 0 rgba(123,110,246,0)}
+        }
+        .switch.switch-pulse .slider{animation:switchPulseRing 0.55s var(--ease)}
+        .switch.switch-pulse .slider::before{animation:switchPulseRing 0.55s var(--ease)}
+        /* ── Propulsion du motif "Orbes" depuis l'interrupteur ── */
+        .theme-orb-pulse{
+            position:fixed;left:0;top:0;border-radius:50%;pointer-events:none;z-index:9999;
+            background:var(--grad);
+            opacity:0.5;
+            transform:translate(-50%,-50%) scale(0);
+            transition:transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.85s ease-out;
+        }
+        .theme-orb-pulse.burst{
+            transform:translate(-50%,-50%) scale(1);
+            opacity:0;
         }
         @keyframes pulseGlow {
             0%,100%{box-shadow:0 0 0 0 rgba(123,110,246,0)}
@@ -2276,11 +2314,12 @@ function morphOpen(panelEl, sourceEl, opts = {}) {
 function morphClose(panelEl, sourceEl, opts = {}) {
     if (!panelEl) return;
     if (sourceEl && !sourceEl.isConnected) sourceEl = null;
-    /* Fermeture adoucie : durée un peu plus longue + easing "spring-soft"
-       (léger relâchement en fin de course, comme une bulle qui se dépose
-       doucement) au lieu de l'ease-out sec précédent. L'opacité s'estompe
-       un peu plus tôt pour renforcer la sensation de douceur. */
-    const closeMs = opts.closeMs || 420;
+    /* Fermeture ralentie et très adoucie : durée nettement plus longue +
+       easing "spring-gentle" (décélération longue et moelleuse, sans à-coup)
+       pour une sensation de bulle qui se dépose tout en douceur. L'opacité
+       s'estompe sur une portion plus large de la durée pour accompagner
+       ce ralenti. */
+    const closeMs = opts.closeMs || 620;
 
     let dx = 0, dy = 0, scaleX = 0.4, scaleY = 0.4;
     if (sourceEl) {
@@ -2293,7 +2332,7 @@ function morphClose(panelEl, sourceEl, opts = {}) {
     }
 
     panelEl.style.transformOrigin = 'center center';
-    panelEl.style.transition = `transform ${closeMs}ms var(--spring-soft), opacity ${Math.round(closeMs*0.62)}ms var(--ease)`;
+    panelEl.style.transition = `transform ${closeMs}ms var(--spring-gentle), opacity ${Math.round(closeMs*0.72)}ms var(--ease)`;
     requestAnimationFrame(() => {
         panelEl.style.transform = sourceEl
             ? `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})`
@@ -2307,11 +2346,9 @@ function morphClose(panelEl, sourceEl, opts = {}) {
         panelEl.style.transform      = '';
         panelEl.style.opacity        = '';
         panelEl.style.transformOrigin= '';
-        /* — La carte source réapparaît (fade in) une fois le panneau refermé — */
-        if (sourceEl) {
-            sourceEl.classList.remove('faded');
-            setTimeout(() => sourceEl.classList.remove('morph-source-fade'), 320);
-        }
+        /* — La carte source réapparaît avec un léger rebond une fois le
+           panneau refermé, pour un visuel plus éclatant — */
+        if (sourceEl) unfadeSourceWithBounce(sourceEl);
     };
 
     let done = false;
@@ -2321,7 +2358,31 @@ function morphClose(panelEl, sourceEl, opts = {}) {
         panelEl.removeEventListener('transitionend', handler);
         finish();
     });
-    setTimeout(() => { if (!done) { done = true; finish(); } }, closeMs + 160);
+    setTimeout(() => { if (!done) { done = true; finish(); } }, closeMs + 200);
+}
+
+/* Fait réapparaître un élément source (carte ou bouton) précédemment
+   estompé, avec un léger rebond (scale overshoot) plutôt qu'un simple
+   fondu, pour un effet plus vivant à la fermeture. */
+function unfadeSourceWithBounce(el) {
+    if (!el || !el.isConnected) return;
+    el.style.transition = 'none';
+    el.classList.remove('faded');
+    el.classList.add('bounce-in');
+    void el.offsetWidth;
+    let done = false;
+    const cleanup = () => {
+        if (done) return;
+        done = true;
+        el.classList.remove('bounce-in', 'morph-source-fade');
+        el.style.transition = '';
+    };
+    el.addEventListener('animationend', function handler(e) {
+        if (e.target !== el) return;
+        el.removeEventListener('animationend', handler);
+        cleanup();
+    });
+    setTimeout(cleanup, 600);
 }
 
 function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
@@ -2476,7 +2537,7 @@ function closeMatchPreview() {
     const matchPreviewEl = document.getElementById('match-preview');
     const sheetEl = document.getElementById('mp-sheet');
     /* — Fermeture : le bottom-sheet se rétracte et se fond dans la carte d'origine — */
-    morphClose(sheetEl, previewSourceCard, { closeMs: 400 });
+    morphClose(sheetEl, previewSourceCard, { closeMs: 620 });
     /* Le fond (backdrop) suit le même timing que la fermeture du sheet */
     matchPreviewEl.classList.remove('active');
     previewSourceCard = null;
@@ -2675,7 +2736,7 @@ function openDetail(data, sourceEl) {
 
 function closeDetail() {
     /* — Fermeture : la page détail se rétracte et se fond dans la carte d'origine — */
-    morphClose(document.getElementById('forecast-detail'), detailSourceCard, { closeMs: 440 });
+    morphClose(document.getElementById('forecast-detail'), detailSourceCard, { closeMs: 640 });
     selectedForecast = null;
     detailSourceCard = null;
 }
@@ -3168,8 +3229,7 @@ function showSection(id) {
                 <div class="notif-dot${hasNewEvents?' active':''}" id="events-dot"></div>
             </div>`;
         document.getElementById('events-btn').addEventListener('click', () => {
-            showSection('events');
-            hasNewEvents = false;
+            openNotifications();
         });
         document.getElementById('search-btn').addEventListener('click', isSettings ? handlePwaInstallHeaderBtn : openSearchBar);
         bottomNav.classList.remove('hidden');
@@ -3185,6 +3245,97 @@ function showSection(id) {
         bottomNav.classList.add('hidden');
         mainContent.classList.add('no-nav');
     }
+}
+
+/* ===== Notifications — même animation d'ouverture/fermeture que les cartes =====
+   OUVERTURE : le bouton cloche s'estompe (comme une carte source) pendant
+   que le panneau des notifications émerge du centre.
+   FERMETURE : le panneau se rétracte en douceur (ralenti, easing "spring-
+   gentle") puis, une fois le bouton cloche revenu dans l'en-tête, celui-ci
+   réapparaît avec un léger rebond pour un visuel plus éclatant. */
+const NOTIF_OPEN_MS  = 420;
+const NOTIF_CLOSE_MS = 620;
+
+function openNotifications() {
+    const btn = document.getElementById('events-btn');
+    hasNewEvents = false;
+
+    if (btn) {
+        btn.classList.add('morph-source-fade');
+        void btn.offsetWidth;
+        requestAnimationFrame(() => btn.classList.add('faded'));
+    }
+
+    /* On laisse le bouton s'estomper avant de faire basculer l'en-tête
+       (qui le retire du DOM), pour que le fondu reste visible. */
+    setTimeout(() => {
+        showSection('events');
+        const panel = document.getElementById('events-section');
+        if (!panel) return;
+
+        panel.style.transition    = 'none';
+        panel.style.opacity       = '0';
+        panel.style.transformOrigin = 'center center';
+        panel.style.transform     = 'scale(0.92)';
+        void panel.offsetWidth;
+
+        panel.style.transition = `transform ${NOTIF_OPEN_MS}ms var(--spring-soft), opacity ${Math.round(NOTIF_OPEN_MS*0.72)}ms var(--ease)`;
+        requestAnimationFrame(() => {
+            panel.style.opacity   = '1';
+            panel.style.transform = 'scale(1)';
+        });
+
+        let done = false;
+        panel.addEventListener('transitionend', function handler(e) {
+            if (e.target !== panel || done) return;
+            done = true;
+            panel.removeEventListener('transitionend', handler);
+            panel.style.transition = '';
+            panel.style.transform  = '';
+            panel.style.opacity    = '';
+        });
+        setTimeout(() => { if (!done) { done = true; panel.style.transition=''; panel.style.transform=''; panel.style.opacity=''; } }, NOTIF_OPEN_MS + 160);
+    }, 190);
+}
+
+function closeNotifications() {
+    const panel  = document.getElementById('events-section');
+    const target = previousMainSection;
+    if (!panel) { showSection(target); return; }
+
+    panel.style.transformOrigin = 'center center';
+    panel.style.transition = `transform ${NOTIF_CLOSE_MS}ms var(--spring-gentle), opacity ${Math.round(NOTIF_CLOSE_MS*0.72)}ms var(--ease)`;
+    requestAnimationFrame(() => {
+        panel.style.transform = 'scale(0.9)';
+        panel.style.opacity   = '0';
+    });
+
+    const finish = () => {
+        panel.style.transition = '';
+        panel.style.transform  = '';
+        panel.style.opacity    = '';
+        showSection(target);
+        /* Le bouton cloche, tout juste reconstruit dans l'en-tête,
+           réapparaît avec un léger rebond. */
+        const btn = document.getElementById('events-btn');
+        if (btn) {
+            btn.classList.add('notif-bounce-in');
+            btn.addEventListener('animationend', function handler(e) {
+                if (e.target !== btn) return;
+                btn.removeEventListener('animationend', handler);
+                btn.classList.remove('notif-bounce-in');
+            });
+        }
+    };
+
+    let done = false;
+    panel.addEventListener('transitionend', function handler(e) {
+        if (e.target !== panel || done) return;
+        done = true;
+        panel.removeEventListener('transitionend', handler);
+        finish();
+    });
+    setTimeout(() => { if (!done) { done = true; finish(); } }, NOTIF_CLOSE_MS + 200);
 }
 
 /* ===== Recherche ===== */
@@ -3278,7 +3429,13 @@ function setupListeners() {
     document.getElementById('menu-terms').addEventListener('click',   () => showSection('terms'));
     document.getElementById('menu-about').addEventListener('click',   () => showSection('about'));
 
-    document.getElementById('back-btn').addEventListener('click', () => showSection(previousMainSection));
+    document.getElementById('back-btn').addEventListener('click', () => {
+        if (currentSection === 'events') {
+            closeNotifications();
+        } else {
+            showSection(previousMainSection);
+        }
+    });
     /* la navigation par tap/glissement du bottom-nav est gérée par initLiquidGlassInteractions() */
 
     /* ── Recherche ── */
@@ -3740,8 +3897,47 @@ function initBgBlack() {
         document.body.classList.toggle('bg-black', enabled);
         try { localStorage.setItem('starky_bg_black', enabled ? '1' : '0'); } catch(e){}
         updateStatusBar();
+        triggerThemeSwitchPulse(toggle);
         showToast(enabled ? 'Fond noir activé' : 'Fond noir désactivé', 'success', 1800);
     });
+}
+
+/* ===== Pulsion du switch mode sombre/clair =====
+   À chaque bascule, l'interrupteur reçoit un petit anneau de pulsion.
+   Si le motif de fond actif est "Orbes", une propulsion de ce même motif
+   (dégradé de la palette) jaillit en plus depuis l'interrupteur et se
+   diffuse sur tout l'écran, en écho visuel au changement de thème. */
+function triggerThemeSwitchPulse(toggleEl) {
+    const switchLabel = toggleEl ? toggleEl.closest('.switch') : null;
+    if (switchLabel) {
+        switchLabel.classList.add('switch-pulse');
+        setTimeout(() => switchLabel.classList.remove('switch-pulse'), 560);
+    }
+
+    if (!document.body.classList.contains('bg-style-orbs')) return;
+    const originEl = switchLabel || toggleEl;
+    if (!originEl) return;
+
+    const rect = originEl.getBoundingClientRect();
+    const cx = rect.left + rect.width  / 2;
+    const cy = rect.top  + rect.height / 2;
+    const size = Math.max(window.innerWidth, window.innerHeight) * 1.7;
+
+    const orb = document.createElement('div');
+    orb.className = 'theme-orb-pulse';
+    orb.style.width  = size + 'px';
+    orb.style.height = size + 'px';
+    orb.style.left   = cx + 'px';
+    orb.style.top    = cy + 'px';
+    document.body.appendChild(orb);
+
+    void orb.offsetWidth;
+    requestAnimationFrame(() => orb.classList.add('burst'));
+
+    let removed = false;
+    const remove = () => { if (!removed) { removed = true; orb.remove(); } };
+    orb.addEventListener('transitionend', remove);
+    setTimeout(remove, 950);
 }
 
 /* ===== INIT ===== */
