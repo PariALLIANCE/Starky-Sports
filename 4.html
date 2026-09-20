@@ -2258,19 +2258,7 @@ function computeDNB(pH, pA) {
         .pbar-btts-no{background:#8800FF}
 
         /* ══ Probabilités — tous les marchés de cotes ══ */
-        .proba-group-block{margin-bottom:14px}
-        .proba-line-row{margin-bottom:14px}
-        .proba-line-row:last-child{margin-bottom:0}
-        .proba-line-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-align:center;letter-spacing:0.3px}
-        .proba-bars-multi{flex-wrap:wrap;row-gap:10px}
-        .proba-bars-multi .pbar-wrap{min-width:62px}
-        .pbar-multi.c0{background:#0066FF}
-        .pbar-multi.c1{background:#8800FF}
-        .pbar-multi.c2{background:#00C2A8}
-        .pbar-multi.c3{background:#FF8A00}
-        .pbar-multi.c4{background:#E040FB}
-        .pbar-multi.c5{background:#4FFFB0}
-        .pbar-multi.c5 span{color:#0E0E2A}
+        /* (barres de probabilité en % — plus utilisées, remplacées par l'accordéon de cotes ci-dessous) */
 
         /* ══ Stats — sélecteur d'équipe + graphique de progression ══ */
         .stats-team-toggle{display:flex;gap:8px}
@@ -2284,6 +2272,48 @@ function computeDNB(pH, pA) {
         .stats-team-btn span{font-size:11px;font-weight:700;color:var(--text);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
         .stats-team-btn.active{border-color:var(--border-bright);background:rgba(123,110,246,0.12);box-shadow:0 0 14px var(--primary-glow)}
         .stats-chart-wrap{position:relative;width:100%;height:220px;margin-top:4px}
+
+        /* ══ Probabilités — cotes en sections déroulantes (accordéon) par catégorie ══ */
+        .accordion-item{
+            background:var(--bg-card);border:1px solid var(--glass-border);border-radius:18px;
+            margin-bottom:10px;overflow:hidden;
+            backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.14),0 8px 20px rgba(0,0,0,0.08);
+            transition:border-color 0.22s;
+        }
+        .accordion-item.open{border-color:var(--border-bright)}
+        .accordion-header{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:14px 16px;cursor:pointer;font-size:13px;font-weight:700;color:var(--text);
+            user-select:none;-webkit-user-select:none;
+        }
+        .accordion-chevron{transition:transform 0.25s var(--ease);color:var(--text-muted);font-size:12px}
+        .accordion-item.open .accordion-chevron{transform:rotate(180deg);color:var(--primary)}
+        .accordion-body{max-height:0;overflow:hidden;transition:max-height 0.35s var(--ease)}
+        .accordion-item.open .accordion-body{max-height:3000px}
+        .accordion-body-inner{padding:0 16px 16px}
+        .odds-line-row{margin-bottom:10px}
+        .odds-line-row:last-child{margin-bottom:0}
+        .odds-line-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px}
+        .odds-pill-row{display:flex;flex-wrap:wrap;gap:8px}
+        .odds-pill{
+            display:flex;align-items:center;gap:7px;
+            background:var(--bg-elevated);border:1px solid var(--border);
+            border-radius:10px;padding:6px 10px;font-size:11px;
+        }
+        .odds-pill-name{color:var(--text-muted);font-weight:600}
+        .odds-pill-val{color:var(--primary);font-weight:800;font-size:12px}
+
+        /* ══ Stats — résumé KPI au-dessus du graphique ══ */
+        .stats-kpi-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+        .stats-kpi{
+            flex:1 1 calc(33.333% - 8px);min-width:90px;
+            display:flex;flex-direction:column;align-items:center;gap:2px;
+            background:var(--bg-elevated);border:1px solid var(--border);
+            border-radius:14px;padding:10px 6px;
+        }
+        .stats-kpi-val{font-size:16px;font-weight:800;color:var(--primary)}
+        .stats-kpi-label{font-size:9px;font-weight:700;color:var(--text-muted);text-align:center;letter-spacing:0.2px}
     `;
     document.head.appendChild(s);
 })();
@@ -2690,32 +2720,26 @@ function switchTab(name) {
     if (scroll) scroll.scrollTop = 0;
 }
 
-/* ===== Probabilités — conversion des cotes (cf) de CHAQUE marché en % ===== */
-function computeImpliedProbs(items) {
-    const raw = items.map(it => ({ ...it, p: (it.cf && it.cf > 0) ? 100 / it.cf : 0 }));
-    const total = raw.reduce((s, x) => s + x.p, 0) || 1;
-    return raw.map(x => ({ ...x, pct: Math.max(1, Math.round(x.p / total * 100)) }));
-}
+/* ===== Probabilités — cotes brutes, organisées en sections déroulantes (accordéon) par catégorie ===== */
+function buildOddsAccordionItem(group, isFirst) {
+    const item = document.createElement('div');
+    item.className = 'accordion-item' + (isFirst ? ' open' : '');
 
-/* Regroupe les cotes d'un marché par ligne (parameter) — pour le Handicap
-   les deux sens (Handicap 1 / Handicap 2) sont appariés via |parameter|. */
-function renderOddsGroup(group) {
-    const block = document.createElement('div');
-    block.className = 'analysis-block proba-group-block';
+    const header = document.createElement('div');
+    header.className = 'accordion-header';
+    header.innerHTML = `<span>${group.group_name || ''}</span><i class="fas fa-chevron-down accordion-chevron"></i>`;
 
-    const title = document.createElement('div');
-    title.className = 'analysis-block-title';
-    title.textContent = group.group_name || '';
-    block.appendChild(title);
+    const body = document.createElement('div');
+    body.className = 'accordion-body';
+    const bodyInner = document.createElement('div');
+    bodyInner.className = 'accordion-body-inner';
 
-    const divider = document.createElement('div');
-    divider.style.cssText = 'border-top:1px solid var(--border);margin-bottom:12px;';
-    block.appendChild(divider);
-
+    /* Regroupe les cotes par ligne (parameter) — pour le Handicap, les deux
+       sens (Handicap 1 / Handicap 2) sont appariés via |parameter|. */
     const buckets = new Map();
     (group.odds || []).forEach(o => {
         let key;
-        if (group.group_id === 3) { // Handicap : lignes miroir (+p / -p)
+        if (group.group_id === 3) {
             const p = (o.parameter == null) ? 0 : o.parameter;
             key = Math.abs(p);
         } else {
@@ -2731,34 +2755,27 @@ function renderOddsGroup(group) {
         return a - b;
     });
 
-    keys.forEach(key => {
+    bodyInner.innerHTML = keys.map(key => {
         const items = buckets.get(key);
-        const withProb = computeImpliedProbs(items);
+        const label = key === '__base__' ? '' : `<div class="odds-line-label">Ligne ${key}</div>`;
+        const pills = items.map(it => `
+            <div class="odds-pill">
+                <span class="odds-pill-name">${it.type_name || ''}</span>
+                <span class="odds-pill-val">${(+it.cf).toFixed(2)}</span>
+            </div>`).join('');
+        return `<div class="odds-line-row">${label}<div class="odds-pill-row">${pills}</div></div>`;
+    }).join('');
 
-        const row = document.createElement('div');
-        row.className = 'proba-line-row';
+    body.appendChild(bodyInner);
+    item.appendChild(header);
+    item.appendChild(body);
 
-        if (key !== '__base__') {
-            const labelEl = document.createElement('div');
-            labelEl.className = 'proba-line-label';
-            labelEl.textContent = `Ligne ${key}`;
-            row.appendChild(labelEl);
-        }
+    header.addEventListener('click', () => item.classList.toggle('open'));
 
-        const bars = document.createElement('div');
-        bars.className = withProb.length > 3 ? 'proba-bars proba-bars-multi' : 'proba-bars';
-        bars.innerHTML = withProb.map((it, idx) =>
-            buildBarWrap(it.pct, `pbar-multi c${idx % 6}`, it.pct + '%', it.type_name || '')
-        ).join('');
-        row.appendChild(bars);
-
-        block.appendChild(row);
-    });
-
-    return block;
+    return item;
 }
 
-/* ===== Render Probabilités — TOUS les évènements de cotes, en % ===== */
+/* ===== Render Probabilités — TOUTES les cotes, en sections déroulantes par catégorie ===== */
 function renderProbabilites(data) {
     const container = document.getElementById('proba-groups-container');
     if (!container) return;
@@ -2768,19 +2785,38 @@ function renderProbabilites(data) {
     const oddsGroups = g?.odds || [];
 
     if (!oddsGroups.length) {
-        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-percentage"></i><h3>Probabilités indisponibles</h3></div>`;
+        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-tags"></i><h3>Cotes indisponibles</h3></div>`;
         return;
     }
-    oddsGroups.forEach(group => container.appendChild(renderOddsGroup(group)));
+    oddsGroups.forEach((group, idx) => container.appendChild(buildOddsAccordionItem(group, idx === 0)));
 }
 
-/* ===== Stats — progression d'une équipe (buts marqués/encaissés) sur ses derniers matchs ===== */
+/* ===== Stats — progression détaillée d'une équipe sur ses derniers matchs ===== */
 let statsChartTeam    = 'team1';
 let currentStatsChart = null;
 
+function extractFullMatchStat(entry, title) {
+    const arr = entry?.stats?.full_match;
+    if (!Array.isArray(arr)) return null;
+    const found = arr.find(s => s.title === title);
+    return found ? { v1: found.score1, v2: found.score2 } : null;
+}
+
+function parseStatNumber(v) {
+    if (v == null) return null;
+    const n = parseFloat(String(v).replace('%', '').replace(',', '.'));
+    return isNaN(n) ? null : n;
+}
+
+function avgOf(arr) {
+    const valid = arr.filter(v => v != null && !isNaN(v));
+    if (!valid.length) return null;
+    return valid.reduce((a, b) => a + b, 0) / valid.length;
+}
+
 function buildTeamProgression(entries, teamName) {
     const list = (entries || [])
-        .map(e => ({ ...parseMatchText(e.text || ''), league: e.league || '' }))
+        .map(e => ({ ...parseMatchText(e.text || ''), league: e.league || '', _entry: e }))
         .filter(p => p.hasScore)
         .reverse(); // du plus ancien au plus récent
 
@@ -2791,8 +2827,44 @@ function buildTeamProgression(entries, teamName) {
         let result = 'D';
         if (gf > ga) result = 'W'; else if (gf < ga) result = 'L';
         const opponent = mainIsLeft ? p.team2 : p.team1;
-        return { label: p.date, gf, ga, result, opponent };
+
+        const xgRaw   = extractFullMatchStat(p._entry, 'Buts attendus (xG)');
+        const possRaw = extractFullMatchStat(p._entry, 'Possession');
+        const sotRaw  = extractFullMatchStat(p._entry, 'Tirs cadrés');
+
+        const xgFor = xgRaw   ? parseStatNumber(mainIsLeft ? xgRaw.v1   : xgRaw.v2)   : null;
+        const xgAgt = xgRaw   ? parseStatNumber(mainIsLeft ? xgRaw.v2   : xgRaw.v1)   : null;
+        const poss  = possRaw ? parseStatNumber(mainIsLeft ? possRaw.v1 : possRaw.v2) : null;
+        const sot   = sotRaw  ? parseStatNumber(mainIsLeft ? sotRaw.v1  : sotRaw.v2)  : null;
+
+        return { label: p.date, gf, ga, result, opponent, xgFor, xgAgt, poss, sot };
     });
+}
+
+function renderStatsSummary(points) {
+    const el = document.getElementById('stats-kpi-row');
+    if (!el) return;
+
+    const avgGf    = avgOf(points.map(p => p.gf));
+    const avgGa    = avgOf(points.map(p => p.ga));
+    const avgXgFor = avgOf(points.map(p => p.xgFor));
+    const avgXgAgt = avgOf(points.map(p => p.xgAgt));
+    const avgPoss  = avgOf(points.map(p => p.poss));
+    const avgSot   = avgOf(points.map(p => p.sot));
+
+    const kpis = [];
+    if (avgGf    != null) kpis.push({ val: avgGf.toFixed(2),           label: 'Buts marqués / m.' });
+    if (avgGa    != null) kpis.push({ val: avgGa.toFixed(2),           label: 'Buts encaissés / m.' });
+    if (avgXgFor != null) kpis.push({ val: avgXgFor.toFixed(2),        label: 'xG marqué / m.' });
+    if (avgXgAgt != null) kpis.push({ val: avgXgAgt.toFixed(2),        label: 'xG concédé / m.' });
+    if (avgPoss  != null) kpis.push({ val: Math.round(avgPoss) + '%',  label: 'Possession moy.' });
+    if (avgSot   != null) kpis.push({ val: avgSot.toFixed(1),          label: 'Tirs cadrés / m.' });
+
+    el.innerHTML = kpis.map(k => `
+        <div class="stats-kpi">
+            <span class="stats-kpi-val">${k.val}</span>
+            <span class="stats-kpi-label">${k.label}</span>
+        </div>`).join('');
 }
 
 function renderStatsChart(data, team) {
@@ -2811,6 +2883,8 @@ function renderStatsChart(data, team) {
 
     if (currentStatsChart) { currentStatsChart.destroy(); currentStatsChart = null; }
 
+    renderStatsSummary(points);
+
     if (!points.length) {
         canvas.style.display = 'none';
         if (emptyEl) emptyEl.style.display = 'flex';
@@ -2823,28 +2897,58 @@ function renderStatsChart(data, team) {
     const styles     = getComputedStyle(document.body);
     const primary    = (styles.getPropertyValue('--primary')    || '#7B6EF6').trim();
     const danger     = (styles.getPropertyValue('--danger')     || '#FF4D6D').trim();
+    const cyan       = (styles.getPropertyValue('--cyan')       || '#00D4FF').trim();
+    const magenta    = (styles.getPropertyValue('--magenta')    || '#E040FB').trim();
     const textMuted  = (styles.getPropertyValue('--text-muted') || '#5A5A80').trim();
+
+    const hasXg = points.filter(p => p.xgFor != null).length >= Math.ceil(points.length / 2);
+
+    const datasets = [
+        {
+            label: 'Buts marqués', data: points.map(p => p.gf),
+            borderColor: primary, backgroundColor: primary + '33',
+            tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: primary
+        },
+        {
+            label: 'Buts encaissés', data: points.map(p => p.ga),
+            borderColor: danger, backgroundColor: danger + '22',
+            tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: danger
+        }
+    ];
+    if (hasXg) {
+        datasets.push({
+            label: 'xG marqué', data: points.map(p => p.xgFor),
+            borderColor: cyan, backgroundColor: 'transparent', borderDash: [5, 4],
+            tension: 0.35, fill: false, pointRadius: 2, pointBackgroundColor: cyan
+        });
+        datasets.push({
+            label: 'xG concédé', data: points.map(p => p.xgAgt),
+            borderColor: magenta, backgroundColor: 'transparent', borderDash: [5, 4],
+            tension: 0.35, fill: false, pointRadius: 2, pointBackgroundColor: magenta
+        });
+    }
 
     currentStatsChart = new Chart(canvas.getContext('2d'), {
         type: 'line',
-        data: {
-            labels: points.map(p => p.label),
-            datasets: [
-                {
-                    label: 'Buts marqués', data: points.map(p => p.gf),
-                    borderColor: primary, backgroundColor: primary + '33',
-                    tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: primary
-                },
-                {
-                    label: 'Buts encaissés', data: points.map(p => p.ga),
-                    borderColor: danger, backgroundColor: danger + '22',
-                    tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: danger
-                }
-            ]
-        },
+        data: { labels: points.map(p => p.label), datasets },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: textMuted, font: { size: 10, weight: '700' } } } },
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: textMuted, font: { size: 10, weight: '700' } } },
+                tooltip: {
+                    callbacks: {
+                        title: (items) => points[items[0].dataIndex]?.label || '',
+                        afterTitle: (items) => `vs ${points[items[0].dataIndex]?.opponent || ''}`,
+                        footer: (items) => {
+                            const p = points[items[0].dataIndex];
+                            if (!p) return '';
+                            const rLabel = p.result === 'W' ? 'Victoire' : p.result === 'L' ? 'Défaite' : 'Nul';
+                            return `Résultat : ${rLabel} (${p.gf}-${p.ga})`;
+                        }
+                    }
+                }
+            },
             scales: {
                 x: { ticks: { color: textMuted, font: { size: 9 } }, grid: { display: false } },
                 y: { beginAtZero: true, ticks: { color: textMuted, stepSize: 1, font: { size: 9 } }, grid: { color: 'rgba(123,110,246,0.08)' } }
@@ -2882,7 +2986,8 @@ function renderStats(data) {
                     <span>${awayTeam}</span>
                 </div>
             </div>
-            <div class="analysis-block-title" style="margin-top:16px;">Progression — buts marqués / encaissés</div>
+            <div class="stats-kpi-row" id="stats-kpi-row"></div>
+            <div class="analysis-block-title" style="margin-top:16px;">Progression — buts &amp; xG (survolez / touchez un point)</div>
             <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
             <div class="stats-chart-wrap">
                 <canvas id="stats-progress-chart"></canvas>
