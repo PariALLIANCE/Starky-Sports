@@ -52,7 +52,6 @@
             --ease:           cubic-bezier(0.23,1,0.32,1);
             --spring:         cubic-bezier(0.22,0.61,0.36,1);
             --spring-soft:    cubic-bezier(0.25,0.46,0.45,0.94);
-            --spring-gentle:  cubic-bezier(0.16,0.84,0.30,1);
             --glass-edge-3d:  0 0 0 rgba(0,0,0,0);
         }
         /* ══ EFFET 3D — variables activées quand <body> porte la classe .theme-3d ══
@@ -142,43 +141,6 @@
         .morph-source-fade.faded{
             opacity:0;
             transform:scale(0.90);
-        }
-        /* ── Rebond à la réapparition de la carte/bouton source (fermeture) ── */
-        @keyframes sourceBounceIn {
-            0%{opacity:0;transform:scale(0.90)}
-            58%{opacity:1;transform:scale(1.035)}
-            100%{opacity:1;transform:scale(1)}
-        }
-        .morph-source-fade.bounce-in{
-            animation:sourceBounceIn 0.52s var(--ease) both;
-        }
-        /* ── Rebond du bouton notifications à la fermeture du panneau ── */
-        @keyframes notifBounceIn {
-            0%{opacity:0;transform:scale(0.72)}
-            55%{opacity:1;transform:scale(1.16)}
-            78%{transform:scale(0.95)}
-            100%{opacity:1;transform:scale(1)}
-        }
-        .notif-bounce-in{animation:notifBounceIn 0.52s var(--ease) both}
-        /* ── Pulsion du switch mode sombre/clair ── */
-        @keyframes switchPulseRing{
-            0%{box-shadow:0 0 0 0 var(--primary-glow)}
-            65%{box-shadow:0 0 0 12px rgba(123,110,246,0)}
-            100%{box-shadow:0 0 0 0 rgba(123,110,246,0)}
-        }
-        .switch.switch-pulse .slider{animation:switchPulseRing 0.55s var(--ease)}
-        .switch.switch-pulse .slider::before{animation:switchPulseRing 0.55s var(--ease)}
-        /* ── Propulsion du motif "Orbes" depuis l'interrupteur ── */
-        .theme-orb-pulse{
-            position:fixed;left:0;top:0;border-radius:50%;pointer-events:none;z-index:9999;
-            background:var(--grad);
-            opacity:0.5;
-            transform:translate(-50%,-50%) scale(0);
-            transition:transform 0.85s cubic-bezier(0.16,1,0.3,1), opacity 0.85s ease-out;
-        }
-        .theme-orb-pulse.burst{
-            transform:translate(-50%,-50%) scale(1);
-            opacity:0;
         }
         @keyframes pulseGlow {
             0%,100%{box-shadow:0 0 0 0 rgba(123,110,246,0)}
@@ -1395,9 +1357,9 @@
 </head>
 <body>
 <script>try{
-    /* Thème par défaut : 3D + sombre + étincelles (sauf si l'utilisateur
-       a explicitement choisi une autre configuration dans Paramètres). */
-    if(localStorage.getItem('starky_theme_3d')!=='0')document.body.classList.add('theme-3d');
+    /* Thème unique : Effet 3D — c'est désormais le seul thème disponible
+       (le mode "plat" a été supprimé), toujours actif. */
+    document.body.classList.add('theme-3d');
     var isDark = localStorage.getItem('starky_bg_black')!=='0';
     if(isDark)document.body.classList.add('bg-black');
     var tcMeta = document.getElementById('theme-color-meta');
@@ -1693,19 +1655,6 @@
                         <div class="theme-card-title" id="theme-card-title">Violet · Bleu · Cyan · Magenta</div>
                         <div class="theme-card-desc" id="theme-card-desc">Palette exclusive Starky Sports</div>
                     </div>
-                    <div class="setting-row" style="margin-top:16px;">
-                        <div class="setting-left">
-                            <div class="setting-icon"><i class="fas fa-cube"></i></div>
-                            <div>
-                                <div class="setting-label">Effet 3D</div>
-                                <div class="setting-desc">Verre liquide en relief, transparent sur le vrai fond</div>
-                            </div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="theme3d-toggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
                     <div class="setting-row">
                         <div class="setting-left">
                             <div class="setting-icon"><i class="fas fa-moon"></i></div>
@@ -1884,21 +1833,7 @@
     </div>
     <div class="detail-scroll" id="detail-scroll">
         <div class="tab-panel active" id="probabilites-content">
-            <div class="analysis-block">
-                <div class="analysis-block-title">1X2</div>
-                <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
-                <div id="proba-ox2-container"></div>
-            </div>
-            <div class="analysis-block">
-                <div class="analysis-block-title">Over / Under 2.5</div>
-                <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
-                <div id="proba-ou-container"></div>
-            </div>
-            <div class="analysis-block">
-                <div class="analysis-block-title">BTTS (Les deux équipes marquent)</div>
-                <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
-                <div id="proba-btts-container"></div>
-            </div>
+            <div id="proba-groups-container"></div>
         </div>
         <div class="tab-panel" id="stats-content"><div id="stats-panel"></div></div>
         <div class="tab-panel" id="matches-content"><div id="matches-list"></div></div>
@@ -2011,6 +1946,24 @@ const STAT_ICONS = {
     'Yellow Cards'        : 'fa-square',
     'Red Cards'           : 'fa-square',
     'Corners Won'         : 'fa-flag',
+    /* Libellés français utilisés par la nouvelle structure de données */
+    'Buts attendus (xG)'  : 'fa-chart-line',
+    'Possession'          : 'fa-circle-notch',
+    'Total shots'         : 'fa-crosshairs',
+    'Tirs cadrés'         : 'fa-bullseye',
+    'Tirs non cadrés'     : 'fa-crosshairs',
+    'Big Chances'         : 'fa-star',
+    'Corners'             : 'fa-flag',
+    'Cartons jaunes'      : 'fa-square',
+    'Fautes'              : 'fa-exclamation-circle',
+    'Duels won'           : 'fa-fist-raised',
+    'Arrêts'              : 'fa-hand-paper',
+    'Hors-jeu'            : 'fa-flag-checkered',
+    'Coups francs'        : 'fa-shoe-prints',
+    'Passes'              : 'fa-arrows-alt-h',
+    'Passes décisives'    : 'fa-arrows-alt-h',
+    'Clearances'          : 'fa-shield-alt',
+    'Interceptions'       : 'fa-hand-rock',
 };
 
 let selectedForecast   = null;
@@ -2174,9 +2127,55 @@ async function fetchGamesOfDay() {
         const res = await fetch(GAMES_OF_DAY_URL, { cache:'no-cache' });
         if (!res.ok) return [];
         const data = await res.json();
-        gamesCache = Array.isArray(data) ? data : [];
+        /* Nouvelle structure racine : { date, matchs_traites, matchs_total, games:[...] } */
+        const games = Array.isArray(data) ? data
+                    : (data && Array.isArray(data.games)) ? data.games
+                    : [];
+        gamesCache = games;
         return gamesCache;
     } catch { return []; }
+}
+
+/* ===== Extraction du src d'un logo fourni sous forme de balise <img> ===== */
+function extractImgSrc(html) {
+    if (!html) return '';
+    const m = String(html).match(/src="([^"]+)"/);
+    return m ? m[1] : '';
+}
+
+/* ===== Date / heure d'un match à partir de match.start_ts (timestamp Unix) ===== */
+function formatMatchDateTime(startTs) {
+    if (!startTs) return { dateStr:'', timeStr:'', dateObj:null };
+    const d = new Date(startTs * 1000);
+    if (isNaN(d)) return { dateStr:'', timeStr:'', dateObj:null };
+    const dateStr = d.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const timeStr = d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+    return { dateStr, timeStr, dateObj: d };
+}
+
+/* ===== Parsing du champ texte d'un match passé/à venir
+   Formats gérés :
+   "Equipe1 X-Y Equipe2 (DD/MM/AAAA) [ID: xxx]"  (match joué)
+   "Equipe1 vs Equipe2 (DD/MM/AAAA) [ID: xxx]"   (match à venir)
+   ===== */
+function parseMatchText(text) {
+    if (!text) return { team1:'', team2:'', date:'', hasScore:false };
+    const played = text.match(/^(.*?)\s+(\d+)\s*-\s*(\d+)\s+(.*?)\s+\(([^)]+)\)/);
+    if (played) {
+        return {
+            team1: played[1].trim(),
+            score1: parseInt(played[2], 10),
+            score2: parseInt(played[3], 10),
+            team2: played[4].trim(),
+            date: played[5].trim(),
+            hasScore: true
+        };
+    }
+    const upcoming = text.match(/^(.*?)\s+vs\s+(.*?)\s+\(([^)]+)\)/i);
+    if (upcoming) {
+        return { team1: upcoming[1].trim(), team2: upcoming[2].trim(), date: upcoming[3].trim(), hasScore:false };
+    }
+    return { team1:'', team2:'', date:'', hasScore:false };
 }
 
 /* ===== GitHub fetch fallback ===== */
@@ -2257,6 +2256,34 @@ function computeDNB(pH, pA) {
         .pbar-under{background:#8800FF}
         .pbar-btts-yes{background:#0066FF}
         .pbar-btts-no{background:#8800FF}
+
+        /* ══ Probabilités — tous les marchés de cotes ══ */
+        .proba-group-block{margin-bottom:14px}
+        .proba-line-row{margin-bottom:14px}
+        .proba-line-row:last-child{margin-bottom:0}
+        .proba-line-label{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-align:center;letter-spacing:0.3px}
+        .proba-bars-multi{flex-wrap:wrap;row-gap:10px}
+        .proba-bars-multi .pbar-wrap{min-width:62px}
+        .pbar-multi.c0{background:#0066FF}
+        .pbar-multi.c1{background:#8800FF}
+        .pbar-multi.c2{background:#00C2A8}
+        .pbar-multi.c3{background:#FF8A00}
+        .pbar-multi.c4{background:#E040FB}
+        .pbar-multi.c5{background:#4FFFB0}
+        .pbar-multi.c5 span{color:#0E0E2A}
+
+        /* ══ Stats — sélecteur d'équipe + graphique de progression ══ */
+        .stats-team-toggle{display:flex;gap:8px}
+        .stats-team-btn{
+            flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+            padding:10px 6px;border-radius:14px;border:1px solid var(--border);
+            background:var(--bg-elevated);cursor:pointer;transition:all 0.22s var(--ease);
+        }
+        .stats-team-btn img{width:28px;height:28px;object-fit:contain;border-radius:6px;background:var(--logo-bg)}
+        .stats-team-btn i{font-size:20px;color:var(--primary)}
+        .stats-team-btn span{font-size:11px;font-weight:700;color:var(--text);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+        .stats-team-btn.active{border-color:var(--border-bright);background:rgba(123,110,246,0.12);box-shadow:0 0 14px var(--primary-glow)}
+        .stats-chart-wrap{position:relative;width:100%;height:220px;margin-top:4px}
     `;
     document.head.appendChild(s);
 })();
@@ -2314,12 +2341,11 @@ function morphOpen(panelEl, sourceEl, opts = {}) {
 function morphClose(panelEl, sourceEl, opts = {}) {
     if (!panelEl) return;
     if (sourceEl && !sourceEl.isConnected) sourceEl = null;
-    /* Fermeture ralentie et très adoucie : durée nettement plus longue +
-       easing "spring-gentle" (décélération longue et moelleuse, sans à-coup)
-       pour une sensation de bulle qui se dépose tout en douceur. L'opacité
-       s'estompe sur une portion plus large de la durée pour accompagner
-       ce ralenti. */
-    const closeMs = opts.closeMs || 620;
+    /* Fermeture adoucie : durée un peu plus longue + easing "spring-soft"
+       (léger relâchement en fin de course, comme une bulle qui se dépose
+       doucement) au lieu de l'ease-out sec précédent. L'opacité s'estompe
+       un peu plus tôt pour renforcer la sensation de douceur. */
+    const closeMs = opts.closeMs || 420;
 
     let dx = 0, dy = 0, scaleX = 0.4, scaleY = 0.4;
     if (sourceEl) {
@@ -2332,7 +2358,7 @@ function morphClose(panelEl, sourceEl, opts = {}) {
     }
 
     panelEl.style.transformOrigin = 'center center';
-    panelEl.style.transition = `transform ${closeMs}ms var(--spring-gentle), opacity ${Math.round(closeMs*0.72)}ms var(--ease)`;
+    panelEl.style.transition = `transform ${closeMs}ms var(--spring-soft), opacity ${Math.round(closeMs*0.62)}ms var(--ease)`;
     requestAnimationFrame(() => {
         panelEl.style.transform = sourceEl
             ? `translate(${dx}px,${dy}px) scale(${scaleX},${scaleY})`
@@ -2346,9 +2372,11 @@ function morphClose(panelEl, sourceEl, opts = {}) {
         panelEl.style.transform      = '';
         panelEl.style.opacity        = '';
         panelEl.style.transformOrigin= '';
-        /* — La carte source réapparaît avec un léger rebond une fois le
-           panneau refermé, pour un visuel plus éclatant — */
-        if (sourceEl) unfadeSourceWithBounce(sourceEl);
+        /* — La carte source réapparaît (fade in) une fois le panneau refermé — */
+        if (sourceEl) {
+            sourceEl.classList.remove('faded');
+            setTimeout(() => sourceEl.classList.remove('morph-source-fade'), 320);
+        }
     };
 
     let done = false;
@@ -2358,63 +2386,30 @@ function morphClose(panelEl, sourceEl, opts = {}) {
         panelEl.removeEventListener('transitionend', handler);
         finish();
     });
-    setTimeout(() => { if (!done) { done = true; finish(); } }, closeMs + 200);
+    setTimeout(() => { if (!done) { done = true; finish(); } }, closeMs + 160);
 }
 
-/* Fait réapparaître un élément source (carte ou bouton) précédemment
-   estompé, avec un léger rebond (scale overshoot) plutôt qu'un simple
-   fondu, pour un effet plus vivant à la fermeture. */
-function unfadeSourceWithBounce(el) {
-    if (!el || !el.isConnected) return;
-    el.style.transition = 'none';
-    el.classList.remove('faded');
-    el.classList.add('bounce-in');
-    void el.offsetWidth;
-    let done = false;
-    const cleanup = () => {
-        if (done) return;
-        done = true;
-        el.classList.remove('bounce-in', 'morph-source-fade');
-        el.style.transition = '';
-    };
-    el.addEventListener('animationend', function handler(e) {
-        if (e.target !== el) return;
-        el.removeEventListener('animationend', handler);
-        cleanup();
-    });
-    setTimeout(cleanup, 600);
-}
+function openMatchPreview(entry, hName, aName, hLogo, aLogo, sourceEl) {
+    entry = entry || {};
+    const parsed = parseMatchText(entry.text || '');
 
-function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
     /* — Compétition & date — */
-    document.getElementById('mp-comp-name').textContent = m.competition || '';
-    document.getElementById('mp-comp-date').textContent = m.date        || '';
+    document.getElementById('mp-comp-name').textContent = entry.league || '';
+    document.getElementById('mp-comp-date').textContent = parsed.date  || '';
 
     /* — Score — */
-    const hScore = m.home_score ?? '';
-    const aScore = m.away_score ?? '';
     document.getElementById('mp-score').textContent =
-        (hScore !== '' && aScore !== '') ? `${hScore} - ${aScore}` : '- : -';
+        parsed.hasScore ? `${parsed.score1} - ${parsed.score2}` : '- : -';
 
-    /* — Result chip — */
+    /* — Result chip (perspective de l'équipe affichée à gauche) — */
     const chip = document.getElementById('mp-chip');
-    let result = m.result || null;
-    // Si pas de champ result, déduire du score
-    if (!result && hScore !== '' && aScore !== '') {
-        const hs = parseInt(hScore, 10);
-        const as = parseInt(aScore, 10);
-        if (!isNaN(hs) && !isNaN(as)) {
-            if (hs > as) result = 'HOME';
-            else if (as > hs) result = 'AWAY';
-            else result = 'D';
-        }
+    if (parsed.hasScore) {
+        if (parsed.score1 > parsed.score2)      { chip.textContent = `Victoire ${hName}`; chip.className = 'mp-chip win'; }
+        else if (parsed.score2 > parsed.score1) { chip.textContent = `Victoire ${aName}`; chip.className = 'mp-chip loss'; }
+        else                                     { chip.textContent = 'Match nul';         chip.className = 'mp-chip draw'; }
+    } else {
+        chip.textContent = 'À venir'; chip.className = 'mp-chip';
     }
-    if (result === 'W')    { chip.textContent='Victoire'; chip.className='mp-chip win'; }
-    else if (result==='L') { chip.textContent='Défaite';  chip.className='mp-chip loss'; }
-    else if (result==='D') { chip.textContent='Nul';      chip.className='mp-chip draw'; }
-    else if (result==='HOME') { chip.textContent='Dom. gagne'; chip.className='mp-chip win'; }
-    else if (result==='AWAY') { chip.textContent='Ext. gagne'; chip.className='mp-chip loss'; }
-    else { chip.textContent=''; chip.className='mp-chip'; }
 
     /* — Logos & noms — */
     const setLogo = (elId, logo, name) => {
@@ -2428,62 +2423,21 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
     document.getElementById('mp-home-name').textContent = hName;
     document.getElementById('mp-away-name').textContent = aName;
 
-    /* — Corps : cotes puis stats (plus de classement) — */
+    /* — Corps : stats du match (plus de cotes ni de classement) — */
     const body = document.getElementById('mp-body');
     body.innerHTML = '';
 
-    /* — Cotes 1X2 de ce match passé (last_five / h2h) — */
-    const mOdds = m.odds || null;
-    const oH = mOdds && mOdds.home != null ? +mOdds.home : null;
-    const oD = mOdds && mOdds.draw != null ? +mOdds.draw : null;
-    const oA = mOdds && mOdds.away != null ? +mOdds.away : null;
+    const statsArr = (entry.stats && entry.stats.full_match) || [];
 
-    if (oH !== null || oD !== null || oA !== null) {
-        const oddsTitleEl = document.createElement('div');
-        oddsTitleEl.className = 'mp-section-title';
-        oddsTitleEl.innerHTML = '<i class="fas fa-tags"></i> Cotes 1 X 2';
-        body.appendChild(oddsTitleEl);
-
-        const oddsCard = document.createElement('div');
-        oddsCard.className = 'odds-card';
-        oddsCard.style.marginBottom = '20px';
-        oddsCard.innerHTML = `
-            <div class="odds-grid">
-                ${oH !== null ? `
-                <div class="odds-cell">
-                    <span class="odds-cell-label">1</span>
-                    <span class="odds-cell-outcome">Domicile</span>
-                    <span class="odds-cell-val">${oH.toFixed(2)}</span>
-                </div>` : ''}
-                ${oD !== null ? `
-                <div class="odds-cell">
-                    <span class="odds-cell-label">X</span>
-                    <span class="odds-cell-outcome">Nul</span>
-                    <span class="odds-cell-val">${oD.toFixed(2)}</span>
-                </div>` : ''}
-                ${oA !== null ? `
-                <div class="odds-cell">
-                    <span class="odds-cell-label">2</span>
-                    <span class="odds-cell-outcome">Extérieur</span>
-                    <span class="odds-cell-val">${oA.toFixed(2)}</span>
-                </div>` : ''}
-            </div>`;
-        body.appendChild(oddsCard);
-    }
-
-    const stats    = m.stats    || {};
-    const statKeys = Object.keys(stats);
-
-    if (statKeys.length) {
+    if (statsArr.length) {
         const titleEl = document.createElement('div');
         titleEl.className = 'mp-section-title';
         titleEl.innerHTML = '<i class="fas fa-chart-bar"></i> Statistiques';
         body.appendChild(titleEl);
 
-        statKeys.forEach(key => {
-            const s    = stats[key];
-            const hVal = s.home ?? '';
-            const aVal = s.away ?? '';
+        statsArr.forEach(s => {
+            const hVal = s.score1 ?? '';
+            const aVal = s.score2 ?? '';
 
             const hNum = parseFloat(String(hVal).replace('%','').replace(',','.')) || 0;
             const aNum = parseFloat(String(aVal).replace('%','').replace(',','.')) || 0;
@@ -2491,14 +2445,14 @@ function openMatchPreview(m, hName, aName, hLogo, aLogo, sourceEl) {
             const hPct  = Math.round(hNum / total * 100);
             const aPct  = 100 - hPct;
 
-            const icon = STAT_ICONS[key] || 'fa-chart-bar';
+            const icon = STAT_ICONS[s.title] || 'fa-chart-bar';
 
             const row = document.createElement('div');
             row.className = 'mp-stat-row';
             row.innerHTML = `
                 <div class="mp-stat-header">
                     <span class="mp-stat-home">${hVal}</span>
-                    <span class="mp-stat-label"><i class="fas ${icon}"></i>${key}</span>
+                    <span class="mp-stat-label"><i class="fas ${icon}"></i>${s.title || ''}</span>
                     <span class="mp-stat-away">${aVal}</span>
                 </div>
                 <div class="mp-bar">
@@ -2537,7 +2491,7 @@ function closeMatchPreview() {
     const matchPreviewEl = document.getElementById('match-preview');
     const sheetEl = document.getElementById('mp-sheet');
     /* — Fermeture : le bottom-sheet se rétracte et se fond dans la carte d'origine — */
-    morphClose(sheetEl, previewSourceCard, { closeMs: 620 });
+    morphClose(sheetEl, previewSourceCard, { closeMs: 400 });
     /* Le fond (backdrop) suit le même timing que la fermeture du sheet */
     matchPreviewEl.classList.remove('active');
     previewSourceCard = null;
@@ -2560,21 +2514,16 @@ function createForecastCard(data) {
     const { dnbH, dnbA } = computeDNB(pH, pA);
 
     let timeStr = '';
-    try {
-        const g = data._game;
-        if (g?.time_ci)  timeStr = g.time_ci.substring(0, 5);
-        else if (g?.time_utc) timeStr = g.time_utc.substring(0, 5);
-        else if (data.date) {
-            const timePart = data.date.split(' ')[1];
-            if (timePart && /^\d{2}:\d{2}/.test(timePart)) timeStr = timePart.substring(0, 5);
-        }
-    } catch {}
-
     let formattedDate = '';
     try {
-        if (data.date) {
-            const d = parseFrenchDate(data.date);
-            if (d && !isNaN(d)) formattedDate = d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+        const g = data._game;
+        const startTs = g?.match?.start_ts;
+        if (startTs) {
+            const { dateStr, timeStr: t } = formatMatchDateTime(startTs);
+            timeStr = t;
+            formattedDate = dateStr;
+        } else if (data.date) {
+            formattedDate = data.date;
         }
     } catch {}
 
@@ -2631,15 +2580,13 @@ async function loadForecasts() {
     const games = await fetchGamesOfDay();
     if (games.length > 0) {
         games.forEach(g => {
-            const homeTeam = g.home?.team  || 'Domicile';
-            const awayTeam = g.away?.team  || 'Extérieur';
-            const homeLogo = g.home?.logo  || '';
-            const awayLogo = g.away?.logo  || '';
-            const league   = (g.league || '').replace(/_/g, ' ');
-            const odds     = g.odds || {};
-            const probaH   = odds.home ? Math.round(100 / odds.home) : 0;
-            const probaD   = odds.draw ? Math.round(100 / odds.draw) : 0;
-            const probaA   = odds.away ? Math.round(100 / odds.away) : 0;
+            const m        = g.match || {};
+            const homeTeam = m.team1?.name || 'Domicile';
+            const awayTeam = m.team2?.name || 'Extérieur';
+            const homeLogo = extractImgSrc(m.team1?.logo);
+            const awayLogo = extractImgSrc(m.team2?.logo);
+            const league   = (g.champ_name || '').replace(/_/g, ' ');
+            const { dateStr } = formatMatchDateTime(m.start_ts);
 
             const adapted = {
                 HomeTeam  : homeTeam,
@@ -2647,11 +2594,8 @@ async function loadForecasts() {
                 HomeLogo  : homeLogo,
                 AwayLogo  : awayLogo,
                 league    : league,
-                date      : g.date || '',
+                date      : dateStr,
                 status    : 'pending',
-                probaHome : probaH,
-                probaDraw : probaD,
-                probaAway : probaA,
                 _game     : g
             };
             container.appendChild(createForecastCard(adapted));
@@ -2688,17 +2632,15 @@ function openDetail(data, sourceEl) {
     selectedForecast = data;
     detailSourceCard = sourceEl || null;
     const g        = data._game || null;
+    const m        = g?.match || {};
     const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
     const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
     const homeLogo = data.HomeLogo || data.homeLogo || '';
     const awayLogo = data.AwayLogo || data.awayLogo || '';
     const status   = data.status || 'pending';
-    const league   = data.league || data.League || 'Compétition';
+    const league   = g?.champ_name || data.league || data.League || 'Compétition';
 
-    let detailTime = '';
-    if (g?.time_ci)  detailTime = g.time_ci.substring(0,5);
-    else if (g?.time_utc) detailTime = g.time_utc.substring(0,5);
-    else if (data.date?.split(' ')[1]) detailTime = data.date.split(' ')[1].substring(0,5);
+    const { timeStr: detailTime } = formatMatchDateTime(m.start_ts);
 
     document.getElementById('detail-header-title').textContent = `${homeTeam} vs ${awayTeam}`;
     document.getElementById('detail-league').textContent       = league.replace(/_/g,' ');
@@ -2736,7 +2678,7 @@ function openDetail(data, sourceEl) {
 
 function closeDetail() {
     /* — Fermeture : la page détail se rétracte et se fond dans la carte d'origine — */
-    morphClose(document.getElementById('forecast-detail'), detailSourceCard, { closeMs: 640 });
+    morphClose(document.getElementById('forecast-detail'), detailSourceCard, { closeMs: 440 });
     selectedForecast = null;
     detailSourceCard = null;
 }
@@ -2748,154 +2690,306 @@ function switchTab(name) {
     if (scroll) scroll.scrollTop = 0;
 }
 
-/* ===== Render Probabilités ===== */
-function renderProbabilites(data) {
-    const { pH, pD, pA } = computeProba(data);
-    document.getElementById('proba-ox2-container').innerHTML = `
-        <div class="proba-bars">
-            ${buildBarWrap(pH, 'pbar-home', pH+'%', 'Victoire domicile')}
-            ${buildBarWrap(pD, 'pbar-draw', pD+'%', 'Nul')}
-            ${buildBarWrap(pA, 'pbar-away', pA+'%', 'Victoire extérieure')}
-        </div>`;
-    const pOver  = +(data.probaOver||data.ProbaOver||65);
-    const pUnder = 100 - pOver;
-    document.getElementById('proba-ou-container').innerHTML = `
-        <div class="proba-bars">
-            ${buildBarWrap(pOver,  'pbar-over',  'Over '+pOver+'%',   'Over 2.5')}
-            ${buildBarWrap(pUnder, 'pbar-under', 'Under '+pUnder+'%', 'Under 2.5')}
-        </div>`;
-    const pBttsYes = +(data.probaBttsYes||data.ProbaBttsYes||45);
-    const pBttsNo  = 100 - pBttsYes;
-    document.getElementById('proba-btts-container').innerHTML = `
-        <div class="proba-bars">
-            ${buildBarWrap(pBttsYes, 'pbar-btts-yes', 'Oui '+pBttsYes+'%', 'Oui')}
-            ${buildBarWrap(pBttsNo,  'pbar-btts-no',  'Non '+pBttsNo+'%',  'Non')}
-        </div>`;
+/* ===== Probabilités — conversion des cotes (cf) de CHAQUE marché en % ===== */
+function computeImpliedProbs(items) {
+    const raw = items.map(it => ({ ...it, p: (it.cf && it.cf > 0) ? 100 / it.cf : 0 }));
+    const total = raw.reduce((s, x) => s + x.p, 0) || 1;
+    return raw.map(x => ({ ...x, pct: Math.max(1, Math.round(x.p / total * 100)) }));
 }
 
-function renderStats(data) { document.getElementById('stats-panel').innerHTML = ''; }
+/* Regroupe les cotes d'un marché par ligne (parameter) — pour le Handicap
+   les deux sens (Handicap 1 / Handicap 2) sont appariés via |parameter|. */
+function renderOddsGroup(group) {
+    const block = document.createElement('div');
+    block.className = 'analysis-block proba-group-block';
+
+    const title = document.createElement('div');
+    title.className = 'analysis-block-title';
+    title.textContent = group.group_name || '';
+    block.appendChild(title);
+
+    const divider = document.createElement('div');
+    divider.style.cssText = 'border-top:1px solid var(--border);margin-bottom:12px;';
+    block.appendChild(divider);
+
+    const buckets = new Map();
+    (group.odds || []).forEach(o => {
+        let key;
+        if (group.group_id === 3) { // Handicap : lignes miroir (+p / -p)
+            const p = (o.parameter == null) ? 0 : o.parameter;
+            key = Math.abs(p);
+        } else {
+            key = (o.parameter == null) ? '__base__' : o.parameter;
+        }
+        if (!buckets.has(key)) buckets.set(key, []);
+        buckets.get(key).push(o);
+    });
+
+    const keys = Array.from(buckets.keys()).sort((a, b) => {
+        if (a === '__base__') return -1;
+        if (b === '__base__') return 1;
+        return a - b;
+    });
+
+    keys.forEach(key => {
+        const items = buckets.get(key);
+        const withProb = computeImpliedProbs(items);
+
+        const row = document.createElement('div');
+        row.className = 'proba-line-row';
+
+        if (key !== '__base__') {
+            const labelEl = document.createElement('div');
+            labelEl.className = 'proba-line-label';
+            labelEl.textContent = `Ligne ${key}`;
+            row.appendChild(labelEl);
+        }
+
+        const bars = document.createElement('div');
+        bars.className = withProb.length > 3 ? 'proba-bars proba-bars-multi' : 'proba-bars';
+        bars.innerHTML = withProb.map((it, idx) =>
+            buildBarWrap(it.pct, `pbar-multi c${idx % 6}`, it.pct + '%', it.type_name || '')
+        ).join('');
+        row.appendChild(bars);
+
+        block.appendChild(row);
+    });
+
+    return block;
+}
+
+/* ===== Render Probabilités — TOUS les évènements de cotes, en % ===== */
+function renderProbabilites(data) {
+    const container = document.getElementById('proba-groups-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const g = data._game || null;
+    const oddsGroups = g?.odds || [];
+
+    if (!oddsGroups.length) {
+        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-percentage"></i><h3>Probabilités indisponibles</h3></div>`;
+        return;
+    }
+    oddsGroups.forEach(group => container.appendChild(renderOddsGroup(group)));
+}
+
+/* ===== Stats — progression d'une équipe (buts marqués/encaissés) sur ses derniers matchs ===== */
+let statsChartTeam    = 'team1';
+let currentStatsChart = null;
+
+function buildTeamProgression(entries, teamName) {
+    const list = (entries || [])
+        .map(e => ({ ...parseMatchText(e.text || ''), league: e.league || '' }))
+        .filter(p => p.hasScore)
+        .reverse(); // du plus ancien au plus récent
+
+    return list.map(p => {
+        const mainIsLeft = p.team1.toLowerCase() === (teamName || '').toLowerCase();
+        const gf = mainIsLeft ? p.score1 : p.score2;
+        const ga = mainIsLeft ? p.score2 : p.score1;
+        let result = 'D';
+        if (gf > ga) result = 'W'; else if (gf < ga) result = 'L';
+        const opponent = mainIsLeft ? p.team2 : p.team1;
+        return { label: p.date, gf, ga, result, opponent };
+    });
+}
+
+function renderStatsChart(data, team) {
+    const g   = data._game || null;
+    const h2h = g?.h2h || null;
+    const homeTeam = data.HomeTeam || data.homeTeam || 'Équipe 1';
+    const awayTeam = data.AwayTeam || data.awayTeam || 'Équipe 2';
+    const teamName = team === 'team1' ? homeTeam : awayTeam;
+    const entries  = team === 'team1' ? (h2h?.last_team1 || []) : (h2h?.last_team2 || []);
+    const points   = buildTeamProgression(entries, teamName);
+
+    const canvas   = document.getElementById('stats-progress-chart');
+    const emptyEl  = document.getElementById('stats-chart-empty');
+    const dotsEl   = document.getElementById('stats-form-dots');
+    if (!canvas) return;
+
+    if (currentStatsChart) { currentStatsChart.destroy(); currentStatsChart = null; }
+
+    if (!points.length) {
+        canvas.style.display = 'none';
+        if (emptyEl) emptyEl.style.display = 'flex';
+        if (dotsEl) dotsEl.innerHTML = '';
+        return;
+    }
+    canvas.style.display = 'block';
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    const styles     = getComputedStyle(document.body);
+    const primary    = (styles.getPropertyValue('--primary')    || '#7B6EF6').trim();
+    const danger     = (styles.getPropertyValue('--danger')     || '#FF4D6D').trim();
+    const textMuted  = (styles.getPropertyValue('--text-muted') || '#5A5A80').trim();
+
+    currentStatsChart = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: points.map(p => p.label),
+            datasets: [
+                {
+                    label: 'Buts marqués', data: points.map(p => p.gf),
+                    borderColor: primary, backgroundColor: primary + '33',
+                    tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: primary
+                },
+                {
+                    label: 'Buts encaissés', data: points.map(p => p.ga),
+                    borderColor: danger, backgroundColor: danger + '22',
+                    tension: 0.35, fill: true, pointRadius: 4, pointBackgroundColor: danger
+                }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: textMuted, font: { size: 10, weight: '700' } } } },
+            scales: {
+                x: { ticks: { color: textMuted, font: { size: 9 } }, grid: { display: false } },
+                y: { beginAtZero: true, ticks: { color: textMuted, stepSize: 1, font: { size: 9 } }, grid: { color: 'rgba(123,110,246,0.08)' } }
+            }
+        }
+    });
+
+    if (dotsEl) {
+        dotsEl.innerHTML = points.map(p =>
+            `<div class="fdot ${p.result}" title="vs ${p.opponent} (${p.label})">${p.result}</div>`
+        ).join('');
+    }
+}
+
+function renderStats(data) {
+    const panel = document.getElementById('stats-panel');
+    if (!panel) return;
+
+    const homeTeam = data.HomeTeam || data.homeTeam || 'Équipe 1';
+    const awayTeam = data.AwayTeam || data.awayTeam || 'Équipe 2';
+    const homeLogo = data.HomeLogo || data.homeLogo || '';
+    const awayLogo = data.AwayLogo || data.awayLogo || '';
+
+    statsChartTeam = 'team1';
+
+    panel.innerHTML = `
+        <div class="analysis-block">
+            <div class="stats-team-toggle" id="stats-team-toggle">
+                <div class="stats-team-btn active" data-team="team1">
+                    ${homeLogo ? `<img src="${homeLogo}" alt="" onerror="this.style.display='none'">` : '<i class="fas fa-futbol"></i>'}
+                    <span>${homeTeam}</span>
+                </div>
+                <div class="stats-team-btn" data-team="team2">
+                    ${awayLogo ? `<img src="${awayLogo}" alt="" onerror="this.style.display='none'">` : '<i class="fas fa-futbol"></i>'}
+                    <span>${awayTeam}</span>
+                </div>
+            </div>
+            <div class="analysis-block-title" style="margin-top:16px;">Progression — buts marqués / encaissés</div>
+            <div style="border-top:1px solid var(--border);margin-bottom:12px;"></div>
+            <div class="stats-chart-wrap">
+                <canvas id="stats-progress-chart"></canvas>
+                <div class="empty-state" id="stats-chart-empty" style="height:auto;padding:30px 0;display:none;">
+                    <i class="fas fa-chart-line"></i><h3>Pas assez de matchs</h3>
+                </div>
+            </div>
+            <div class="form-dots" id="stats-form-dots" style="justify-content:center;margin-top:16px;"></div>
+        </div>`;
+
+    panel.querySelectorAll('.stats-team-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            panel.querySelectorAll('.stats-team-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            statsChartTeam = btn.dataset.team;
+            renderStatsChart(data, statsChartTeam);
+        });
+    });
+
+    renderStatsChart(data, statsChartTeam);
+}
 
 /* ===================================================================
-   RENDER MATCHES — last_five ESPN avec preview au clic (sans animation d'entrée)
+   RENDER MATCHES — derniers matchs de chaque équipe (h2h.last_team1 /
+   h2h.last_team2), avec preview au clic (sans animation d'entrée)
    =================================================================== */
+function buildRecentMatchItem(entry, mainTeamName) {
+    const parsed   = parseMatchText(entry.text || '');
+    const leftName  = parsed.team1 || '';
+    const rightName = parsed.team2 || '';
+    const leftLogo  = extractImgSrc(entry.team1_logo);
+    const rightLogo = extractImgSrc(entry.team2_logo);
+    const scoreDisp = parsed.hasScore ? `${parsed.score1} - ${parsed.score2}` : '-';
+
+    let resClass = 'draw', resLabel = 'Nul';
+    if (parsed.hasScore) {
+        const mainIsLeft  = leftName.toLowerCase()  === (mainTeamName||'').toLowerCase();
+        const mainIsRight = rightName.toLowerCase() === (mainTeamName||'').toLowerCase();
+        let mainScore = null, oppScore = null;
+        if (mainIsLeft)       { mainScore = parsed.score1; oppScore = parsed.score2; }
+        else if (mainIsRight) { mainScore = parsed.score2; oppScore = parsed.score1; }
+        if (mainScore != null) {
+            if (mainScore > oppScore)      { resClass='win';  resLabel='Victoire'; }
+            else if (mainScore < oppScore) { resClass='loss'; resLabel='Défaite'; }
+        }
+    }
+
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    div.innerHTML = `
+        <div class="match-item-header">
+            <span class="match-item-comp">${entry.league || ''}</span>
+            <span class="match-item-date">${parsed.date || ''}</span>
+        </div>
+        <div class="match-item-teams">
+            <div class="match-team">
+                ${leftLogo ? `<img class="match-team-logo" src="${leftLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                <span>${leftName}</span>
+            </div>
+            <div class="match-score-block">
+                <span class="match-score">${scoreDisp}</span>
+                ${parsed.hasScore ? `<span class="result-chip ${resClass}">${resLabel}</span>` : ''}
+            </div>
+            <div class="match-team away">
+                ${rightLogo ? `<img class="match-team-logo" src="${rightLogo}" alt="" onerror="this.style.display='none'">` : ''}
+                <span>${rightName}</span>
+            </div>
+        </div>`;
+
+    div.addEventListener('click', () => {
+        openMatchPreview(entry, leftName, rightName, leftLogo, rightLogo, div);
+    });
+
+    return div;
+}
+
 function renderMatches(data) {
     const container = document.getElementById('matches-list');
     container.innerHTML = '';
-    const g = data._game || null;
+    const g   = data._game || null;
+    const h2h = g?.h2h || null;
 
-    const homeFive  = g?.home?.last_five || [];
-    const awayFive  = g?.away?.last_five || [];
-    const homeTeam  = data.HomeTeam || data.homeTeam || '';
-    const awayTeam  = data.AwayTeam || data.awayTeam || '';
-    const homeId    = g?.home?.team_id || null;
-    const awayId    = g?.away?.team_id || null;
-    const homeLogo  = data.HomeLogo || data.homeLogo || '';
-    const awayLogo  = data.AwayLogo || data.awayLogo || '';
+    const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
+    const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
+    const lastHome = h2h?.last_team1 || [];
+    const lastAway = h2h?.last_team2 || [];
 
-    if (!homeFive.length && !awayFive.length) {
-        const list = data.recentMatches || data.matches || [];
-        if (!list.length) {
-            container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
-            return;
-        }
-        list.forEach((m) => {
-            const div = document.createElement('div');
-            div.className = 'match-item';
-            const resClass = m.result==='win'?'win':m.result==='loss'?'loss':'draw';
-            const resLabel = m.result==='win'?'Victoire':m.result==='loss'?'Défaite':'Nul';
-            div.innerHTML = `
-                <div class="match-item-header">
-                    <span class="match-item-comp">${m.competition||''}</span>
-                    <span class="match-item-date">${m.date||''}</span>
-                </div>
-                <div class="match-item-teams">
-                    <div class="match-team">
-                        ${m.homeLogo?`<img class="match-team-logo" src="${m.homeLogo}" alt="">`:''}<span>${m.homeTeam||''}</span>
-                    </div>
-                    <div class="match-score-block">
-                        <span class="match-score">${m.score||'-'}</span>
-                        <span class="result-chip ${resClass}">${resLabel}</span>
-                    </div>
-                    <div class="match-team away">
-                        ${m.awayLogo?`<img class="match-team-logo" src="${m.awayLogo}" alt="">`:''}<span>${m.awayTeam||''}</span>
-                    </div>
-                </div>`;
-            div.addEventListener('click', () => openMatchPreview(m, m.homeTeam||'', m.awayTeam||'', m.homeLogo||'', m.awayLogo||'', div));
-            container.appendChild(div);
-        });
+    if (!lastHome.length && !lastAway.length) {
+        container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-calendar-alt"></i><h3>Pas de matchs récents</h3></div>`;
         return;
     }
 
-    function buildMatchItem(m, mainTeamId, mainTeamName, mainTeamLogo) {
-        const hId   = m.team_home_id || null;
-        const aId   = m.team_away_id || null;
-        const hName = m.team_home    || '';
-        const aName = m.team_away    || '';
-        const hLogo = m.team_home_logo || (hId ? espnLogo(hId) : '');
-        const aLogo = m.team_away_logo || (aId ? espnLogo(aId) : '');
-
-        const mainIsHome = String(hId) === String(mainTeamId);
-        const leftName  = mainIsHome ? (hName || mainTeamName) : hName;
-        const rightName = mainIsHome ? aName : (aName || mainTeamName);
-        const leftLogo  = mainIsHome ? (hLogo || mainTeamLogo) : hLogo;
-        const rightLogo = mainIsHome ? aLogo : (aLogo || mainTeamLogo);
-
-        const sLeft  = m.home_score ?? '';
-        const sRight = m.away_score ?? '';
-        const scoreDisp = (sLeft !== '' && sRight !== '') ? `${sLeft} - ${sRight}` : '-';
-
-        const res      = m.result || 'D';
-        const resClass = res==='W'?'win':res==='L'?'loss':'draw';
-        const resLabel = res==='W'?'Victoire':res==='L'?'Défaite':'Nul';
-
-        const div = document.createElement('div');
-        div.className = 'match-item';
-        div.innerHTML = `
-            <div class="match-item-header">
-                <span class="match-item-comp">${m.competition||''}</span>
-                <span class="match-item-date">${m.date||''}</span>
-            </div>
-            <div class="match-item-teams">
-                <div class="match-team">
-                    ${leftLogo ? `<img class="match-team-logo" src="${leftLogo}" alt="" onerror="this.style.display='none'">` : ''}
-                    <span>${leftName}</span>
-                </div>
-                <div class="match-score-block">
-                    <span class="match-score">${scoreDisp}</span>
-                    <span class="result-chip ${resClass}">${resLabel}</span>
-                </div>
-                <div class="match-team away">
-                    ${rightLogo ? `<img class="match-team-logo" src="${rightLogo}" alt="" onerror="this.style.display='none'">` : ''}
-                    <span>${rightName}</span>
-                </div>
-            </div>`;
-
-        div.addEventListener('click', () => {
-            openMatchPreview(m, leftName, rightName, leftLogo, rightLogo, div);
-        });
-
-        return div;
-    }
-
-    if (homeFive.length) {
+    if (lastHome.length) {
         const sectionTitle = document.createElement('div');
         sectionTitle.className = 'odds-section-title';
-        sectionTitle.innerHTML = `<i class="fas fa-home"></i> ${homeTeam || 'Domicile'}`;
+        sectionTitle.innerHTML = `<i class="fas fa-home"></i> ${homeTeam}`;
         container.appendChild(sectionTitle);
-        homeFive.forEach((m) => {
-            container.appendChild(buildMatchItem(m, homeId, homeTeam, homeLogo));
-        });
+        lastHome.forEach(entry => container.appendChild(buildRecentMatchItem(entry, homeTeam)));
     }
 
-    if (awayFive.length) {
+    if (lastAway.length) {
         const sectionTitle2 = document.createElement('div');
         sectionTitle2.className = 'odds-section-title';
         sectionTitle2.style.marginTop = '16px';
-        sectionTitle2.innerHTML = `<i class="fas fa-plane"></i> ${awayTeam || 'Extérieur'}`;
+        sectionTitle2.innerHTML = `<i class="fas fa-plane"></i> ${awayTeam}`;
         container.appendChild(sectionTitle2);
-        awayFive.forEach((m) => {
-            container.appendChild(buildMatchItem(m, awayId, awayTeam, awayLogo));
-        });
+        lastAway.forEach(entry => container.appendChild(buildRecentMatchItem(entry, awayTeam)));
     }
 }
 
@@ -2904,61 +2998,33 @@ function renderH2H(data) {
     const container = document.getElementById('h2h-list');
     container.innerHTML = '';
     const g   = data._game || null;
-    const h2h = g?.h2h || data.h2h || [];
+    const confrontations = g?.h2h?.confrontations || [];
 
-    if (!h2h.length) {
+    if (!confrontations.length) {
         container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-exchange-alt"></i><h3>Pas d'historique H2H</h3></div>`;
         return;
     }
 
-    const mainHomeId   = String(g?.home?.team_id || '');
-    const mainAwayId   = String(g?.away?.team_id || '');
-    const mainHomeName = data.HomeTeam || data.homeTeam || '';
-    const mainAwayName = data.AwayTeam || data.awayTeam || '';
-    const mainHomeLogo = data.HomeLogo || data.homeLogo || '';
-    const mainAwayLogo = data.AwayLogo || data.awayLogo || '';
+    confrontations.forEach((entry) => {
+        const parsed = parseMatchText(entry.text || '');
+        const hName  = parsed.team1 || '';
+        const aName  = parsed.team2 || '';
+        const hLogo  = extractImgSrc(entry.team1_logo);
+        const aLogo  = extractImgSrc(entry.team2_logo);
+        const scoreDisp = parsed.hasScore ? `${parsed.score1} - ${parsed.score2}` : '-';
 
-    h2h.forEach((m) => {
-        const hId   = String(m.team_home_id || '');
-        const aId   = String(m.team_away_id || '');
-        const hLogo = m.team_home_logo || (hId ? espnLogo(hId) : '');
-        const aLogo = m.team_away_logo || (aId ? espnLogo(aId) : '');
-
-        let hName = m.team_home || '';
-        let aName = m.team_away || '';
-
-        if (!hName) {
-            if (hId === mainHomeId) hName = mainHomeName;
-            else if (hId === mainAwayId) hName = mainAwayName;
-            else hName = `Équipe ${hId}`;
-        }
-        if (!aName) {
-            if (aId === mainHomeId) aName = mainHomeName;
-            else if (aId === mainAwayId) aName = mainAwayName;
-            else aName = `Équipe ${aId}`;
-        }
-
-        const hScore = m.home_score ?? '';
-        const aScore = m.away_score ?? '';
-        const scoreDisp = (hScore !== '' && aScore !== '') ? `${hScore} - ${aScore}` : '-';
-
-        let homeWins = false;
-        let awayWins = false;
-        if (hScore !== '' && aScore !== '') {
-            const hs = parseInt(hScore, 10);
-            const as = parseInt(aScore, 10);
-            if (!isNaN(hs) && !isNaN(as)) {
-                if (hs > as) homeWins = true;
-                else if (as > hs) awayWins = true;
-            }
+        let homeWins = false, awayWins = false;
+        if (parsed.hasScore) {
+            if (parsed.score1 > parsed.score2) homeWins = true;
+            else if (parsed.score2 > parsed.score1) awayWins = true;
         }
 
         const div = document.createElement('div');
         div.className = 'h2h-item';
         div.innerHTML = `
             <div class="h2h-header">
-                <span class="h2h-comp">${m.competition||''}</span>
-                <span class="h2h-date">${m.date||''}</span>
+                <span class="h2h-comp">${entry.league || ''}</span>
+                <span class="h2h-date">${parsed.date || ''}</span>
             </div>
             <div class="h2h-teams">
                 <div class="h2h-team${homeWins?' winner':''}">
@@ -2975,7 +3041,7 @@ function renderH2H(data) {
             </div>`;
 
         div.addEventListener('click', () => {
-            openMatchPreview(m, hName, aName, hLogo, aLogo, div);
+            openMatchPreview(entry, hName, aName, hLogo, aLogo, div);
         });
 
         container.appendChild(div);
@@ -2985,7 +3051,12 @@ function renderH2H(data) {
 function renderRanking(data) {
     const container = document.getElementById('ranking-list');
     container.innerHTML = '';
-    if (!data.ranking||!data.ranking.length) {
+    const g = data._game || null;
+    const ranking = (g && Array.isArray(g.classification) && g.classification.length)
+        ? g.classification
+        : (data.ranking || []);
+
+    if (!ranking.length) {
         container.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-list-ol"></i><h3>Pas de classement</h3></div>`;
         return;
     }
@@ -2993,10 +3064,10 @@ function renderRanking(data) {
     table.className = 'ranking-table';
     table.innerHTML = `
         <thead><tr><th>#</th><th>Équipe</th><th>J</th><th>G</th><th>N</th><th>P</th><th>BP</th><th>BC</th><th>Pts</th></tr></thead>
-        <tbody>${data.ranking.map((t,i)=>`
+        <tbody>${ranking.map((t,i)=>`
             <tr>
-                <td>${i+1}</td>
-                <td><div class="team-cell">${t.logo?`<img class="team-mini-logo" src="${t.logo}" alt="">`:''} ${t.name||''}</div></td>
+                <td>${t.position || t.rank || (i+1)}</td>
+                <td><div class="team-cell">${extractImgSrc(t.logo)||t.logo?`<img class="team-mini-logo" src="${extractImgSrc(t.logo)||t.logo}" alt="">`:''} ${t.name||''}</div></td>
                 <td>${t.played||0}</td><td>${t.won||0}</td><td>${t.drawn||0}</td><td>${t.lost||0}</td>
                 <td>${t.gf||0}</td><td>${t.ga||0}</td><td><strong>${t.points||0}</strong></td>
             </tr>`).join('')}
@@ -3004,28 +3075,25 @@ function renderRanking(data) {
     container.appendChild(table);
 }
 
-/* ===== Render Infos avec classements intégrés (logo + une ligne) ===== */
+/* ===== Render Infos — infos du match + météo (plus aucune cote ici) ===== */
 function renderInfos(data) {
     const panel = document.getElementById('infos-panel');
     panel.innerHTML = '';
 
-    const g         = data._game || null;
-    const odds      = g?.odds || data.odds || null;
-    const homeTeam  = data.HomeTeam || data.homeTeam || 'Domicile';
-    const awayTeam  = data.AwayTeam || data.awayTeam || 'Extérieur';
-    const homeLogo  = data.HomeLogo || data.homeLogo || '';
-    const awayLogo  = data.AwayLogo || data.awayLogo || '';
-    const league    = data.league || data.League || null;
-    const matchDate = g?.date || (data.date ? data.date.split(' ')[0] : null);
-    let   matchTime = '';
-    if (g?.time_ci)  matchTime = g.time_ci.substring(0,5);
-    else if (g?.time_utc) matchTime = g.time_utc.substring(0,5);
-    else if (data.date?.split(' ')[1]) matchTime = data.date.split(' ')[1].substring(0,5);
+    const g        = data._game || null;
+    const m        = g?.match || {};
+    const homeTeam = data.HomeTeam || data.homeTeam || 'Domicile';
+    const awayTeam = data.AwayTeam || data.awayTeam || 'Extérieur';
+    const league   = g?.champ_name || data.league || data.League || null;
+    const { dateStr, timeStr } = formatMatchDateTime(m.start_ts);
 
     const metaRows = [];
-    if (league)    metaRows.push({ icon:'fa-trophy',   key:'Compétition', val: league.replace(/_/g,' ') });
-    if (matchDate) metaRows.push({ icon:'fa-calendar', key:'Date',        val: matchDate });
-    if (matchTime) metaRows.push({ icon:'fa-clock',    key:'Heure (CI)',  val: matchTime });
+    if (league)              metaRows.push({ icon:'fa-trophy',        key:'Compétition',  val: league.replace(/_/g,' ') });
+    if (m.tournament_stage)  metaRows.push({ icon:'fa-layer-group',   key:'Journée/Tour', val: m.tournament_stage });
+    if (dateStr)             metaRows.push({ icon:'fa-calendar',      key:'Date',         val: dateStr });
+    if (timeStr)             metaRows.push({ icon:'fa-clock',         key:'Heure',        val: timeStr });
+    if (m.location)          metaRows.push({ icon:'fa-map-marker-alt',key:'Stade',        val: m.location });
+    if (m.location_country)  metaRows.push({ icon:'fa-flag',          key:'Pays',         val: m.location_country });
     metaRows.push({ icon:'fa-home',  key:'Domicile',  val: homeTeam });
     metaRows.push({ icon:'fa-plane', key:'Extérieur', val: awayTeam });
 
@@ -3045,149 +3113,37 @@ function renderInfos(data) {
         panel.appendChild(metaBlock);
     }
 
-    /* --- Classements avec logo + tout sur une ligne --- */
-    const homeStandings = g?.home?.standings || null;
-    const awayStandings = g?.away?.standings || null;
-    const homeMatchday  = g?.home?.matchday ?? null;
-    const awayMatchday  = g?.away?.matchday ?? null;
-
-    if (homeStandings || awayStandings) {
-        const stTitle = document.createElement('div');
-        stTitle.className = 'odds-section-title';
-        stTitle.style.marginTop = '8px';
-        stTitle.innerHTML = '<i class="fas fa-list-ol"></i> Classement';
-        panel.appendChild(stTitle);
-
-        const stBlock = document.createElement('div');
-        stBlock.className = 'infos-match-meta';
-
-        if (homeStandings) {
-            const row = document.createElement('div');
-            row.className = 'standings-row';
-            row.style.animationDelay = '0.06s';
-            row.innerHTML = `
-                <div class="standings-team">
-                    <div class="standings-team-logo">
-                        ${homeLogo
-                            ? `<img src="${homeLogo}" alt="${homeTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
-                            : '<i class="fas fa-futbol"></i>'}
-                    </div>
-                    <span class="standings-team-name">${homeTeam}</span>
-                </div>
-                <div class="standings-stats">
-                    ${homeMatchday != null ? `
-                    <div class="standings-stat">
-                        <span class="standings-stat-val matchday">J${homeMatchday}</span>
-                        <span class="standings-stat-label">Journée</span>
-                    </div>` : ''}
-                    <div class="standings-stat">
-                        <span class="standings-stat-val pos">${homeStandings.position_current ?? '-'}</span>
-                        <span class="standings-stat-label">Rang</span>
-                    </div>
-                    <div class="standings-stat">
-                        <span class="standings-stat-val">${homeStandings.played ?? 0}</span>
-                        <span class="standings-stat-label">J</span>
-                    </div>
-                    <div class="standings-stat">
-                        <span class="standings-stat-val">${homeStandings.gd != null ? (homeStandings.gd > 0 ? '+'+homeStandings.gd : homeStandings.gd) : 0}</span>
-                        <span class="standings-stat-label">DB</span>
-                    </div>
-                    <div class="standings-stat">
-                        <span class="standings-stat-val pts">${homeStandings.points ?? 0}</span>
-                        <span class="standings-stat-label">Pts</span>
-                    </div>
-                </div>
-            `;
-            stBlock.appendChild(row);
-        }
-
-        if (awayStandings) {
-            const row = document.createElement('div');
-            row.className = 'standings-row';
-            row.style.animationDelay = '0.12s';
-            row.innerHTML = `
-                <div class="standings-team">
-                    <div class="standings-team-logo">
-                        ${awayLogo
-                            ? `<img src="${awayLogo}" alt="${awayTeam}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-futbol\\'></i>'">`
-                            : '<i class="fas fa-futbol"></i>'}
-                    </div>
-                    <span class="standings-team-name">${awayTeam}</span>
-                </div>
-                <div class="standings-stats">
-                    ${awayMatchday != null ? `
-                    <div class="standings-stat">
-                        <span class="standings-stat-val matchday">J${awayMatchday}</span>
-                        <span class="standings-stat-label">Journée</span>
-                    </div>` : ''}
-                    <div class="standings-stat">
-                        <span class="standings-stat-val pos">${awayStandings.position_current ?? '-'}</span>
-                        <span class="standings-stat-label">Rang</span>
-                    </div>
-                    <div class="standings-stat">
-                        <span class="standings-stat-val">${awayStandings.played ?? 0}</span>
-                        <span class="standings-stat-label">J</span>
-                    </div>
-                    <div class="standings-stat">
-                        <span class="standings-stat-val">${awayStandings.gd != null ? (awayStandings.gd > 0 ? '+'+awayStandings.gd : awayStandings.gd) : 0}</span>
-                        <span class="standings-stat-label">DB</span>
-                    </div>
-                    <div class="standings-stat">
-                        <span class="standings-stat-val pts">${awayStandings.points ?? 0}</span>
-                        <span class="standings-stat-label">Pts</span>
-                    </div>
-                </div>
-            `;
-            stBlock.appendChild(row);
-        }
-
-        panel.appendChild(stBlock);
+    /* --- Météo --- */
+    const w = m.weather || null;
+    const weatherRows = [];
+    if (w) {
+        if (w.temperature)           weatherRows.push({ icon:'fa-thermometer-half', key:'Température',   val: w.temperature });
+        if (w.description)           weatherRows.push({ icon:'fa-cloud',            key:'Ciel',           val: w.description });
+        if (w.wind)                  weatherRows.push({ icon:'fa-wind',             key:'Vent',           val: w.wind });
+        if (w.pressure)               weatherRows.push({ icon:'fa-tachometer-alt',   key:'Pression',       val: w.pressure });
+        if (w.humidity)               weatherRows.push({ icon:'fa-tint',             key:'Humidité',       val: w.humidity });
+        if (w.precipitation_chance)   weatherRows.push({ icon:'fa-cloud-rain',       key:'Précipitation',  val: w.precipitation_chance });
     }
 
-    /* --- Cotes --- */
-    const oddsTitle = document.createElement('div');
-    oddsTitle.className = 'odds-section-title';
-    oddsTitle.innerHTML = '<i class="fas fa-tags"></i> Cotes 1 X 2';
-    panel.appendChild(oddsTitle);
+    if (weatherRows.length) {
+        const wTitle = document.createElement('div');
+        wTitle.className = 'odds-section-title';
+        wTitle.style.marginTop = '8px';
+        wTitle.innerHTML = '<i class="fas fa-cloud-sun"></i> Météo';
+        panel.appendChild(wTitle);
 
-    if (odds && (odds.home != null || odds.draw != null || odds.away != null)) {
-        const oH = odds.home != null ? +odds.home : null;
-        const oD = odds.draw != null ? +odds.draw : null;
-        const oA = odds.away != null ? +odds.away : null;
+        const wBlock = document.createElement('div');
+        wBlock.className = 'infos-match-meta';
+        wBlock.innerHTML = weatherRows.map((r, i) => `
+            <div class="infos-meta-row" style="animation-delay:${i * 0.06}s">
+                <span class="infos-meta-key"><i class="fas ${r.icon}"></i>${r.key}</span>
+                <span class="infos-meta-val">${r.val}</span>
+            </div>`).join('');
+        panel.appendChild(wBlock);
+    }
 
-        const card = document.createElement('div');
-        card.className = 'odds-card';
-        card.innerHTML = `
-            <div class="odds-card-header">
-                <div class="odds-card-title"><i class="fas fa-percentage"></i> Marché 1X2</div>
-                <div class="odds-card-sub">MONEYLINE</div>
-            </div>
-            <div class="odds-grid">
-                ${oH !== null ? `
-                <div class="odds-cell">
-                    <span class="odds-cell-label">1</span>
-                    <span class="odds-cell-outcome">Domicile</span>
-                    <span class="odds-cell-val">${oH.toFixed(2)}</span>
-                </div>` : ''}
-                ${oD !== null ? `
-                <div class="odds-cell">
-                    <span class="odds-cell-label">X</span>
-                    <span class="odds-cell-outcome">Nul</span>
-                    <span class="odds-cell-val">${oD.toFixed(2)}</span>
-                </div>` : ''}
-                ${oA !== null ? `
-                <div class="odds-cell">
-                    <span class="odds-cell-label">2</span>
-                    <span class="odds-cell-outcome">Extérieur</span>
-                    <span class="odds-cell-val">${oA.toFixed(2)}</span>
-                </div>` : ''}
-            </div>`;
-        panel.appendChild(card);
-    } else {
-        const noData = document.createElement('div');
-        noData.className = 'odds-no-data';
-        noData.innerHTML = `<i class="fas fa-lock"></i><span>Cotes indisponibles</span>`;
-        panel.appendChild(noData);
+    if (!metaRows.length && !weatherRows.length) {
+        panel.innerHTML = `<div class="empty-state" style="height:auto;padding:40px 0;"><i class="fas fa-info-circle"></i><h3>Infos indisponibles</h3></div>`;
     }
 }
 
@@ -3229,7 +3185,8 @@ function showSection(id) {
                 <div class="notif-dot${hasNewEvents?' active':''}" id="events-dot"></div>
             </div>`;
         document.getElementById('events-btn').addEventListener('click', () => {
-            openNotifications();
+            showSection('events');
+            hasNewEvents = false;
         });
         document.getElementById('search-btn').addEventListener('click', isSettings ? handlePwaInstallHeaderBtn : openSearchBar);
         bottomNav.classList.remove('hidden');
@@ -3245,97 +3202,6 @@ function showSection(id) {
         bottomNav.classList.add('hidden');
         mainContent.classList.add('no-nav');
     }
-}
-
-/* ===== Notifications — même animation d'ouverture/fermeture que les cartes =====
-   OUVERTURE : le bouton cloche s'estompe (comme une carte source) pendant
-   que le panneau des notifications émerge du centre.
-   FERMETURE : le panneau se rétracte en douceur (ralenti, easing "spring-
-   gentle") puis, une fois le bouton cloche revenu dans l'en-tête, celui-ci
-   réapparaît avec un léger rebond pour un visuel plus éclatant. */
-const NOTIF_OPEN_MS  = 420;
-const NOTIF_CLOSE_MS = 620;
-
-function openNotifications() {
-    const btn = document.getElementById('events-btn');
-    hasNewEvents = false;
-
-    if (btn) {
-        btn.classList.add('morph-source-fade');
-        void btn.offsetWidth;
-        requestAnimationFrame(() => btn.classList.add('faded'));
-    }
-
-    /* On laisse le bouton s'estomper avant de faire basculer l'en-tête
-       (qui le retire du DOM), pour que le fondu reste visible. */
-    setTimeout(() => {
-        showSection('events');
-        const panel = document.getElementById('events-section');
-        if (!panel) return;
-
-        panel.style.transition    = 'none';
-        panel.style.opacity       = '0';
-        panel.style.transformOrigin = 'center center';
-        panel.style.transform     = 'scale(0.92)';
-        void panel.offsetWidth;
-
-        panel.style.transition = `transform ${NOTIF_OPEN_MS}ms var(--spring-soft), opacity ${Math.round(NOTIF_OPEN_MS*0.72)}ms var(--ease)`;
-        requestAnimationFrame(() => {
-            panel.style.opacity   = '1';
-            panel.style.transform = 'scale(1)';
-        });
-
-        let done = false;
-        panel.addEventListener('transitionend', function handler(e) {
-            if (e.target !== panel || done) return;
-            done = true;
-            panel.removeEventListener('transitionend', handler);
-            panel.style.transition = '';
-            panel.style.transform  = '';
-            panel.style.opacity    = '';
-        });
-        setTimeout(() => { if (!done) { done = true; panel.style.transition=''; panel.style.transform=''; panel.style.opacity=''; } }, NOTIF_OPEN_MS + 160);
-    }, 190);
-}
-
-function closeNotifications() {
-    const panel  = document.getElementById('events-section');
-    const target = previousMainSection;
-    if (!panel) { showSection(target); return; }
-
-    panel.style.transformOrigin = 'center center';
-    panel.style.transition = `transform ${NOTIF_CLOSE_MS}ms var(--spring-gentle), opacity ${Math.round(NOTIF_CLOSE_MS*0.72)}ms var(--ease)`;
-    requestAnimationFrame(() => {
-        panel.style.transform = 'scale(0.9)';
-        panel.style.opacity   = '0';
-    });
-
-    const finish = () => {
-        panel.style.transition = '';
-        panel.style.transform  = '';
-        panel.style.opacity    = '';
-        showSection(target);
-        /* Le bouton cloche, tout juste reconstruit dans l'en-tête,
-           réapparaît avec un léger rebond. */
-        const btn = document.getElementById('events-btn');
-        if (btn) {
-            btn.classList.add('notif-bounce-in');
-            btn.addEventListener('animationend', function handler(e) {
-                if (e.target !== btn) return;
-                btn.removeEventListener('animationend', handler);
-                btn.classList.remove('notif-bounce-in');
-            });
-        }
-    };
-
-    let done = false;
-    panel.addEventListener('transitionend', function handler(e) {
-        if (e.target !== panel || done) return;
-        done = true;
-        panel.removeEventListener('transitionend', handler);
-        finish();
-    });
-    setTimeout(() => { if (!done) { done = true; finish(); } }, NOTIF_CLOSE_MS + 200);
 }
 
 /* ===== Recherche ===== */
@@ -3429,13 +3295,7 @@ function setupListeners() {
     document.getElementById('menu-terms').addEventListener('click',   () => showSection('terms'));
     document.getElementById('menu-about').addEventListener('click',   () => showSection('about'));
 
-    document.getElementById('back-btn').addEventListener('click', () => {
-        if (currentSection === 'events') {
-            closeNotifications();
-        } else {
-            showSection(previousMainSection);
-        }
-    });
+    document.getElementById('back-btn').addEventListener('click', () => showSection(previousMainSection));
     /* la navigation par tap/glissement du bottom-nav est gérée par initLiquidGlassInteractions() */
 
     /* ── Recherche ── */
@@ -3657,18 +3517,7 @@ function updateNavMarker(sectionId) {
 window.addEventListener('resize', () => updateNavMarker(currentSection));
 
 
-/* ===== EFFET 3D (Paramètres) ===== */
-function initTheme3D() {
-    const toggle = document.getElementById('theme3d-toggle');
-    if (!toggle) return;
-    toggle.checked = document.body.classList.contains('theme-3d');
-    toggle.addEventListener('change', () => {
-        const enabled = toggle.checked;
-        document.body.classList.toggle('theme-3d', enabled);
-        try { localStorage.setItem('starky_theme_3d', enabled ? '1' : '0'); } catch(e){}
-        showToast(enabled ? 'Effet 3D activé' : 'Effet 3D désactivé', 'success', 1800);
-    });
-}
+/* ===== EFFET 3D — thème unique, toujours actif (mode plat supprimé) ===== */
 
 /* ===== COULEURS PERSONNALISÉES (Paramètres) =====
    Les palettes (bi-tons ou multi-couleurs) sont chargées depuis un
@@ -3897,47 +3746,8 @@ function initBgBlack() {
         document.body.classList.toggle('bg-black', enabled);
         try { localStorage.setItem('starky_bg_black', enabled ? '1' : '0'); } catch(e){}
         updateStatusBar();
-        triggerThemeSwitchPulse(toggle);
         showToast(enabled ? 'Fond noir activé' : 'Fond noir désactivé', 'success', 1800);
     });
-}
-
-/* ===== Pulsion du switch mode sombre/clair =====
-   À chaque bascule, l'interrupteur reçoit un petit anneau de pulsion.
-   Si le motif de fond actif est "Orbes", une propulsion de ce même motif
-   (dégradé de la palette) jaillit en plus depuis l'interrupteur et se
-   diffuse sur tout l'écran, en écho visuel au changement de thème. */
-function triggerThemeSwitchPulse(toggleEl) {
-    const switchLabel = toggleEl ? toggleEl.closest('.switch') : null;
-    if (switchLabel) {
-        switchLabel.classList.add('switch-pulse');
-        setTimeout(() => switchLabel.classList.remove('switch-pulse'), 560);
-    }
-
-    if (!document.body.classList.contains('bg-style-orbs')) return;
-    const originEl = switchLabel || toggleEl;
-    if (!originEl) return;
-
-    const rect = originEl.getBoundingClientRect();
-    const cx = rect.left + rect.width  / 2;
-    const cy = rect.top  + rect.height / 2;
-    const size = Math.max(window.innerWidth, window.innerHeight) * 1.7;
-
-    const orb = document.createElement('div');
-    orb.className = 'theme-orb-pulse';
-    orb.style.width  = size + 'px';
-    orb.style.height = size + 'px';
-    orb.style.left   = cx + 'px';
-    orb.style.top    = cy + 'px';
-    document.body.appendChild(orb);
-
-    void orb.offsetWidth;
-    requestAnimationFrame(() => orb.classList.add('burst'));
-
-    let removed = false;
-    const remove = () => { if (!removed) { removed = true; orb.remove(); } };
-    orb.addEventListener('transitionend', remove);
-    setTimeout(remove, 950);
 }
 
 /* ===== INIT ===== */
@@ -3945,7 +3755,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupListeners();
     initPWA();
     initLiquidGlassInteractions();
-    initTheme3D();
+
     initBgBlack();
     applyStoredPalette();
     initBgStyle();
