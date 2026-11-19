@@ -82,27 +82,7 @@
         }
         @keyframes spin { from{transform:rotate(0deg)}to{transform:rotate(360deg)} }
 
-        /* ══════════════════════════════════════════════════════════════
-           ══ MOTIF DE FOND — choix dans Paramètres entre "Aucun" (défaut),
-           "Orbes" et "Étincelles". Les deux motifs sont statiques (aucune
-           animation) et se colorent automatiquement avec la palette active
-           (var(--primary)/--cyan/--magenta), qu'elle soit la palette par
-           défaut ou une palette personnalisée choisie via Custom.json.
-           ══════════════════════════════════════════════════════════════ */
-        .app-orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;display:none;opacity:0.4}
-        body.bg-style-orbs .app-orb{display:block}
-        body.bg-black.bg-style-orbs .app-orb{opacity:0.5}
-        .app-orb-1{width:340px;height:340px;background:var(--primary);top:-30px;left:-30px}
-        .app-orb-2{width:300px;height:300px;background:var(--cyan);top:14%;right:-50px}
-        .app-orb-3{width:320px;height:320px;background:var(--magenta);bottom:-20px;left:18%}
-
-        .bg-spark-big{position:fixed;pointer-events:none;z-index:0;display:none;opacity:0.55}
-        body.bg-style-sparks .bg-spark-big{display:block}
-        body.bg-black.bg-style-sparks .bg-spark-big{opacity:0.7}
-        .bg-spark-big-1{width:200px;height:200px;top:-30px;left:-30px}
-        .bg-spark-big-2{width:240px;height:240px;top:14%;right:-50px}
-        .bg-spark-big-3{width:190px;height:190px;bottom:-20px;left:18%}
-
+        
         @keyframes notifIn {
             from{opacity:0;transform:translateX(-50%) translateY(-10px)}
             to{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -908,42 +888,6 @@
         .theme-card-title{font-weight:700;font-size:15px;margin-bottom:6px;color:var(--text)}
         .theme-card-desc{font-size:12px;color:var(--text-muted)}
 
-        /* ══ MOTIF DE FOND — sélecteur Aucun / Orbes / Étincelles ══ */
-        .bgstyle-options{display:flex;gap:8px;width:100%}
-        .bgstyle-opt{
-            flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
-            padding:10px 6px;border-radius:14px;cursor:pointer;
-            background:var(--glass-fill);border:1px solid var(--glass-border);
-            color:var(--text-muted);font-size:12px;font-weight:700;font-family:inherit;
-            
-            transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.16s var(--spring);
-        }
-        .bgstyle-opt i{font-size:12px}
-        .bgstyle-opt.active{background:var(--grad-soft);border-color:var(--border-bright);color:var(--primary)}
-        .bgstyle-opt:active{transform:scale(0.96)}
-
-        /* ══ COULEURS PERSONNALISÉES — palettes chargées via Custom.json ══ */
-        .palette-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-        .palette-empty{
-            display:flex;align-items:center;gap:8px;width:100%;
-            color:var(--text-muted);font-size:12.5px;font-weight:600;padding:16px 4px;
-        }
-        .palette-swatch{
-            display:flex;flex-direction:column;align-items:center;gap:6px;
-            width:66px;padding:10px 4px;border-radius:16px;cursor:pointer;
-            background:var(--glass-fill);border:1px solid var(--glass-border);
-            
-            transition:background 0.2s,border-color 0.2s,transform 0.16s var(--spring);
-        }
-        .palette-swatch:active{transform:scale(0.94)}
-        .palette-swatch.active{background:var(--grad-soft);border-color:var(--border-bright)}
-        .palette-swatch-dots{display:flex;gap:3px}
-        .palette-swatch-dot{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25)}
-        .palette-swatch-name{
-            font-size:10px;font-weight:700;color:var(--text);text-align:center;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px;
-        }
-
         /* ══ ICÔNES EXTERNES (Iconify) — recolorées via CSS mask ══ */
         .icon-mask{
             display:inline-block;width:1em;height:1em;
@@ -1318,7 +1262,7 @@
         }
         @keyframes snowFall{to{transform:translateY(900px)}}
 
-        /* Nouvel an : confettis + deux feux d'artifice */
+        /* Nouvel an : confettis (les feux d'artifice sont animés en JS, cf. StarkyFX) */
         body[data-theme="nouvelan"] .app-bg{
             background:
                 radial-gradient(60% 40% at 50% 0%,color-mix(in srgb,var(--primary) 14%,transparent),transparent 70%),
@@ -1329,14 +1273,6 @@
                 radial-gradient(circle at 90px 150px,var(--primary) 0 1.4px,transparent 2.4px);
             background-size:auto,170px 170px,170px 170px,170px 170px,170px 170px,170px 170px;
         }
-        body[data-theme="nouvelan"] .bg-a,body[data-theme="nouvelan"] .bg-b{
-            display:block;border-radius:50%;
-            background:repeating-conic-gradient(var(--c) 0 1.6deg,transparent 1.6deg 12deg);
-            -webkit-mask:radial-gradient(circle,transparent 22%,#000 23%,#000 58%,transparent 60%);
-            mask:radial-gradient(circle,transparent 22%,#000 23%,#000 58%,transparent 60%);
-        }
-        body[data-theme="nouvelan"] .bg-a{--c:var(--primary);width:300px;height:300px;right:-90px;top:60px;opacity:.55}
-        body[data-theme="nouvelan"] .bg-b{--c:var(--magenta);width:220px;height:220px;left:-60px;bottom:140px;opacity:.45}
 
         /* Halloween : lune, toile d'araignée, brume orange */
         body[data-theme="halloween"] .app-bg{
@@ -1350,6 +1286,50 @@
             box-shadow:0 0 70px 26px rgba(255,160,50,.25);opacity:.9;
         }
         body[data-theme="halloween"] .bg-web{display:block;left:0;top:0;width:min(60vw,260px);color:var(--primary);opacity:.45}
+
+
+        /* ── Noël : bonhomme de neige + sapin (décor) ── */
+        body[data-theme="noel"] .bg-snowman{display:block;left:10px;bottom:calc(var(--nav-h) + 34px);width:104px;height:auto}
+        body[data-theme="noel"] .bg-tree{display:block;right:10px;bottom:calc(var(--nav-h) + 34px);width:96px;height:auto}
+        .bg-tree .lt{animation:xmasTwinkle 1.5s ease-in-out infinite alternate}
+        .bg-tree .lt:nth-of-type(2n){animation-delay:.5s}
+        .bg-tree .lt:nth-of-type(3n){animation-delay:1s}
+        @keyframes xmasTwinkle{from{opacity:.3}to{opacity:1}}
+
+        /* ── Animations désactivables (Paramètres → Animations du thème) ── */
+        body.fx-off .app-bg::before,
+        body.fx-off .bg-tree .lt,
+        body.fx-off .auth-splash-snow{animation:none!important}
+        body.fx-off #fx-fly,body.fx-off .fx-bat{display:none!important}
+
+        /* ── Calque d'effets animés (feux d'artifice, chauves-souris) ── */
+        #fx-fly{position:fixed;inset:0;z-index:60;pointer-events:none;overflow:hidden}
+        #fx-fw{position:absolute;inset:0;width:100%;height:100%}
+        .fx-bat{position:absolute;left:0;top:0;pointer-events:none;will-change:transform}
+        .fx-bat svg{display:block;width:100%;height:auto;animation:batFlap .26s ease-in-out infinite alternate;transform-origin:50% 45%}
+        .fx-bat path{fill:#0c0612}
+        body.bg-black .fx-bat,.auth-splash-fx .fx-bat{filter:drop-shadow(0 0 5px rgba(255,122,26,.75))}
+        @keyframes batFlap{from{transform:scaleY(1)}to{transform:scaleY(.42)}}
+
+        /* ── Écran de chargement aux couleurs du thème ── */
+        .auth-splash-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
+        .auth-splash-fx{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+        #splash-fx{position:absolute;inset:0;width:100%;height:100%}
+        .auth-splash-snow{display:none;position:absolute;left:0;right:0;top:-900px;bottom:0;opacity:.85;
+            background-image:
+                radial-gradient(circle,rgba(255,255,255,.9) 0 2.2px,transparent 3px),
+                radial-gradient(circle,rgba(255,255,255,.9) 0 1.6px,transparent 2.4px),
+                radial-gradient(circle,rgba(255,255,255,.9) 0 3.2px,transparent 4px);
+            background-size:100px 100px,150px 150px,300px 300px;
+            background-position:0 0,45px 70px,120px 40px;
+            animation:snowFall 30s linear infinite}
+        body[data-theme="noel"] .auth-splash-snow{display:block}
+        .auth-splash-msg{display:none;max-width:330px;text-align:center;padding:0 20px;
+            font:700 clamp(16px,4.8vw,21px)/1.4 'Bricolage Grotesque','DM Sans',sans-serif;color:#F2F2FA;
+            opacity:0;transform:translateY(10px);animation:authSplashLetter 1s var(--ease) 2.1s forwards}
+        .auth-splash-msg b{font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        html body:not([data-theme="defaut"]) .auth-splash-msg{display:block}
+        html body:not([data-theme="defaut"]) #auth-splash{background:var(--base)}
 
         /* ── Barre du bas responsive (zone sûre iOS, grands écrans, paysage) ── */
         .bottom-nav{
@@ -1505,33 +1485,133 @@ applyStarkyTheme(getActiveTheme());
     if(tcMeta) tcMeta.setAttribute('content', isDark ? getActiveTheme().base : '#F3F1E8');
     var asbMeta = document.getElementById('apple-status-bar-meta');
     if(asbMeta) asbMeta.setAttribute('content', isDark ? 'black-translucent' : 'default');
-    var bgs = localStorage.getItem('starky_bg_style');
-    if(bgs !== 'none') bgs = 'theme';
-    document.body.classList.add('bg-style-' + bgs);
+    document.body.classList.add('bg-style-theme'); /* le décor du thème est toujours présent */
+    if(localStorage.getItem('starky_anim')==='0') document.body.classList.add('fx-off'); /* animations actives par défaut */
     /* Verrouillage : l'app reste floutée derrière l'overlay Google tant
        que Firebase n'a pas confirmé une session (évite un flash de
        contenu visible avant la vérification). */
     document.body.classList.add('auth-locked');
     document.body.classList.add('auth-checking');
     window.__authSplashStart = Date.now();
-    var pc = JSON.parse(localStorage.getItem('starky_custom_palette_colors') || 'null');
-    if (pc && pc.length) {
-        var c0 = pc[0], c1 = pc[1] || pc[0], c2 = pc[2] || c1;
-        var r = document.documentElement.style;
-        r.setProperty('--primary', c0);
-        r.setProperty('--cyan', c1);
-        r.setProperty('--magenta', c2);
-        r.setProperty('--grad', 'linear-gradient(135deg,' + c0 + ' 0%,' + c1 + ' 50%,' + c2 + ' 100%)');
-    }
+    ['id','name','colors'].forEach(function(k){localStorage.removeItem('starky_custom_palette_'+k)});
+    window.__authSplashMinMs = getActiveTheme().id==='defaut' ? 3300 : 4800; /* laisse le temps de lire le message du thème */
 }catch(e){}</script>
 
-<div class="app-bg" id="app-bg"><i class="bg-a"></i><i class="bg-b"></i><svg class="bg-web" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M45 0 Q40 8 42 17 Q34 23 32 32 Q23 34 17 42 Q8 40 0 45"/><path d="M90 0 Q79 16 83 34 Q67 45 64 64 Q45 67 34 83 Q16 79 0 90"/><path d="M135 0 Q119 24 125 52 Q101 68 95 95 Q68 101 52 125 Q24 119 0 135"/><path d="M180 0 Q159 32 166 69 Q135 90 127 127 Q90 135 69 166 Q32 159 0 180"/><line x1="0" y1="0" x2="200" y2="0"/><line x1="0" y1="0" x2="185" y2="77"/><line x1="0" y1="0" x2="141" y2="141"/><line x1="0" y1="0" x2="77" y2="185"/><line x1="0" y1="0" x2="0" y2="200"/></svg></div>
+<div class="app-bg" id="app-bg"><i class="bg-a"></i><i class="bg-b"></i><svg class="bg-web" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M45 0 Q40 8 42 17 Q34 23 32 32 Q23 34 17 42 Q8 40 0 45"/><path d="M90 0 Q79 16 83 34 Q67 45 64 64 Q45 67 34 83 Q16 79 0 90"/><path d="M135 0 Q119 24 125 52 Q101 68 95 95 Q68 101 52 125 Q24 119 0 135"/><path d="M180 0 Q159 32 166 69 Q135 90 127 127 Q90 135 69 166 Q32 159 0 180"/><line x1="0" y1="0" x2="200" y2="0"/><line x1="0" y1="0" x2="185" y2="77"/><line x1="0" y1="0" x2="141" y2="141"/><line x1="0" y1="0" x2="77" y2="185"/><line x1="0" y1="0" x2="0" y2="200"/></svg><svg class="bg-snowman" viewBox="0 0 120 180" aria-hidden="true"><path d="M34 80 L8 62 M18 69 L11 59 M86 80 L112 62 M102 69 L109 59" stroke="#6b4a2b" stroke-width="3.2" stroke-linecap="round" fill="none"/><circle cx="60" cy="135" r="40" fill="#F4F8FF" stroke="#C9D6EA" stroke-width="1.5"/><circle cx="60" cy="86" r="28" fill="#F4F8FF" stroke="#C9D6EA" stroke-width="1.5"/><circle cx="60" cy="48" r="20" fill="#F4F8FF" stroke="#C9D6EA" stroke-width="1.5"/><rect x="38" y="26" width="44" height="6" rx="3" fill="#2a2a3a"/><rect x="46" y="6" width="28" height="22" rx="3" fill="#2a2a3a"/><rect x="46" y="19" width="28" height="5" fill="var(--primary)"/><circle cx="53" cy="44" r="2.3" fill="#222"/><circle cx="67" cy="44" r="2.3" fill="#222"/><path d="M60 50 L82 55 L60 58 Z" fill="#FF8A1E"/><g fill="#222"><circle cx="51" cy="58" r="1.4"/><circle cx="55" cy="61.5" r="1.4"/><circle cx="60" cy="62.5" r="1.4"/><circle cx="65" cy="61.5" r="1.4"/><circle cx="69" cy="58" r="1.4"/><circle cx="60" cy="80" r="2.6"/><circle cx="60" cy="92" r="2.6"/><circle cx="60" cy="104" r="2.6"/></g><rect x="40" y="63" width="40" height="9" rx="4.5" fill="var(--primary)"/><rect x="68" y="68" width="9" height="24" rx="3.5" fill="var(--primary)"/></svg><svg class="bg-tree" viewBox="0 0 100 150" aria-hidden="true"><rect x="42" y="124" width="16" height="22" fill="#6b4a2b"/><polygon points="50,12 80,56 20,56" fill="#2FBF71"/><polygon points="50,36 88,92 12,92" fill="#27a862"/><polygon points="50,62 95,128 5,128" fill="#1f9d5b"/><polygon points="50,0 54,9 63,9 56,15 59,24 50,18 41,24 44,15 37,9 46,9" fill="var(--magenta)"/><circle class="lt" cx="42" cy="40" r="3.6" fill="var(--primary)"/><circle class="lt" cx="58" cy="52" r="3.6" fill="var(--magenta)"/><circle class="lt" cx="34" cy="76" r="3.6" fill="var(--magenta)"/><circle class="lt" cx="62" cy="80" r="3.6" fill="var(--primary)"/><circle class="lt" cx="48" cy="100" r="3.6" fill="var(--primary)"/><circle class="lt" cx="74" cy="110" r="3.6" fill="var(--magenta)"/><circle class="lt" cx="24" cy="112" r="3.6" fill="var(--magenta)"/><circle class="lt" cx="50" cy="120" r="3.6" fill="var(--primary)"/></svg></div>
+<div id="fx-fly" aria-hidden="true"><canvas id="fx-fw"></canvas></div>
 
 <div id="auth-splash">
-    <div class="auth-splash-logo">
+    <div class="auth-splash-fx" id="splash-fly"><div class="auth-splash-snow"></div><canvas id="splash-fx"></canvas></div>
+    <div class="auth-splash-inner">
+        <div class="auth-splash-logo">
         <span style="animation-delay:.00s">S</span><span style="animation-delay:.16s">t</span><span style="animation-delay:.32s">a</span><span style="animation-delay:.48s">r</span><span style="animation-delay:.64s">k</span><span style="animation-delay:.80s">y</span><span class="auth-splash-space" style="animation-delay:.96s">&nbsp;</span><span style="animation-delay:1.12s">S</span><span style="animation-delay:1.28s">p</span><span style="animation-delay:1.44s">o</span><span style="animation-delay:1.60s">r</span><span style="animation-delay:1.76s">t</span><span style="animation-delay:1.92s">s</span>
     </div>
+        <div class="auth-splash-msg" id="auth-splash-msg"></div>
+    </div>
 </div>
+
+<script>
+/* ══ STARKY FX — effets animés des thèmes ══
+   Nouvel an : feux d'artifice toutes les 10 s (volée de 2) ; plus fréquents sur l'écran de chargement.
+   Halloween : chauves-souris qui survolent l'écran de temps en temps.
+   Noël      : neige (CSS) + bonhomme de neige / sapin (décor).
+   Tout s'arrête quand « Animations du thème » est désactivé (Paramètres). */
+(function(){
+var B=document.body,$=function(i){return document.getElementById(i)};
+var rnd=function(a,b){return a+Math.random()*(b-a)};
+var theme=function(){return B.getAttribute('data-theme')||'defaut'};
+
+/* — Message de l'écran de chargement selon le thème — */
+(function(){
+  var m=$('auth-splash-msg'),y=new Date().getFullYear();
+  var M={noel:'Starky vous souhaite un <b>Joyeux Noël</b>',
+         nouvelan:'Starky vous souhaite une bonne et heureuse année <b>'+y+'</b>',
+         halloween:'Starky vous souhaite un <b>Joyeux Halloween</b>'};
+  if(m&&M[theme()])m.innerHTML=M[theme()];
+})();
+
+/* — Feux d'artifice (canvas) — */
+function Fireworks(cv){
+  var ctx=cv.getContext('2d'),dpr=Math.min(window.devicePixelRatio||1,2),W=0,H=0,rk=[],sp=[],raf=0,last=0;
+  function pal(){var t=(window.STARKY_THEMES||[]).filter(function(x){return x.id==='nouvelan'})[0];
+    return (t?t.colors:['#F5C451','#D9DEE8','#FF7AA2']).concat(['#FFFFFF'])}
+  function size(){W=cv.clientWidth;H=cv.clientHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+  function burst(x,y,c1){
+    var P=pal(),c2=P[Math.floor(Math.random()*P.length)],n=Math.round(rnd(70,100));
+    for(var i=0;i<n;i++){var a=Math.PI*2*i/n+rnd(-.04,.04),v=rnd(.55,1)*Math.min(230,Math.max(W,H)*.3),l=rnd(1,1.7);
+      sp.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:l,m:l,c:i%3?c1:c2,r:rnd(1.3,2.3)})}
+  }
+  function frame(t){
+    var dt=Math.min(.05,(t-last)/1000);last=t;
+    ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+    for(var i=rk.length-1;i>=0;i--){var r=rk[i];r.x+=r.vx*dt;r.y+=r.vy*dt;
+      ctx.globalAlpha=1;ctx.fillStyle=r.c;ctx.beginPath();ctx.arc(r.x,r.y,2.2,0,6.283);ctx.fill();
+      if(r.y<=r.ty){burst(r.x,r.y,r.c);rk.splice(i,1)}}
+    var drag=Math.pow(.96,dt*60);
+    for(var k=sp.length-1;k>=0;k--){var s=sp[k];s.vx*=drag;s.vy=s.vy*drag+150*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=dt;
+      if(s.l<=0){sp.splice(k,1);continue}
+      ctx.globalAlpha=Math.min(1,s.l/s.m*1.4);ctx.fillStyle=s.c;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.283);ctx.fill()}
+    ctx.globalAlpha=1;
+    if(rk.length||sp.length)raf=requestAnimationFrame(frame);
+    else{raf=0;ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,W,H)}
+  }
+  this.launch=function(){
+    if(!W||cv.clientWidth!==W||cv.clientHeight!==H)size();
+    if(!W||!H)return;
+    var P=pal(),ty=rnd(H*.14,H*.42),t=rnd(.8,1.1);
+    rk.push({x:rnd(W*.15,W*.85),y:H+8,vx:rnd(-14,14),vy:-(H-ty)/t,ty:ty,c:P[Math.floor(Math.random()*(P.length-1))]});
+    if(!raf){last=performance.now();raf=requestAnimationFrame(frame)}
+  };
+  this.stop=function(){rk=[];sp=[];if(raf)cancelAnimationFrame(raf);raf=0;ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height)};
+}
+
+/* — Chauves-souris — */
+var BAT='<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M32 10C30 6 29 4 28 2L27 8C22 6 14 6 2 12C8 12 10 15 11 19C14 16 18 16 21 19C24 17 28 18 30 23L32 26L34 23C36 18 40 17 43 19C46 16 50 16 53 19C54 15 56 12 62 12C50 6 42 6 37 8L36 2C35 4 34 6 32 10Z"/></svg>';
+function bats(layer,n){
+  if(!layer||!layer.animate)return;
+  var W=layer.clientWidth,H=layer.clientHeight;if(!W||!H)return;
+  for(var i=0;i<n;i++)(function(i){
+    var el=document.createElement('div');el.className='fx-bat';el.innerHTML=BAT;
+    var w=rnd(30,56);el.style.width=w+'px';layer.appendChild(el);
+    var ltr=Math.random()<.5,y0=rnd(H*.08,H*.55),amp=rnd(20,70),ph=rnd(0,6.28),kf=[],N=8;
+    for(var k=0;k<=N;k++){var t=k/N,x=-w-20+(W+2*w+40)*(ltr?t:1-t),y=y0+Math.sin(t*6.283*rnd(.8,1.2)+ph)*amp;
+      kf.push({transform:'translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)'})}
+    var a=el.animate(kf,{duration:rnd(5000,8500),delay:i*rnd(350,900),easing:'linear',fill:'both'});
+    a.onfinish=function(){el.remove()};
+  })(i);
+}
+
+/* — Planification — */
+function every(fn,first,gap){var id=0,dead=false;
+  function tick(){if(dead)return;fn();id=setTimeout(tick,typeof gap==='function'?gap():gap)}
+  id=setTimeout(tick,first);return function(){dead=true;clearTimeout(id)}}
+
+var mainFw=new Fireworks($('fx-fw')),splashFw=new Fireworks($('splash-fx'));
+var stopMain=null,stopSplash=null,kMain='',kSplash='';
+
+function clearBats(layer){if(!layer)return;[].slice.call(layer.querySelectorAll('.fx-bat')).forEach(function(b){b.remove()})}
+
+function sync(){
+  var th=theme(),on=!B.classList.contains('fx-off'),
+      locked=B.classList.contains('auth-locked'),checking=B.classList.contains('auth-checking');
+  var km=(on&&!locked)?th:'',ks=(on&&checking)?th:'';
+  if(km!==kMain){kMain=km;if(stopMain){stopMain();stopMain=null}
+    mainFw.stop();clearBats($('fx-fly'));
+    if(km==='nouvelan')stopMain=every(function(){if(document.hidden)return;mainFw.launch();setTimeout(function(){mainFw.launch()},380)},800,10000);
+    else if(km==='halloween')stopMain=every(function(){if(!document.hidden)bats($('fx-fly'),1+Math.floor(Math.random()*3))},3500,function(){return rnd(9000,18000)});
+  }
+  if(ks!==kSplash){kSplash=ks;if(stopSplash){stopSplash();stopSplash=null}
+    splashFw.stop();clearBats($('splash-fly'));
+    if(ks==='nouvelan')stopSplash=every(function(){splashFw.launch()},250,650);
+    else if(ks==='halloween'){stopSplash=every(function(){bats($('splash-fly'),2)},500,1900)}
+  }
+}
+window.StarkyFX={sync:sync};
+new MutationObserver(sync).observe(B,{attributes:true,attributeFilter:['class','data-theme']});
+sync();
+})();
+</script>
 
 <!-- AUTHENTIFICATION OBLIGATOIRE (overlay Google) -->
 <div id="auth-overlay">
@@ -1814,35 +1894,15 @@ applyStarkyTheme(getActiveTheme());
                         </div>
                         <label class="switch"><input type="checkbox" id="bgblack-toggle"><span class="slider"></span></label>
                     </div>
-                    <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px;">
+                    <div class="setting-row">
                         <div class="setting-left">
-                            <div class="setting-icon"><i class="fas fa-image"></i></div>
+                            <div class="setting-icon"><i class="fas fa-magic"></i></div>
                             <div>
-                                <div class="setting-label">Fond d'écran</div>
-                                <div class="setting-desc">Chaque thème a son propre décor</div>
+                                <div class="setting-label">Animations du thème</div>
+                                <div class="setting-desc">Neige, feux d'artifice, chauves-souris…</div>
                             </div>
                         </div>
-                        <div class="bgstyle-options" id="bgstyle-options">
-                            <button type="button" class="bgstyle-opt" data-style="theme"><i class="fas fa-snowflake"></i><span>Décor du thème</span></button>
-                            <button type="button" class="bgstyle-opt" data-style="none"><i class="fas fa-ban"></i><span>Uni</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="iface-block">
-                    <div class="iface-title"><i class="fas fa-swatchbook"></i> Couleurs</div>
-                    <div class="iface-subtitle">Personnalisez l'interface : bi-tons ou palettes complètes</div>
-                    <div class="palette-grid" id="palette-grid">
-                        <div class="palette-empty" id="palette-empty">
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <span>Chargement des palettes…</span>
-                        </div>
-                    </div>
-                    <div class="side-item" id="palette-reset">
-                        <div class="side-item-icon"><i class="fas fa-undo"></i></div>
-                        <div class="side-item-info">
-                            <div class="side-item-text">Palette par défaut</div>
-                            <div class="side-item-desc">Revenir aux couleurs du thème actif</div>
-                        </div>
+                        <label class="switch"><input type="checkbox" id="fx-toggle" checked><span class="slider"></span></label>
                     </div>
                 </div>
                 <div class="iface-block">
@@ -3566,147 +3626,11 @@ function initThemes() {
     grid.querySelectorAll('.theme-opt').forEach(btn => btn.addEventListener('click', () => {
         const th = STARKY_THEMES.find(x => x.id === btn.dataset.id);
         grid.querySelectorAll('.theme-opt').forEach(x => x.classList.toggle('active', x === btn));
-        try {
-            localStorage.setItem('starky_theme_id', th.id);
-            ['id','name','colors'].forEach(k => localStorage.removeItem('starky_custom_palette_' + k));
-        } catch(e){}
-        document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
+        try { localStorage.setItem('starky_theme_id', th.id); } catch(e){}
         applyStarkyTheme(th);
         updateStatusBar();
         showToast('Thème « ' + th.name + ' » appliqué', 'success', 1800);
     }));
-}
-
-/* ===== COULEURS PERSONNALISÉES (Paramètres) =====
-   Les palettes (bi-tons ou multi-couleurs) sont chargées depuis un
-   fichier Custom.json hébergé à la racine du site (même adresse que
-   l'app). Schéma attendu — un tableau, ou un objet { "palettes":[...] } :
-   [{ "id":"sunset", "name":"Sunset", "type":"duo"|"palette",
-      "colors":["#RRGGBB","#RRGGBB", ...] }, ...]
-   Tant que ce fichier n'est pas déployé, la grille affiche simplement
-   un état vide, sans erreur visible pour l'utilisateur. */
-function hexToRgba(hex, alpha) {
-    const h = String(hex).replace('#', '');
-    const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
-    const r = parseInt(full.substring(0, 2), 16) || 0;
-    const g = parseInt(full.substring(2, 4), 16) || 0;
-    const b = parseInt(full.substring(4, 6), 16) || 0;
-    return `rgba(${r},${g},${b},${alpha})`;
-}
-/* Met à jour la mini-prévisualisation "Thème" (Paramètres) pour qu'elle
-   reflète toujours la palette réellement active, au lieu d'un aperçu
-   figé — couleurs des 3 pastilles + nom affichés dynamiquement. */
-function updateThemeCardPreview(colors, name) {
-    const defaultColors = ['#7B6EF6', '#00D4FF', '#E040FB'];
-    const c = (colors && colors.length) ? colors : defaultColors;
-    ['theme-dot-1', 'theme-dot-2', 'theme-dot-3'].forEach((id, i) => {
-        const dot = document.getElementById(id);
-        if (dot) dot.style.background = c[i] || c[c.length - 1];
-    });
-    const title = document.getElementById('theme-card-title');
-    const desc  = document.getElementById('theme-card-desc');
-    if (colors && colors.length) {
-        if (title) title.textContent = name || 'Palette personnalisée';
-        if (desc)  desc.textContent  = 'Palette active actuellement';
-    } else {
-        if (title) title.textContent = 'Violet · Bleu · Cyan · Magenta';
-        if (desc)  desc.textContent  = 'Palette exclusive Starky Sports';
-    }
-}
-function applyPalette(palette) {
-    const colors = (palette && palette.colors && palette.colors.length) ? palette.colors : null;
-    if (!colors) return;
-    const c0 = colors[0], c1 = colors[1] || colors[0], c2 = colors[2] || c1;
-    const root = document.documentElement.style;
-    root.setProperty('--primary', c0);
-    root.setProperty('--cyan', c1);
-    root.setProperty('--magenta', c2);
-    root.setProperty('--grad', `linear-gradient(135deg,${c0} 0%,${c1} 50%,${c2} 100%)`);
-    root.setProperty('--grad-soft', `linear-gradient(135deg,${hexToRgba(c0, 0.18)} 0%,${hexToRgba(c1, 0.12)} 100%)`);
-    root.setProperty('--border-bright', hexToRgba(c0, 0.45));
-    root.setProperty('--primary-glow', hexToRgba(c0, 0.35));
-    if (document.body.classList.contains('bg-style-sparks')) buildBgSparks();
-}
-function resetPalette() {
-    const root = document.documentElement.style;
-    ['--primary','--cyan','--magenta','--grad','--grad-soft','--border-bright','--primary-glow']
-        .forEach(p => root.removeProperty(p));
-    applyStarkyTheme(getActiveTheme());
-    if (document.body.classList.contains('bg-style-sparks')) buildBgSparks();
-}
-function applyStoredPalette() {
-    try {
-        const colors = JSON.parse(localStorage.getItem('starky_custom_palette_colors') || 'null');
-        const name = localStorage.getItem('starky_custom_palette_name');
-        if (colors && colors.length) {
-            applyPalette({ colors });
-            updateThemeCardPreview(colors, name);
-        } else {
-            updateThemeCardPreview(null, null);
-        }
-    } catch(e){}
-}
-
-let customPalettes = [];
-async function loadCustomPalettes() {
-    try {
-        const res = await fetch('./Custom.json', { cache: 'no-store' });
-        if (!res.ok) throw new Error('not found');
-        const data = await res.json();
-        customPalettes = Array.isArray(data) ? data : (Array.isArray(data.palettes) ? data.palettes : []);
-    } catch (e) {
-        customPalettes = [];
-    }
-    renderPaletteGrid();
-}
-function renderPaletteGrid() {
-    const grid = document.getElementById('palette-grid');
-    if (!grid) return;
-    if (!customPalettes.length) {
-        grid.innerHTML = `<div class="palette-empty" id="palette-empty">
-            <i class="fas fa-info-circle"></i><span>Aucune palette disponible pour le moment</span>
-        </div>`;
-        return;
-    }
-    let active = 'default';
-    try { active = localStorage.getItem('starky_custom_palette_id') || 'default'; } catch(e){}
-    grid.innerHTML = '';
-    customPalettes.forEach((p, i) => {
-        const pid = p.id || p.name || ('palette-' + i);
-        const el = document.createElement('div');
-        el.className = 'palette-swatch' + (pid === active ? ' active' : '');
-        const dots = (p.colors || []).slice(0, 3)
-            .map(c => `<span class="palette-swatch-dot" style="background:${c}"></span>`).join('');
-        el.innerHTML = `<div class="palette-swatch-dots">${dots}</div><div class="palette-swatch-name">${p.name || pid}</div>`;
-        el.addEventListener('click', () => {
-            document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
-            el.classList.add('active');
-            applyPalette(p);
-            updateThemeCardPreview(p.colors, p.name || pid);
-            try {
-                localStorage.setItem('starky_custom_palette_id', pid);
-                localStorage.setItem('starky_custom_palette_name', p.name || pid);
-                localStorage.setItem('starky_custom_palette_colors', JSON.stringify(p.colors || []));
-            } catch(e){}
-            showToast(`Palette « ${p.name || pid} » appliquée`, 'success', 1800);
-        });
-        grid.appendChild(el);
-    });
-}
-function initPaletteReset() {
-    const btn = document.getElementById('palette-reset');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-        resetPalette();
-        document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
-        updateThemeCardPreview(null, null);
-        try {
-            localStorage.removeItem('starky_custom_palette_id');
-            localStorage.removeItem('starky_custom_palette_name');
-            localStorage.removeItem('starky_custom_palette_colors');
-        } catch(e){}
-        showToast('Palette par défaut restaurée', 'success', 1800);
-    });
 }
 
 function initHistoryDuration() {
@@ -3734,50 +3658,18 @@ function initHistoryDuration() {
     });
 }
 
-/* ===== MOTIF DE FOND — Aucun / Orbes / Étincelles (Paramètres) =====
-   "Orbes" est du CSS pur (var(--primary)/--cyan/--magenta) : il suit la
-   palette instantanément, sans JS. "Étincelles" affiche 3 grandes icônes
-   sparkle (positionnées comme les orbes, dans les coins), chacune colorée
-   avec une couleur de la palette active — assez discret pour bien laisser
-   voir le fond derrière. Reconstruit à chaque changement de palette
-   (cf. applyPalette/resetPalette). */
-function getPaletteColors() {
-    const cs = getComputedStyle(document.documentElement);
-    const pick = (name, fallback) => (cs.getPropertyValue(name) || '').trim() || fallback;
-    return [
-        pick('--primary', '#7B6EF6'),
-        pick('--cyan', '#00D4FF'),
-        pick('--magenta', '#E040FB'),
-    ];
-}
-function buildBgSparks() {
-    const colors = getPaletteColors();
-    const ids = ['bg-spark-1', 'bg-spark-2', 'bg-spark-3'];
-    ids.forEach((id, i) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const color = colors[i % colors.length];
-        el.src = `https://api.iconify.design/ph/sparkle-fill.svg?color=${encodeURIComponent(color)}`;
-    });
-}
-
-function initBgStyle() {
-    let saved = 'theme';
-    try { saved = localStorage.getItem('starky_bg_style') || 'theme'; } catch(e){}
-    if (saved !== 'none') saved = 'theme';
-    const set = s => document.body.classList.toggle('bg-style-theme', s === 'theme');
-    set(saved);
-    const opts = document.querySelectorAll('#bgstyle-options .bgstyle-opt');
-    const labels = { none: 'Fond uni', theme: 'Décor du thème activé' };
-    opts.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.style === saved);
-        btn.addEventListener('click', () => {
-            const style = btn.dataset.style;
-            opts.forEach(b => b.classList.toggle('active', b === btn));
-            set(style);
-            try { localStorage.setItem('starky_bg_style', style); } catch(e){}
-            showToast(labels[style], 'success', 1800);
-        });
+/* ===== ANIMATIONS DU THÈME (Paramètres) =====
+   Actives par défaut ; le décor reste affiché, seules les animations
+   (neige, feux d'artifice, chauves-souris, guirlande) sont coupées. */
+function initFxToggle() {
+    const toggle = document.getElementById('fx-toggle');
+    if (!toggle) return;
+    toggle.checked = !document.body.classList.contains('fx-off');
+    toggle.addEventListener('change', () => {
+        const on = toggle.checked;
+        document.body.classList.toggle('fx-off', !on);
+        try { localStorage.setItem('starky_anim', on ? '1' : '0'); } catch(e){}
+        showToast(on ? 'Animations activées' : 'Animations désactivées', 'success', 1800);
     });
 }
 
@@ -3812,11 +3704,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     initLiquidGlassInteractions();
     initThemes();
     initBgBlack();
-    applyStoredPalette();
-    initBgStyle();
-    initPaletteReset();
+    initFxToggle();
     initHistoryDuration();
-    loadCustomPalettes();
 
     console.log('Starky Sports v5.1.0 — thèmes saisonniers, SureBet');
 
@@ -4214,7 +4103,7 @@ window.SureBet = { onShow() { load(loaded); } };
     // délai + durée d'une lettre), avec une petite marge : on ne masque
     // jamais l'écran de chargement avant qu'elle ne soit terminée, même
     // si Firebase répond plus vite.
-    const AUTH_SPLASH_MIN_MS = 3300;
+    const AUTH_SPLASH_MIN_MS = window.__authSplashMinMs || 3300;
     const authSplashStartedAt = Date.now();
 
 
