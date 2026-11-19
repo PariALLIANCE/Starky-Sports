@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STARKY SPORTS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@500;600;700&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="/icon-192x192.png">
@@ -55,19 +56,7 @@
             --spring-soft:    cubic-bezier(0.25,0.46,0.45,0.94);
             --glass-edge-3d:  0 0 0 rgba(0,0,0,0);
         }
-        /* ══ EFFET 3D — variables activées quand <body> porte la classe .theme-3d ══
-           La transparence (bg-*, glass-*, border, header/nav/side) est
-           désormais identique à celle du thème normal, dans tous les modes
-           (clair/sombre) : seul le relief (glass-edge-3d) et le flou
-           distinguent encore l'effet 3D. */
-        body.theme-3d {
-            --glass-blur:     18px;
-            --glass-edge-3d:  inset 0 6px 10px -4px rgba(255,255,255,0.65),
-                               inset 0 -8px 14px -6px rgba(0,0,0,0.1),
-                               inset 6px 0 10px -6px rgba(255,255,255,0.3),
-                               inset -6px 0 12px -6px rgba(0,0,0,0.06),
-                               0 1px 2px rgba(255,255,255,0.4);
-        }
+        
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0; padding: 0;
@@ -75,15 +64,7 @@
             user-select: none;
             -webkit-user-select: none;
         }
-        /* ══ LIQUID GLASS — flou appliqué à tous les panneaux translucides ══ */
-        .analysis-block,.match-item,.h2h-item,.odds-card,.odds-cell,.infos-match-meta,
-        .mp-sheet,.mp-close,.mp-logo,.side-menu,.side-menu-hdr,.side-item-icon,.benefit-card,
-        .iface-block,.setting-icon,.btn,.history-card,.confirm-dialog,.av-select-box,.av-opt,
-        .av-viewer-btns .av-btn.close,.deposit-box,.bar-track,.ranking-table th,.slider,
-        .promo-box,.side-item.pressed,.dtab,.plan-card,.plan-cta{
-            backdrop-filter:blur(var(--glass-blur)) saturate(160%);
-            -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(160%);
-        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background:
@@ -172,7 +153,7 @@
         .header {
             position:fixed;top:0;left:0;right:0;height:56px;
             background:var(--header-bg);
-            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+            
             border-bottom:1px solid var(--border);
             display:flex;align-items:center;justify-content:space-between;
             padding:0 16px;z-index:100;
@@ -197,7 +178,7 @@
         .search-bar-inner{
             display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;
             background:var(--glass-fill-strong);border:1px solid var(--glass-border);
-            border-radius:24px;backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+            border-radius:24px;
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 10px 26px rgba(0,0,0,0.18);
         }
         .search-bar-icon{color:var(--text-muted);font-size:14px}
@@ -213,7 +194,7 @@
         .icon-btn {
             width:38px;height:38px;border-radius:50%;flex-shrink:0;
             background:var(--glass-fill);border:1px solid var(--glass-border);
-            backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+            
             display:flex;align-items:center;justify-content:center;
             cursor:pointer;color:var(--text-muted);position:relative;
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 6px 16px rgba(0,0,0,0.18);
@@ -243,7 +224,7 @@
         .bottom-nav {
             position:fixed;bottom:14px;left:14px;right:14px;height:64px;
             background:var(--nav-bg);
-            backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);
+            
             border:1px solid var(--glass-border);
             border-radius:32px;
             display:flex;z-index:95;touch-action:none;
@@ -291,7 +272,7 @@
         /* ══ FORECAST CARD — liquid glass ══ */
         .forecast-card {
             background:var(--bg-card);border:1px solid var(--glass-border);
-            backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);
+            
             border-radius:22px;padding:16px 18px 14px;cursor:pointer;
             position:relative;overflow:hidden;
             box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 14px 30px rgba(0,0,0,0.08);
@@ -305,7 +286,7 @@
         .league-badge{
             font-size:11px;color:var(--text-muted);
             background:var(--glass-fill);border:1px solid var(--glass-border);
-            backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+            
             padding:4px 10px;border-radius:20px;
             transition:background 0.4s,border-color 0.4s;
         }
@@ -326,7 +307,7 @@
         .team-logo-box {
             position:absolute;inset:4px;background:var(--logo-bg);
             border-radius:14px;border:1px solid var(--glass-border);
-            backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+            
             display:flex;align-items:center;justify-content:center;
             overflow:hidden;z-index:1;
             transition:background 0.4s,border-color 0.4s;
@@ -355,14 +336,14 @@
         .forecast-detail{
             position:fixed;inset:0;z-index:200;
             background:var(--bg-card);
-            backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);
+            
             display:none;flex-direction:column;
             transition:background 0.4s;
         }
         .forecast-detail.active{display:flex}
         .detail-header{
             background:var(--header-bg);
-            backdrop-filter:blur(34px) saturate(160%);-webkit-backdrop-filter:blur(34px) saturate(160%);
+            
             border-bottom:1px solid var(--border);flex-shrink:0;
             transition:background 0.45s,border-color 0.45s;
         }
@@ -629,12 +610,12 @@
         .mp-backdrop {
             position:absolute;inset:0;
             background:rgba(0,0,0,0);
-            backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);
-            transition:background 0.34s,backdrop-filter 0.34s;
+            
+            transition:background 0.34s,opacity 0.34s;
         }
         .match-preview.active .mp-backdrop {
             background:rgba(0,0,0,0.68);
-            backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+            
         }
         .mp-sheet {
             position:absolute;left:0;right:0;bottom:0;
@@ -773,7 +754,7 @@
         .side-menu.active{left:0;box-shadow:4px 0 36px rgba(0,0,0,0.55)}
         .side-menu-overlay{
             position:fixed;inset:0;background:rgba(0,0,0,0.15);
-            backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
+            
             z-index:999;display:none;
         }
         .side-menu-overlay.active{display:block}
@@ -934,7 +915,7 @@
             padding:10px 6px;border-radius:14px;cursor:pointer;
             background:var(--glass-fill);border:1px solid var(--glass-border);
             color:var(--text-muted);font-size:12px;font-weight:700;font-family:inherit;
-            backdrop-filter:blur(var(--glass-blur)) saturate(160%);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(160%);
+            
             transition:background 0.2s,border-color 0.2s,color 0.2s,transform 0.16s var(--spring);
         }
         .bgstyle-opt i{font-size:12px}
@@ -951,7 +932,7 @@
             display:flex;flex-direction:column;align-items:center;gap:6px;
             width:66px;padding:10px 4px;border-radius:16px;cursor:pointer;
             background:var(--glass-fill);border:1px solid var(--glass-border);
-            backdrop-filter:blur(var(--glass-blur)) saturate(160%);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(160%);
+            
             transition:background 0.2s,border-color 0.2s,transform 0.16s var(--spring);
         }
         .palette-swatch:active{transform:scale(0.94)}
@@ -1051,7 +1032,7 @@
         .pros-coming-sub{font-size:14px;color:var(--text-muted)}
 
         /* ══ TOAST ══ */
-        .toast{position:fixed;top:76px;left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:5000;display:none;max-width:82vw;width:max-content;text-align:center;box-shadow:0 8px 36px rgba(0,0,0,0.55);line-height:1.4;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+        .toast{position:fixed;top:76px;left:50%;transform:translateX(-50%);padding:12px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:5000;display:none;max-width:82vw;width:max-content;text-align:center;box-shadow:0 8px 36px rgba(0,0,0,0.55);line-height:1.4;}
         .toast.show{display:block;animation:notifIn 0.28s ease}
         .toast.success{background:rgba(79,255,176,0.16);color:var(--success);border:1px solid rgba(79,255,176,0.36)}
         .toast.error{background:rgba(255,77,109,0.16);color:var(--danger);border:1px solid rgba(255,77,109,0.36)}
@@ -1059,7 +1040,7 @@
         .toast.warning{background:rgba(255,184,48,0.14);color:var(--warning);border:1px solid rgba(255,184,48,0.36)}
 
         /* ══ OVERLAY & DIALOGS ══ */
-        .overlay{position:fixed;inset:0;background:var(--overlay-bg);backdrop-filter:blur(4px);z-index:90;display:none;transition:background 0.4s}
+        .overlay{position:fixed;inset:0;background:var(--overlay-bg);z-index:90;display:none;transition:background 0.4s}
         .overlay.active{display:block}
         .confirm-dialog{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-elevated);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 56px rgba(0,0,0,0.65);width:88%;max-width:320px;padding:24px;z-index:150;display:none;transition:background 0.4s,border-color 0.4s,box-shadow 0.4s}
         .confirm-dialog.active{display:block}
@@ -1083,7 +1064,7 @@
         .av-btn.pressed{transform:scale(1.05,.95)}
         .av-btn.edit{background:var(--primary);color:#fff}
         .av-btn.close{background:rgba(255,255,255,0.10);color:#fff;border:1px solid rgba(255,255,255,0.20)}
-        .av-select-modal{position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);z-index:350;display:none;align-items:center;justify-content:center;padding:20px}
+        .av-select-modal{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:350;display:none;align-items:center;justify-content:center;padding:20px}
         .av-select-modal.active{display:flex}
         .av-select-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;padding:28px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto;transition:background 0.4s,border-color 0.4s}
         .av-select-title{font-size:20px;font-weight:800;color:var(--primary);margin-bottom:6px;text-align:center}
@@ -1115,84 +1096,6 @@
         }
 
         /* ══════════════════════════════════════════════════════════════
-           ══ EFFET 3D — surcharges actives quand <body class="theme-3d"> ══
-           Les variables (bg-*, glass-*, border*, side-bg, glass-edge-3d)
-           sont déjà redéfinies plus haut dans body.theme-3d { ... } et se
-           propagent automatiquement partout où elles sont utilisées via
-           var(...). L'effet 3D n'a plus de fond propre : il laisse voir
-           le véritable arrière-plan de l'app (clair ou noir) et se
-           contente d'accentuer la transparence/le relief du verre.
-           ══════════════════════════════════════════════════════════════ */
-
-        /* saturation renforcée sur tous les panneaux liquid glass listés en haut du fichier */
-        body.theme-3d .analysis-block,body.theme-3d .match-item,body.theme-3d .h2h-item,body.theme-3d .odds-card,body.theme-3d .odds-cell,body.theme-3d .infos-match-meta,
-        body.theme-3d .mp-sheet,body.theme-3d .mp-close,body.theme-3d .mp-logo,body.theme-3d .side-menu,body.theme-3d .side-menu-hdr,body.theme-3d .side-item-icon,body.theme-3d .benefit-card,
-        body.theme-3d .iface-block,body.theme-3d .setting-icon,body.theme-3d .btn,body.theme-3d .history-card,body.theme-3d .confirm-dialog,body.theme-3d .av-select-box,body.theme-3d .av-opt,
-        body.theme-3d .av-viewer-btns .av-btn.close,body.theme-3d .deposit-box,body.theme-3d .bar-track,body.theme-3d .ranking-table th,body.theme-3d .slider,
-        body.theme-3d .promo-box,body.theme-3d .side-item.pressed,body.theme-3d .dtab,body.theme-3d .plan-card,body.theme-3d .plan-cta{
-            backdrop-filter:blur(var(--glass-blur)) saturate(180%);
-            -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(180%);
-        }
-
-        /* header */
-        body.theme-3d .header{
-            backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);
-        }
-
-        /* boutons ronds (icon-btn) */
-        body.theme-3d .icon-btn{
-            backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);
-            box-shadow:var(--glass-edge-3d),0 6px 16px rgba(0,0,0,0.1);
-        }
-
-        /* bottom nav */
-        body.theme-3d .bottom-nav{
-            backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);
-            box-shadow:var(--glass-edge-3d),0 14px 34px rgba(0,0,0,0.14);
-        }
-
-        /* carte de pronostic — effet "goutte d'eau" */
-        body.theme-3d .forecast-card{
-            background:rgba(255,255,255,0.04);
-            backdrop-filter:blur(10px) saturate(190%);-webkit-backdrop-filter:blur(10px) saturate(190%);
-            box-shadow:var(--glass-edge-3d),0 14px 30px rgba(0,0,0,0.08);
-        }
-        body.theme-3d .forecast-card::before,
-        body.theme-3d .forecast-card::after{
-            content:'';position:absolute;width:90px;height:90px;border-radius:50%;
-            background:radial-gradient(circle,rgba(255,255,255,0.85),rgba(255,255,255,0) 68%);
-            bottom:-45px;pointer-events:none;z-index:0;mix-blend-mode:screen;
-        }
-        body.theme-3d .forecast-card::before{left:-40px}
-        body.theme-3d .forecast-card::after{right:-40px}
-        /* en mode sombre, les reflets/lueurs de l'effet 3D disparaissent —
-           un halo blanc n'a plus de sens visuel sur fond noir. */
-        body.theme-3d.bg-black .forecast-card::before,
-        body.theme-3d.bg-black .forecast-card::after{display:none}
-        body.theme-3d .forecast-card.pressed{background:rgba(255,255,255,0.1)}
-        body.theme-3d .forecast-header,
-        body.theme-3d .teams-row{position:relative;z-index:1}
-        body.theme-3d .league-badge{box-shadow:var(--glass-edge-3d)}
-        body.theme-3d .team-logo-box{box-shadow:var(--glass-edge-3d)}
-
-        /* page de détail */
-        body.theme-3d .forecast-detail{
-            background:rgba(255,255,255,0.08);
-            backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);
-        }
-        body.theme-3d .detail-header{
-            backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
-            box-shadow:var(--glass-edge-3d);
-        }
-
-        /* cartes de cotes */
-        body.theme-3d .odds-card{box-shadow:var(--glass-edge-3d)}
-
-        /* menu latéral */
-        body.theme-3d .side-menu{box-shadow:var(--glass-edge-3d)}
-        body.theme-3d .side-menu.active{box-shadow:var(--glass-edge-3d),4px 0 36px rgba(0,0,0,0.3)}
-
-        /* ══════════════════════════════════════════════════════════════
            ══ FOND NOIR (Paramètres) — bascule l'app en thème sombre.
            La transparence du verre s'adapte : plus transparente qu'en
            thème clair, texte éclairci pour rester lisible. Les motifs
@@ -1220,19 +1123,7 @@
             --shadow:          rgba(0,0,0,0.5);
             --overlay-bg:      rgba(0,0,0,0.65);
         }
-        /* sans effet 3D comme avec : la transparence est identique partout
-           en mode sombre — mêmes bg-surface/bg-card/bg-elevated/glass-*
-           que l'effet 3D sur fond noir, sur tous les éléments. Seuls le
-           relief (glass-edge-3d) et les lueurs distinguent encore l'effet
-           3D — cf. ci-dessous. */
-        body.theme-3d.bg-black{
-            background:#000;
-            --glass-edge-3d:   inset 0 6px 10px -4px rgba(255,255,255,0.18),
-                               inset 0 -8px 14px -6px rgba(0,0,0,0.4),
-                               inset 6px 0 10px -6px rgba(255,255,255,0.08),
-                               inset -6px 0 12px -6px rgba(0,0,0,0.28),
-                               0 1px 2px rgba(255,255,255,0.08);
-        }
+        
 
         /* ══════════════════════════════════════════════════════════════
            ══ AUTHENTIFICATION OBLIGATOIRE — overlay Google par-dessus
@@ -1299,8 +1190,8 @@
             display: none;
             align-items: center; justify-content: center;
             background: rgba(6,6,16,0.55);
-            -webkit-backdrop-filter: blur(2px);
-            backdrop-filter: blur(2px);
+            
+            
             padding: 24px;
             opacity: 0;
             animation: fadeSlideUp 0.5s var(--ease) forwards;
@@ -1313,8 +1204,8 @@
             background: var(--glass-fill-strong);
             border: 1px solid var(--glass-border);
             border-radius: 28px;
-            backdrop-filter: blur(28px) saturate(180%);
-            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            
+            
             box-shadow: 0 20px 60px rgba(0,0,0,0.45), var(--glass-edge-3d);
             padding: 36px 28px 30px;
             display: flex; flex-direction: column; align-items: center;
@@ -1354,21 +1245,210 @@
         .auth-card-foot{
             margin-top: 20px; font-size: 11.5px; color: var(--text-inactive); line-height: 1.5;
         }
+    
+        /* ══════════════════════════════════════════════════════════════
+           ══ STARKY v5 — thème « Stade de nuit », surfaces pleines
+           (plus aucun verre/flou). Les couleurs d'un thème sont posées
+           par applyStarkyTheme() ; ci-dessous : valeurs par défaut.
+           ══════════════════════════════════════════════════════════════ */
+        :root{
+            --base:#07140F; --on-primary:#16110A;
+            --primary:#F5B83D; --cyan:#3DDC97; --magenta:#FF6B57;
+            --grad:linear-gradient(135deg,#F5B83D 0%,#3DDC97 50%,#FF6B57 100%);
+            --grad-soft:linear-gradient(135deg,rgba(245,184,61,.16),rgba(61,220,151,.10));
+            --primary-glow:rgba(245,184,61,.28); --border-bright:rgba(245,184,61,.5);
+            --bg:#F3F1E8; --bg-surface:#FBFAF5; --bg-card:#FFFFFF; --bg-elevated:#F5F3EA;
+            --text:#10231A; --text-muted:#52625A; --text-inactive:#8B968F;
+            --border:rgba(16,35,26,.12); --glass-border:rgba(16,35,26,.12);
+            --glass-fill:#FFFFFF; --glass-fill-strong:#ECE9DD; --logo-bg:#FFFFFF;
+            --header-bg:#FBFAF5; --nav-bg:#FBFAF5; --side-bg:#FBFAF5;
+            --side-hover:rgba(245,184,61,.14); --side-active:rgba(245,184,61,.24);
+            --shadow:rgba(16,35,26,.10); --overlay-bg:rgba(8,16,12,.55);
+            --stripe:rgba(16,35,26,.035); --line:rgba(16,35,26,.14);
+            --home-color:#FF6B57; --away-color:#3DDC97;
+            --success:#17A869; --danger:#E5484D; --warning:#D99A12;
+            --glass-blur:0px;
+        }
+        body{
+            background:var(--bg);
+            font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+        }
+        body.bg-black{
+            background:var(--base);
+            --bg-surface:color-mix(in srgb,var(--base),#fff 5%);
+            --bg-card:color-mix(in srgb,var(--base),#fff 8%);
+            --bg-elevated:color-mix(in srgb,var(--base),#fff 13%);
+            --border:color-mix(in srgb,var(--base),#fff 17%);
+            --glass-border:var(--border); --glass-fill:var(--bg-card);
+            --glass-fill-strong:var(--bg-elevated); --logo-bg:var(--bg-card);
+            --header-bg:var(--bg-surface); --nav-bg:var(--bg-surface); --side-bg:var(--bg-surface);
+            --text:#F1EEE3; --text-muted:#A9B4AC; --text-inactive:#6F7C74;
+            --shadow:rgba(0,0,0,.5); --overlay-bg:rgba(0,0,0,.65);
+            --stripe:rgba(255,255,255,.022); --line:rgba(255,255,255,.10);
+            --success:#4ADE9C;
+        }
+
+        /* ── Fond d'écran : Pelouse (rayures de tonte + tracé du terrain),
+              Tactique (grille de points), Uni ── */
+        .app-bg{position:fixed;inset:0;z-index:0;pointer-events:none;display:none;overflow:hidden}
+        body.bg-style-pitch .app-bg,body.bg-style-tactic .app-bg{display:block}
+        body.bg-style-pitch .app-bg{
+            background:
+                radial-gradient(90% 55% at 50% 0%,color-mix(in srgb,var(--primary) 13%,transparent),transparent 70%),
+                repeating-linear-gradient(90deg,var(--stripe) 0 46px,transparent 46px 92px);
+        }
+        .app-bg svg{display:none;position:absolute;left:50%;top:50%;width:min(135vw,760px);transform:translate(-50%,-50%);color:var(--line)}
+        body.bg-style-pitch .app-bg svg{display:block}
+        body.bg-style-tactic .app-bg{
+            background-image:radial-gradient(var(--line) 1.2px,transparent 1.5px);
+            background-size:26px 26px;
+            -webkit-mask-image:linear-gradient(#000 30%,transparent 100%);mask-image:linear-gradient(#000 30%,transparent 100%);
+        }
+
+        /* ── Surfaces pleines, bordures nettes ── */
+        #header-title,.page-title{font-family:'Bricolage Grotesque','DM Sans',sans-serif;letter-spacing:-.2px}
+        .header{background:var(--header-bg);border-bottom:1px solid var(--border)}
+        .icon-btn{background:var(--bg-card);border:1px solid var(--border);box-shadow:none}
+        .bottom-nav{background:var(--nav-bg);border:1px solid var(--border);border-radius:22px;box-shadow:0 10px 28px var(--shadow)}
+        .nav-marker{border-radius:18px;background:var(--side-active);border:1px solid var(--border-bright);box-shadow:none}
+        .nav-item.active .nav-icon{filter:none}
+        body:not(.bg-black) .nav-item.active{color:var(--text)}
+        .forecast-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 18px var(--shadow)}
+        .iface-block,.plan-card,.history-card,.match-item,.analysis-block,.odds-card,.confirm-dialog{box-shadow:none;border-color:var(--border)}
+        .btn.primary,.plan-cta.btn.primary{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+        .plan-badge{background:var(--primary);color:var(--on-primary);box-shadow:none}
+
+        /* ── Sélecteur de thèmes ── */
+        .theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+        .theme-opt{text-align:left;border:1px solid var(--border);background:var(--bg-elevated);border-radius:14px;padding:10px;cursor:pointer;color:var(--text);font:inherit;transition:border-color .2s,transform .16s}
+        .theme-opt:active{transform:scale(.97)}
+        .theme-opt.active{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+        .theme-prev{height:46px;border-radius:9px;margin-bottom:8px;display:flex;align-items:flex-end;gap:4px;padding:6px;border:1px solid rgba(255,255,255,.1)}
+        .theme-prev i{width:14px;height:14px;border-radius:50%}
+        .theme-name{font-size:13px;font-weight:700}
+        .theme-tag{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+        /* ── Page SureBet ── */
+        .sb-wrap{padding:16px 16px 28px;max-width:720px;margin:0 auto}
+        .sb-head{margin-bottom:14px}
+        .sb-title{font:800 26px/1.1 'Bricolage Grotesque','DM Sans',sans-serif;letter-spacing:-.4px;color:var(--text)}
+        .sb-sub{font-size:12.5px;color:var(--text-muted);margin-top:5px;line-height:1.45}
+        .sb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+        .sb-stat{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:10px 12px}
+        .sb-stat-l{font-size:11px;color:var(--text-muted);font-weight:600}
+        .sb-stat-v{font-size:19px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+        .sb-stat-v.pos{color:var(--success)}
+        .sb-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+        .sb-tools input,.sb-tools select,.sb-modal-input-row input{
+            background:var(--bg-card);border:1px solid var(--border);color:var(--text);border-radius:12px;
+            padding:11px 13px;font:inherit;font-size:14px;user-select:text;-webkit-user-select:text;
+        }
+        .sb-tools input{flex:1 1 100%}
+        .sb-tools select{flex:1 1 140px}
+        .sb-tools input:focus,.sb-tools select:focus,.sb-modal-input-row input:focus{outline:2px solid var(--primary);outline-offset:1px}
+        .sb-btn{background:var(--bg-card);border:1px solid var(--border);color:var(--text);border-radius:12px;padding:11px 14px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;transition:transform .15s}
+        .sb-btn:active{transform:scale(.96)}
+        .sb-btn.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+        .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px}
+        .sb-card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+        .sb-match{font-weight:800;font-size:15.5px;line-height:1.3}
+        .sb-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+        .sb-profit{font:800 23px/1 'Bricolage Grotesque','DM Sans',sans-serif;color:var(--success);white-space:nowrap;font-variant-numeric:tabular-nums}
+        .sb-profit.high{color:var(--primary)}
+        body:not(.bg-black) .sb-profit.high{color:var(--warning)}
+        .sb-market{display:flex;justify-content:space-between;gap:10px;background:var(--bg-elevated);border-radius:12px;padding:10px 12px;margin:12px 0 10px}
+        .sb-label{font-size:11px;color:var(--text-muted);font-weight:600}
+        .sb-value{font-weight:700;font-size:14px;margin-top:2px}
+        .sb-issues{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+        .sb-issue{border:1px solid var(--border);border-radius:12px;padding:9px 11px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+        .sb-book{font-size:11px;font-weight:800}
+        .book-1xbet{color:#F2802E}.book-betmomo{color:#A855F7}
+        .sb-ilabel{font-size:13px;font-weight:600;margin-top:1px}
+        .sb-cote{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+        .sb-calc{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .sb-hint{font-size:11.5px;color:var(--text-muted)}
+        .sb-badge{background:var(--warning);color:#1A1200;padding:1px 7px;border-radius:6px;font-size:10.5px;font-weight:800;margin-left:8px;vertical-align:middle}
+        .sb-state{text-align:center;padding:44px 18px;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);border-radius:16px;font-size:14px;line-height:1.5}
+        .sb-state.err{color:var(--danger)}
+        .sb-foot{margin-top:18px;text-align:center;font-size:11.5px;color:var(--text-inactive);line-height:1.5}
+
+        /* ── Calculateur de mise (feuille du bas) ── */
+        .sb-modal-overlay{position:fixed;inset:0;background:var(--overlay-bg);display:none;align-items:flex-end;justify-content:center;z-index:2000}
+        .sb-modal-overlay.visible{display:flex}
+        .sb-modal{background:var(--bg-surface);border:1px solid var(--border);border-radius:22px 22px 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;animation:sheetUp .28s var(--ease)}
+        .sb-modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg-surface);z-index:1}
+        .sb-modal-title{font:800 18px 'Bricolage Grotesque','DM Sans',sans-serif}
+        .sb-modal-close{background:var(--bg-card);border:1px solid var(--border);color:var(--text-muted);width:34px;height:34px;border-radius:50%;cursor:pointer}
+        .sb-modal-body{padding:16px 18px 28px}
+        .sb-modal-match{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:12px;padding:12px;margin-bottom:16px}
+        .sb-modal-match-title{font-weight:800;font-size:15px}
+        .sb-modal-match-meta,.sb-modal-market-famille{font-size:12px;color:var(--text-muted);margin-top:3px}
+        .sb-modal-market{background:var(--bg-elevated);border-radius:10px;padding:10px 12px;margin-top:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+        .sb-modal-market-label,.sb-modal-summary-label{font-size:11px;color:var(--text-muted);font-weight:600}
+        .sb-modal-market-value{font-weight:800;margin-top:2px}
+        .sb-modal-input-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+        .sb-modal-input-row label{font-size:13px;color:var(--text-muted);flex:1 1 100%}
+        .sb-modal-input-row input{flex:1 1 150px;font-variant-numeric:tabular-nums}
+        .sb-modal-input-row button{background:var(--primary);color:var(--on-primary);border:none;border-radius:12px;padding:12px 20px;font:inherit;font-weight:800;cursor:pointer}
+        .sb-modal-error{color:var(--danger);font-size:13.5px;margin-bottom:10px}
+        .sb-modal-result{display:none}
+        .sb-modal-result.visible{display:block}
+        .sb-modal-issues{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}
+        .sb-modal-issue{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+        .sb-modal-issue-book{font-size:11px;font-weight:800}
+        .sb-modal-issue-label{font-size:13.5px;font-weight:600;margin:5px 0}
+        .sb-modal-issue-cote{font-size:12.5px;color:var(--text-muted)}
+        .sb-modal-issue-mise{font:800 21px 'Bricolage Grotesque','DM Sans',sans-serif;margin-top:8px;font-variant-numeric:tabular-nums}
+        .sb-modal-issue-gain{font-size:12.5px;color:var(--success);margin-top:4px}
+        .sb-modal-issue-total{font-size:12px;color:var(--text-muted);margin-top:6px;padding-top:6px;border-top:1px solid var(--border)}
+        .sb-modal-issue-total strong{color:var(--text)}
+        .sb-modal-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+        .sb-modal-summary-value{font-size:16px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+        .sb-modal-summary-value.green{color:var(--success)}
+        .sb-modal-summary-value.yellow{color:var(--warning)}
+        .sb-modal-summary-value.red{color:var(--danger)}
+        .sb-modal-warning,.sb-modal-info{border-radius:10px;padding:10px 12px;font-size:13px;margin-top:12px;line-height:1.45}
+        .sb-modal-warning{background:rgba(217,154,18,.12);border:1px solid var(--warning);color:var(--warning)}
+        .sb-modal-info{background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted)}
+
     </style>
 </head>
 <body>
 <script>try{
+window.STARKY_THEMES=[
+{id:'stade-nuit',name:'Stade de nuit',tag:'Thème par défaut',base:'#07140F',colors:['#F5B83D','#3DDC97','#FF6B57']},
+{id:'abidjan-225',name:'Abidjan 225',tag:'Édition limitée',base:'#130A04',colors:['#FF8200','#2BB673','#F4EFE3']},
+{id:'maracana',name:'Maracanã',tag:'Édition limitée',base:'#05130C',colors:['#FFD400','#00A859','#2F6BFF']},
+{id:'derby-rouge',name:'Derby rouge',tag:'Édition limitée',base:'#150609',colors:['#FF3B4E','#FF9A3C','#FFD2D6']},
+{id:'glace',name:'Glace',tag:'Édition limitée',base:'#06121A',colors:['#7DD3FC','#38BDF8','#E0F2FE']},
+{id:'classique',name:'Classique Starky',tag:'Édition limitée',base:'#0A0A1A',colors:['#7B6EF6','#00D4FF','#E040FB']}];
+window.getActiveTheme=function(){var id='stade-nuit';try{id=localStorage.getItem('starky_theme_id')||id}catch(e){}
+ return STARKY_THEMES.filter(function(x){return x.id===id})[0]||STARKY_THEMES[0]};
+window.applyStarkyTheme=function(th){
+ function rgba(h,a){var n=parseInt(h.slice(1),16);return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'}
+ function lum(h){var n=parseInt(h.slice(1),16);return(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255))/255}
+ var r=document.documentElement.style,c=th.colors;
+ r.setProperty('--base',th.base);
+ r.setProperty('--primary',c[0]);r.setProperty('--cyan',c[1]);r.setProperty('--magenta',c[2]);
+ r.setProperty('--grad','linear-gradient(135deg,'+c[0]+' 0%,'+c[1]+' 50%,'+c[2]+' 100%)');
+ r.setProperty('--grad-soft','linear-gradient(135deg,'+rgba(c[0],.16)+','+rgba(c[1],.10)+')');
+ r.setProperty('--border-bright',rgba(c[0],.5));r.setProperty('--primary-glow',rgba(c[0],.28));
+ r.setProperty('--side-hover',rgba(c[0],.12));r.setProperty('--side-active',rgba(c[0],.22));
+ r.setProperty('--home-color',c[2]);r.setProperty('--away-color',c[1]);
+ r.setProperty('--on-primary',lum(c[0])>.55?'#16110A':'#FFFFFF');
+};
+applyStarkyTheme(getActiveTheme());
     /* Thème par défaut : 3D + sombre + étincelles (sauf si l'utilisateur
        a explicitement choisi une autre configuration dans Paramètres). */
-    if(localStorage.getItem('starky_theme_3d')!=='0')document.body.classList.add('theme-3d');
     var isDark = localStorage.getItem('starky_bg_black')!=='0';
     if(isDark)document.body.classList.add('bg-black');
     var tcMeta = document.getElementById('theme-color-meta');
-    if(tcMeta) tcMeta.setAttribute('content', isDark ? '#000000' : '#EEEEF8');
+    if(tcMeta) tcMeta.setAttribute('content', isDark ? getActiveTheme().base : '#F3F1E8');
     var asbMeta = document.getElementById('apple-status-bar-meta');
     if(asbMeta) asbMeta.setAttribute('content', isDark ? 'black-translucent' : 'default');
-    var bgs = localStorage.getItem('starky_bg_style') || 'sparks';
-    if(bgs === 'orbs' || bgs === 'sparks') document.body.classList.add('bg-style-' + bgs);
+    var bgs = localStorage.getItem('starky_bg_style');
+    if(bgs !== 'tactic' && bgs !== 'none') bgs = 'pitch';
+    document.body.classList.add('bg-style-' + bgs);
     /* Verrouillage : l'app reste floutée derrière l'overlay Google tant
        que Firebase n'a pas confirmé une session (évite un flash de
        contenu visible avant la vérification). */
@@ -1386,12 +1466,7 @@
     }
 }catch(e){}</script>
 
-<div class="app-orb app-orb-1"></div>
-<div class="app-orb app-orb-2"></div>
-<div class="app-orb app-orb-3"></div>
-<img class="bg-spark-big bg-spark-big-1" id="bg-spark-1" alt="">
-<img class="bg-spark-big bg-spark-big-2" id="bg-spark-2" alt="">
-<img class="bg-spark-big bg-spark-big-3" id="bg-spark-3" alt="">
+<div class="app-bg" id="app-bg"><svg viewBox="0 0 400 600" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="10" y="10" width="380" height="580" rx="6"/><line x1="10" y1="300" x2="390" y2="300"/><circle cx="200" cy="300" r="62"/><circle cx="200" cy="300" r="3" fill="currentColor"/><rect x="95" y="10" width="210" height="100"/><rect x="150" y="10" width="100" height="38"/><rect x="95" y="490" width="210" height="100"/><rect x="150" y="552" width="100" height="38"/><path d="M155 110a50 50 0 0 0 90 0"/><path d="M155 490a50 50 0 0 1 90 0"/></svg></div>
 
 <div id="auth-splash">
     <div class="auth-splash-logo">
@@ -1491,16 +1566,38 @@
         <div class="forecasts-container" id="forecasts-container"></div>
     </div>
 
-    <!-- VALUE BET -->
+    <!-- SUREBET -->
     <div id="icegame-section" class="section">
         <div class="scroll-section">
-            <div class="vbet-container">
-                <div class="vbet-coming">
-                    <div class="vbet-icon"><span class="icon-mask icon-dbstats"></span></div>
-                    <div class="vbet-title">Value Bet</div>
-                    <div class="vbet-sub">Bientôt disponible !</div>
+            <div class="sb-wrap">
+                <div class="sb-head">
+                    <div class="sb-title">SureBet</div>
+                    <div class="sb-sub">Hockey · cotes croisées entre 1xBet et Betmomo pour un gain garanti</div>
                 </div>
+                <div class="sb-stats">
+                    <div class="sb-stat"><div class="sb-stat-l">Opportunités</div><div class="sb-stat-v" id="sb-stat-total">—</div></div>
+                    <div class="sb-stat"><div class="sb-stat-l">Profit max</div><div class="sb-stat-v pos" id="sb-stat-max">—</div></div>
+                    <div class="sb-stat"><div class="sb-stat-l">Mise à jour</div><div class="sb-stat-v" id="sb-stat-updated" style="font-size:14px;padding-top:4px">—</div></div>
+                </div>
+                <div class="sb-tools">
+                    <input type="text" id="sb-search" placeholder="Équipe, championnat, marché…" autocomplete="off">
+                    <select id="sb-sort">
+                        <option value="profit-desc">Profit décroissant</option>
+                        <option value="profit-asc">Profit croissant</option>
+                        <option value="date-desc">Plus récent</option>
+                    </select>
+                    <button type="button" class="sb-btn on" id="sb-refresh"><i class="fas fa-sync-alt"></i> Actualiser</button>
+                    <button type="button" class="sb-btn" id="sb-auto"><i class="fas fa-clock"></i> Auto : désactivé</button>
+                </div>
+                <div id="sb-content"><div class="sb-state">Chargement des SureBets…</div></div>
+                <div class="sb-foot">Montants en XOF, par pas de 500. Arrondi au franc près si aucun résultat positif à ce pas.</div>
             </div>
+        </div>
+    </div>
+    <div class="sb-modal-overlay" id="sb-modal-overlay">
+        <div class="sb-modal">
+            <div class="sb-modal-header"><div class="sb-modal-title">Calcul de mise</div><button type="button" class="sb-modal-close" id="sb-modal-close" aria-label="Fermer"><i class="fas fa-times"></i></button></div>
+            <div class="sb-modal-body" id="sb-modal-body"></div>
         </div>
     </div>
 
@@ -1540,7 +1637,7 @@
                         <div class="plan-price"><span class="plan-price-amount">2 500</span><span class="plan-price-unit">FCFA / semaine</span></div>
                         <ul class="plan-features">
                             <li><i class="fas fa-check"></i> Tout le plan journalier</li>
-                            <li><i class="fas fa-check"></i> Value Bet illimités</li>
+                            <li><i class="fas fa-check"></i> SureBet illimités</li>
                             <li><i class="fas fa-check"></i> Historique 7 jours</li>
                         </ul>
                         <button type="button" class="plan-cta btn" data-plan="weekly">Choisir</button>
@@ -1645,61 +1742,31 @@
                     </div>
                 </div>
                 <div class="iface-block">
-                    <div class="iface-title"><i class="fas fa-palette"></i> Thème</div>
-                    <div class="iface-subtitle">Palette couleur exclusive du logo STARKY SPORTS</div>
-                    <div class="theme-card">
-                        <div class="theme-dots" id="theme-dots">
-                            <div class="theme-dot" id="theme-dot-1" style="background:#7B6EF6;"></div>
-                            <div class="theme-dot" id="theme-dot-2" style="background:#00D4FF;"></div>
-                            <div class="theme-dot" id="theme-dot-3" style="background:#E040FB;"></div>
-                        </div>
-                        <div class="theme-card-title" id="theme-card-title">Violet · Bleu · Cyan · Magenta</div>
-                        <div class="theme-card-desc" id="theme-card-desc">Palette exclusive Starky Sports</div>
-                    </div>
+                    <div class="iface-title"><i class="fas fa-palette"></i> Thèmes</div>
+                    <div class="iface-subtitle">Le thème par défaut et les éditions limitées Starky Sports</div>
+                    <div class="theme-grid" id="theme-grid"></div>
                     <div class="setting-row" style="margin-top:16px;">
-                        <div class="setting-left">
-                            <div class="setting-icon"><i class="fas fa-cube"></i></div>
-                            <div>
-                                <div class="setting-label">Effet 3D</div>
-                                <div class="setting-desc">Verre liquide en relief, transparent sur le vrai fond</div>
-                            </div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="theme3d-toggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-row">
                         <div class="setting-left">
                             <div class="setting-icon"><i class="fas fa-moon"></i></div>
                             <div>
-                                <div class="setting-label">Fond noir</div>
-                                <div class="setting-desc">Arrière-plan noir profond, verre encore plus transparent</div>
+                                <div class="setting-label">Mode sombre</div>
+                                <div class="setting-desc">Fond profond aux couleurs du thème</div>
                             </div>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="bgblack-toggle">
-                            <span class="slider"></span>
-                        </label>
+                        <label class="switch"><input type="checkbox" id="bgblack-toggle"><span class="slider"></span></label>
                     </div>
                     <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px;">
                         <div class="setting-left">
-                            <div class="setting-icon"><i class="fas fa-star"></i></div>
+                            <div class="setting-icon"><i class="fas fa-futbol"></i></div>
                             <div>
-                                <div class="setting-label">Motif de fond</div>
-                                <div class="setting-desc">S'adapte automatiquement à la palette active</div>
+                                <div class="setting-label">Fond d'écran</div>
+                                <div class="setting-desc">Se colore avec le thème actif</div>
                             </div>
                         </div>
                         <div class="bgstyle-options" id="bgstyle-options">
-                            <button type="button" class="bgstyle-opt" data-style="none">
-                                <i class="fas fa-ban"></i><span>Aucun</span>
-                            </button>
-                            <button type="button" class="bgstyle-opt" data-style="orbs">
-                                <i class="fas fa-circle"></i><span>Orbes</span>
-                            </button>
-                            <button type="button" class="bgstyle-opt" data-style="sparks">
-                                <i class="fas fa-star"></i><span>Étincelles</span>
-                            </button>
+                            <button type="button" class="bgstyle-opt" data-style="pitch"><i class="fas fa-futbol"></i><span>Pelouse</span></button>
+                            <button type="button" class="bgstyle-opt" data-style="tactic"><i class="fas fa-th"></i><span>Tactique</span></button>
+                            <button type="button" class="bgstyle-opt" data-style="none"><i class="fas fa-ban"></i><span>Uni</span></button>
                         </div>
                     </div>
                 </div>
@@ -1716,7 +1783,7 @@
                         <div class="side-item-icon"><i class="fas fa-undo"></i></div>
                         <div class="side-item-info">
                             <div class="side-item-text">Palette par défaut</div>
-                            <div class="side-item-desc">Revenir aux couleurs exclusives Starky Sports</div>
+                            <div class="side-item-desc">Revenir aux couleurs du thème actif</div>
                         </div>
                     </div>
                 </div>
@@ -1886,7 +1953,7 @@
         <i class="nav-icon fas fa-futbol"></i><span>Pronostics</span>
     </div>
     <div class="nav-item" data-section="icegame">
-        <span class="nav-icon icon-mask icon-dbstats"></span><span>Value Bet</span>
+        <i class="nav-icon fas fa-balance-scale"></i><span>SureBet</span>
     </div>
     <div class="nav-item" data-section="pros">
         <span class="nav-icon icon-mask icon-thunder"></span><span>Pro</span>
@@ -1948,7 +2015,7 @@ const AVATAR_OPTIONS = [
 
 const SECTION_TITLES = {
     forecasts    : 'Pronostics',
-    icegame      : 'Value Bet',
+    icegame      : 'SureBet',
     pros         : 'Pro',
     interface    : 'Paramètres',
     events       : 'Événements',
@@ -3147,6 +3214,7 @@ function showSection(id) {
     updateNavMarker(id);
 
     currentSection = id;
+    if (id === 'icegame' && window.SureBet) window.SureBet.onShow();
 
     const backBtn     = document.getElementById('back-btn');
     const hTitle      = document.getElementById('header-title');
@@ -3395,87 +3463,7 @@ function applyDropStretch(el, dx, dy, baseScale) {
         `translate(${tx}px,${ty}px) rotate(${angle}deg) scale(${stretch},${squeeze}) rotate(${-angle}deg)`;
 }
 
-function initLiquidGlassInteractions() {
-    const PRESSABLE = '.icon-btn, .nav-item, .forecast-card, .match-item, .h2h-item, ' +
-                       '.mp-close, .side-item, .promo-box, .social-btn, .btn, .av-btn, ' +
-                       '.av-opt, .dtab';
-    const POP_IN  = '.18s cubic-bezier(.34,1.68,.64,1)'; // gonflement franc à l'appui
-    const DRAG_TR = '.05s linear';                        // suit le doigt sans latence
-    const RELEASE = '.52s var(--spring-soft)';             // retour doux et rebondi
-
-    /* gonflement au contact + étirement tant que le doigt reste posé — délégation,
-       marche aussi sur les éléments créés dynamiquement. Capture de pointeur +
-       touch-action:none sur les boutons pour garantir la fiabilité du maintien
-       même avec de grands déplacements du doigt. */
-    document.addEventListener('pointerdown', (e) => {
-        const el = e.target.closest(PRESSABLE);
-        if (!el || el.closest('.bottom-nav')) return; // le bottom-nav a sa propre logique (glissement)
-
-        const baseScale   = getBulgeScale(el);
-        const wantsCapture = el.matches(CAPTURE_SELECTORS);
-        const pid = e.pointerId, startX = e.clientX, startY = e.clientY;
-        const prevTouchAction = el.style.touchAction;
-
-        el.classList.add('pressed');
-        el.style.transition = `transform ${POP_IN}`;
-        el.style.transform = `scale(${baseScale})`;
-        spawnLiquidRipple(el, e.clientX, e.clientY);
-
-        if (wantsCapture) {
-            el.style.touchAction = 'none';
-            try { el.setPointerCapture(pid); } catch (_) {}
-        }
-
-        /* Verrouillage du maintien : tant que "el" est maintenu, ses voisins directs
-           (ex: recherche/notification dans le même conteneur) sont rendus totalement
-           inertes — impossible que le survol pendant le glissement du doigt fasse
-           "sauter" l'animation ou l'action sur un autre bouton. */
-        const lockContainer = el.parentElement;
-        const frozenSiblings = wantsCapture && lockContainer
-            ? [...lockContainer.children].filter(sib => sib !== el)
-            : [];
-        frozenSiblings.forEach(sib => {
-            sib.dataset._prevPe = sib.style.pointerEvents || '';
-            sib.style.pointerEvents = 'none';
-        });
-
-        let stretching = false;
-        const onMove = (ev) => {
-            if (ev.pointerId !== pid) return;
-            if (!stretching) { stretching = true; el.style.transition = `transform ${DRAG_TR}`; }
-            applyDropStretch(el, ev.clientX - startX, ev.clientY - startY, baseScale);
-        };
-        const release = () => {
-            el.classList.remove('pressed');
-            el.style.transition = `transform ${RELEASE}`;
-            el.style.transform = '';
-            if (wantsCapture) {
-                el.style.touchAction = prevTouchAction;
-                try { el.releasePointerCapture(pid); } catch (_) {}
-            }
-            frozenSiblings.forEach(sib => {
-                sib.style.pointerEvents = sib.dataset._prevPe || '';
-                delete sib.dataset._prevPe;
-            });
-            document.removeEventListener('pointermove', onMove);
-            document.removeEventListener('pointerup', release);
-            document.removeEventListener('pointercancel', release);
-            setTimeout(() => { el.style.transition = ''; }, 540);
-        };
-        document.addEventListener('pointermove', onMove);
-        document.addEventListener('pointerup', release);
-        document.addEventListener('pointercancel', release);
-    });
-
-    /* bottom-nav : simple tap pour changer d'onglet — plus d'effet de
-       goutte d'eau étirée ni de glissement liquide. */
-    const bottomNav = document.getElementById('bottom-nav');
-    if (!bottomNav) return;
-
-    bottomNav.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => showSection(item.dataset.section));
-    });
-}
+function initLiquidGlassInteractions() {}
 
 /* ── Marqueur/sélecteur du dock : même hauteur que le dock, se déplace
    sous l'onglet actif à chaque changement de section. ── */
@@ -3502,16 +3490,26 @@ window.addEventListener('resize', () => updateNavMarker(currentSection));
 
 
 /* ===== EFFET 3D (Paramètres) ===== */
-function initTheme3D() {
-    const toggle = document.getElementById('theme3d-toggle');
-    if (!toggle) return;
-    toggle.checked = document.body.classList.contains('theme-3d');
-    toggle.addEventListener('change', () => {
-        const enabled = toggle.checked;
-        document.body.classList.toggle('theme-3d', enabled);
-        try { localStorage.setItem('starky_theme_3d', enabled ? '1' : '0'); } catch(e){}
-        showToast(enabled ? 'Effet 3D activé' : 'Effet 3D désactivé', 'success', 1800);
-    });
+/* ===== THÈMES (Paramètres) ===== */
+function initThemes() {
+    const grid = document.getElementById('theme-grid');
+    if (!grid) return;
+    const act = getActiveTheme().id;
+    grid.innerHTML = STARKY_THEMES.map(th => `<button type="button" class="theme-opt${th.id === act ? ' active' : ''}" data-id="${th.id}">
+        <div class="theme-prev" style="background:${th.base}">${th.colors.map(c => `<i style="background:${c}"></i>`).join('')}</div>
+        <div class="theme-name">${th.name}</div><div class="theme-tag">${th.tag}</div></button>`).join('');
+    grid.querySelectorAll('.theme-opt').forEach(btn => btn.addEventListener('click', () => {
+        const th = STARKY_THEMES.find(x => x.id === btn.dataset.id);
+        grid.querySelectorAll('.theme-opt').forEach(x => x.classList.toggle('active', x === btn));
+        try {
+            localStorage.setItem('starky_theme_id', th.id);
+            ['id','name','colors'].forEach(k => localStorage.removeItem('starky_custom_palette_' + k));
+        } catch(e){}
+        document.querySelectorAll('.palette-swatch').forEach(s => s.classList.remove('active'));
+        applyStarkyTheme(th);
+        updateStatusBar();
+        showToast('Thème « ' + th.name + ' » appliqué', 'success', 1800);
+    }));
 }
 
 /* ===== COULEURS PERSONNALISÉES (Paramètres) =====
@@ -3568,6 +3566,7 @@ function resetPalette() {
     const root = document.documentElement.style;
     ['--primary','--cyan','--magenta','--grad','--grad-soft','--border-bright','--primary-glow']
         .forEach(p => root.removeProperty(p));
+    applyStarkyTheme(getActiveTheme());
     if (document.body.classList.contains('bg-style-sparks')) buildBgSparks();
 }
 function applyStoredPalette() {
@@ -3698,25 +3697,21 @@ function buildBgSparks() {
 }
 
 function initBgStyle() {
-    let saved = 'sparks';
-    try { saved = localStorage.getItem('starky_bg_style') || 'sparks'; } catch(e){}
-    document.body.classList.toggle('bg-style-orbs', saved === 'orbs');
-    document.body.classList.toggle('bg-style-sparks', saved === 'sparks');
-    if (saved === 'sparks') buildBgSparks();
-
+    let saved = 'pitch';
+    try { saved = localStorage.getItem('starky_bg_style') || 'pitch'; } catch(e){}
+    if (!['pitch','tactic','none'].includes(saved)) saved = 'pitch';
+    const set = s => ['pitch','tactic'].forEach(k => document.body.classList.toggle('bg-style-' + k, s === k));
+    set(saved);
     const opts = document.querySelectorAll('#bgstyle-options .bgstyle-opt');
+    const labels = { none: 'Fond uni', pitch: 'Fond pelouse', tactic: 'Fond tactique' };
     opts.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.style === saved);
         btn.addEventListener('click', () => {
             const style = btn.dataset.style;
-            opts.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.body.classList.toggle('bg-style-orbs', style === 'orbs');
-            document.body.classList.toggle('bg-style-sparks', style === 'sparks');
-            if (style === 'sparks') buildBgSparks();
+            opts.forEach(b => b.classList.toggle('active', b === btn));
+            set(style);
             try { localStorage.setItem('starky_bg_style', style); } catch(e){}
-            const labels = { none: 'Aucun motif', orbs: 'Fond en orbes activé', sparks: 'Fond en étincelles activé' };
-            showToast(labels[style] || '', 'success', 1800);
+            showToast(labels[style], 'success', 1800);
         });
     });
 }
@@ -3727,7 +3722,7 @@ function initBgStyle() {
 function updateStatusBar() {
     const dark = document.body.classList.contains('bg-black');
     const tcMeta = document.getElementById('theme-color-meta');
-    if (tcMeta) tcMeta.setAttribute('content', dark ? '#000000' : '#EEEEF8');
+    if (tcMeta) tcMeta.setAttribute('content', dark ? getActiveTheme().base : '#F3F1E8');
     const asbMeta = document.getElementById('apple-status-bar-meta');
     if (asbMeta) asbMeta.setAttribute('content', dark ? 'black-translucent' : 'default');
 }
@@ -3750,7 +3745,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupListeners();
     initPWA();
     initLiquidGlassInteractions();
-    initTheme3D();
+    initThemes();
     initBgBlack();
     applyStoredPalette();
     initBgStyle();
@@ -3758,12 +3753,344 @@ document.addEventListener('DOMContentLoaded', async () => {
     initHistoryDuration();
     loadCustomPalettes();
 
-    console.log('Starky Sports v4.7.0 — liquid glass iOS (thème unique, transparence renforcée)');
+    console.log('Starky Sports v5.0.0 — thème Stade de nuit, SureBet');
 
     loadAndCacheLogo();
     showSection('forecasts');
     await loadForecasts();
 });
+</script>
+
+<script>
+/* ══ SUREBET — données Supabase (REST), calcul de mise et modale ══ */
+(function(){
+const SB_URL = "https://ebgkyrysezphtywpiigi.supabase.co";
+const SB_KEY = "sb_publishable_zFjBa7mB9pgFg3DmkxsyHg_TE-9Jed5";
+const MISE_MIN = 1000, MISE_MAX = 10_000_000, PAS = 500, PAS_FALLBACK = 1;
+let all = [], auto = false, timer = null, loaded = false;
+const $ = id => document.getElementById(id);
+
+async function q(path) {
+    const r = await fetch(SB_URL + '/rest/v1/' + path, { headers: { apikey: SB_KEY } });
+    if (!r.ok) throw new Error(path.split('?')[0] + ' (' + r.status + ')');
+    return r.json();
+}
+async function load(silent) {
+    const box = $('sb-content');
+    if (!silent) box.innerHTML = '<div class="sb-state">Chargement des SureBets…</div>';
+    try {
+        const sbs = await q('surebets?select=*&order=profit_pct.desc');
+        const ids = sbs.map(s => s.id);
+        let iss = [];
+        for (let i = 0; i < ids.length; i += 100)
+            iss = iss.concat(await q('surebet_issues?select=*&surebet_id=in.(' + ids.slice(i, i + 100).join(',') + ')'));
+        const by = {};
+        iss.forEach(x => (by[x.surebet_id] = by[x.surebet_id] || []).push(x));
+        all = sbs.map(s => ({ ...s, issues: by[s.id] || [] }));
+        loaded = true;
+        render();
+    } catch (e) {
+        if (!silent || !loaded) box.innerHTML = '<div class="sb-state err">Impossible de charger les SureBets : ' + escapeHtml(e.message) + '</div>';
+    }
+}
+function calculerMisesOptimal(budget, issues) {
+  if (!issues || issues.length === 0) return null;
+
+  // 1. Essai avec PAS = 500
+  const res500 = _rechercher(budget, issues, PAS);
+  if (res500 && res500.gainNet > 0) {
+    return { ...res500, pasUtilise: PAS, fallback: false };
+  }
+
+  // 2. Fallback : PAS = 1
+  const res1 = _rechercher(budget, issues, PAS_FALLBACK);
+  if (res1 && res1.gainNet > 0) {
+    return { ...res1, pasUtilise: PAS_FALLBACK, fallback: true };
+  }
+
+  // 3. Dernier recours
+  if (res1) {
+    return { ...res1, pasUtilise: PAS_FALLBACK, fallback: true,
+             warning: "⚠️ Aucune combinaison avec ROI > 0. Mise minimale utilisée." };
+  }
+  return null;
+}
+
+function _rechercher(budget, issues, pas) {
+  const n = issues.length;
+  let B = Math.floor(budget / pas) * pas;
+  if (B < MISE_MIN) B = MISE_MIN;
+
+  const invSum = issues.reduce((acc, i) => acc + 1 / i.cote, 0);
+
+  function evaluer(mises) {
+    const total = mises.reduce((a, v) => a + v, 0);
+    if (total > B) return null;
+    if (mises.some(m => m < pas)) return null;
+    const gains = mises.map((m, i) => m * issues[i].cote);
+    const gainMin = Math.min(...gains);
+    const gainMax = Math.max(...gains);
+    const reste = B - total;
+    const gainsTotaux = gains.map(g => g + reste);
+    const gainMinTotal = Math.min(...gainsTotaux);
+    const gainNet = gainMinTotal - B;
+    const roi = gainNet / B * 100;
+    return {
+      mises: [...mises], gains, gainsTotaux, reste, total,
+      gainMin, gainMax, ecart: gainMax - gainMin,
+      gainMinTotal, gainNet, roi,
+    };
+  }
+
+  const theoriques = issues.map(i => B * (1 / i.cote) / invSum);
+  let base = theoriques.map(t => Math.max(pas, Math.floor(t / pas) * pas));
+  let sumBase = base.reduce((a, v) => a + v, 0);
+  if (sumBase < B) {
+    let idxMax = 0;
+    for (let i = 1; i < base.length; i++) if (base[i] > base[idxMax]) idxMax = i;
+    const diff = Math.min(B - sumBase, Math.floor((B - sumBase) / pas) * pas);
+    base[idxMax] += diff;
+  }
+
+  // K adaptatif
+  const K = pas === 1
+    ? Math.min(1500, Math.max(150, Math.floor(B / (n * 10))))
+    : Math.min(50, Math.max(10, Math.floor(B / (pas * n * 4))));
+
+  let meilleur = null;
+  const offsets = [];
+  for (let d = -K; d <= K; d++) offsets.push(d * pas);
+
+  function explorer(idx, current) {
+    if (idx === n) {
+      const ev = evaluer(current);
+      if (!ev) return;
+      if (ev.gainNet <= 0) return;
+      if (!meilleur ||
+          ev.ecart < meilleur.ecart - 1e-6 ||
+          (Math.abs(ev.ecart - meilleur.ecart) < 1e-6 && ev.gainNet > meilleur.gainNet)) {
+        meilleur = ev;
+      }
+      return;
+    }
+    for (const off of offsets) {
+      const m = base[idx] + off;
+      if (m < pas) continue;
+      current.push(m);
+      const sumPart = current.reduce((a, v) => a + v, 0);
+      const minRest = (n - idx - 1) * pas;
+      if (sumPart + minRest <= B) explorer(idx + 1, current);
+      current.pop();
+    }
+  }
+
+  explorer(0, []);
+  return meilleur;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDU
+
+function render() {
+    const box = $('sb-content');
+    const term = $('sb-search').value.toLowerCase().trim();
+    const sort = $('sb-sort').value;
+    let list = all.filter(s => !term || ['team1','team2','champ','country','famille','marche']
+        .some(k => (s[k] || '').toLowerCase().includes(term)));
+    list.sort((a, b) => sort === 'profit-asc' ? a.profit_pct - b.profit_pct
+        : sort === 'date-desc' ? new Date(b.detected_at) - new Date(a.detected_at)
+        : b.profit_pct - a.profit_pct);
+    $('sb-stat-total').textContent = list.length;
+    $('sb-stat-max').textContent = list.length ? '+' + Math.max(...list.map(s => s.profit_pct)).toFixed(2) + '%' : '—';
+    $('sb-stat-updated').textContent = all.length && all[0].detected_at
+        ? new Date(all[0].detected_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '—';
+    if (!list.length) {
+        box.innerHTML = '<div class="sb-state">' + (all.length ? 'Aucun résultat pour cette recherche.' : 'Aucun SureBet pour le moment. Revenez dans quelques minutes ou actualisez.') + '</div>';
+        return;
+    }
+    box.innerHTML = list.map(card).join('');
+}
+function card(s) {
+    const issues = (s.issues || []).map(i => `<div class="sb-issue">
+        <div><div class="sb-book book-${i.bookmaker === '1xbet' ? '1xbet' : 'betmomo'}">${escapeHtml(i.bookmaker)}</div>
+        <div class="sb-ilabel">${escapeHtml(i.label || i.key)}</div></div>
+        <div class="sb-cote">${Number(i.cote).toFixed(3)}</div></div>`).join('');
+    return `<div class="sb-card">
+        <div class="sb-card-top">
+            <div><div class="sb-match">${escapeHtml(s.team1 || '?')} vs ${escapeHtml(s.team2 || '?')}${s.inversed ? '<span class="sb-badge">Inversé</span>' : ''}</div>
+            <div class="sb-meta">${escapeHtml([s.country, s.champ, s.heure].filter(Boolean).join(' · '))}</div></div>
+            <div class="sb-profit${s.profit_pct >= 3 ? ' high' : ''}">+${s.profit_pct.toFixed(2)}%</div>
+        </div>
+        <div class="sb-market">
+            <div><div class="sb-label">Marché</div><div class="sb-value">${escapeHtml(s.marche || '—')}</div><div class="sb-meta">${escapeHtml(s.famille || '')}</div></div>
+            <div style="text-align:right"><div class="sb-label">Période</div><div class="sb-value">${escapeHtml(s.period || 'MATCH')}</div><div class="sb-meta">Marge ${(s.marge * 100).toFixed(2)}%</div></div>
+        </div>
+        <div class="sb-issues">${issues}</div>
+        <div class="sb-calc"><button type="button" class="sb-btn on" data-sb="${s.id}"><i class="fas fa-calculator"></i> Calculer ma mise</button>
+        <span class="sb-hint">dès ${MISE_MIN.toLocaleString('fr-FR')} XOF</span></div></div>`;
+}
+let currentSurebet = null;
+
+function ouvrirModale(s) {
+  currentSurebet = s;
+  const overlay = document.getElementById('sb-modal-overlay');
+  const body = document.getElementById('sb-modal-body');
+  const inversedBadge = s.inversed ? '<span class="sb-badge">Inversé</span>' : '';
+
+  body.innerHTML = `
+    <div class="sb-modal-match">
+      <div class="sb-modal-match-title">${escapeHtml(s.team1 || '?')} vs ${escapeHtml(s.team2 || '?')}${inversedBadge}</div>
+      <div class="sb-modal-match-meta">${escapeHtml(s.country || '')} · ${escapeHtml(s.champ || '')} · ${escapeHtml(s.heure || '')}</div>
+      <div class="sb-modal-market">
+        <div>
+          <div class="sb-modal-market-label">Marché principal</div>
+          <div class="sb-modal-market-value">${escapeHtml(s.marche || '—')}</div>
+          <div class="sb-modal-market-famille">${escapeHtml(s.famille || '')} · ${escapeHtml(s.period || 'MATCH')}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="sb-modal-market-label">Profit</div>
+          <div class="sb-modal-market-value" style="color:var(--success);">+${s.profit_pct.toFixed(2)}%</div>
+          <div class="sb-modal-market-famille">Marge : ${(s.marge * 100).toFixed(2)}%</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-modal-input-row">
+      <label for="sb-modal-input">Budget (XOF) :</label>
+      <input type="number" id="sb-modal-input" min="${MISE_MIN}" max="${MISE_MAX}" step="${PAS}"
+             placeholder="ex: 10000" autofocus>
+      <button id="sb-modal-calc">Calculer</button>
+      <span class="sb-hint">min ${MISE_MIN.toLocaleString('fr-FR')} XOF</span>
+    </div>
+    <div class="sb-modal-result" id="sb-modal-result"></div>
+  `;
+
+  document.getElementById('sb-modal-calc').addEventListener('click', () => lancerCalcul(s));
+  document.getElementById('sb-modal-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') lancerCalcul(s);
+  });
+
+  overlay.classList.add('visible');
+  setTimeout(() => document.getElementById('sb-modal-input').focus(), 100);
+}
+
+function fermerModale() {
+  document.getElementById('sb-modal-overlay').classList.remove('visible');
+  currentSurebet = null;
+}
+
+function lancerCalcul(s) {
+  const input = document.getElementById('sb-modal-input');
+  const resultDiv = document.getElementById('sb-modal-result');
+
+  let budget = parseInt(input.value, 10);
+  if (isNaN(budget) || input.value.trim() === '') {
+    resultDiv.innerHTML = `<div class="sb-modal-error">Veuillez entrer un montant.</div>`;
+    resultDiv.classList.add('visible'); return;
+  }
+  if (budget < MISE_MIN) {
+    resultDiv.innerHTML = `<div class="sb-modal-error">Montant minimum : ${MISE_MIN.toLocaleString('fr-FR')} XOF.</div>`;
+    resultDiv.classList.add('visible'); return;
+  }
+  if (budget > MISE_MAX) {
+    resultDiv.innerHTML = `<div class="sb-modal-error">Montant maximum : ${MISE_MAX.toLocaleString('fr-FR')} XOF.</div>`;
+    resultDiv.classList.add('visible'); return;
+  }
+
+  const r = calculerMisesOptimal(budget, s.issues || []);
+  if (!r) {
+    resultDiv.innerHTML = `<div class="sb-modal-error">Impossible de calculer.</div>`;
+    resultDiv.classList.add('visible'); return;
+  }
+
+  const issuesHtml = (s.issues || []).map((iss, i) => {
+    const bookClass = iss.bookmaker === '1xbet' ? 'book-1xbet' : 'book-betmomo';
+    const gainIssue = r.gains[i];
+    const gainTotal = r.gainsTotaux[i];
+    return `
+      <div class="sb-modal-issue">
+        <div class="sb-modal-issue-book ${bookClass}">${iss.bookmaker}</div>
+        <div class="sb-modal-issue-label">${escapeHtml(iss.label || iss.key)}</div>
+        <div class="sb-modal-issue-cote">@ ${iss.cote.toFixed(3)}</div>
+        <div class="sb-modal-issue-mise">${r.mises[i].toLocaleString('fr-FR')} XOF</div>
+        <div class="sb-modal-issue-gain">gain pari : ${Math.round(gainIssue).toLocaleString('fr-FR')} XOF</div>
+        <div class="sb-modal-issue-total">
+          + reste ${r.reste.toLocaleString('fr-FR')} = <strong>${Math.round(gainTotal).toLocaleString('fr-FR')} XOF</strong>
+        </div>
+      </div>`;
+  }).join('');
+
+  const roiClass = r.roi > 0 ? 'green' : 'red';
+  const benefClass = r.gainNet > 0 ? 'green' : 'red';
+
+  // Bandeau info si fallback
+  const infoHtml = r.fallback
+    ? `<div class="sb-modal-info">Arrondi au franc près (pas de ${PAS_FALLBACK} XOF) — aucune solution à ${PAS} XOF avec ROI positif.</div>`
+    : '';
+  const warningHtml = r.warning ? `<div class="sb-modal-warning">${r.warning}</div>` : '';
+
+  resultDiv.innerHTML = `
+    <div class="sb-modal-issues">${issuesHtml}</div>
+    <div class="sb-modal-summary">
+      <div class="sb-modal-summary-item">
+        <div class="sb-modal-summary-label">Budget saisi</div>
+        <div class="sb-modal-summary-value">${budget.toLocaleString('fr-FR')} XOF</div>
+      </div>
+      <div class="sb-modal-summary-item">
+        <div class="sb-modal-summary-label">Total misé</div>
+        <div class="sb-modal-summary-value">${r.total.toLocaleString('fr-FR')} XOF</div>
+      </div>
+      <div class="sb-modal-summary-item">
+        <div class="sb-modal-summary-label">Reste non misé</div>
+        <div class="sb-modal-summary-value yellow">${r.reste.toLocaleString('fr-FR')} XOF</div>
+      </div>
+      <div class="sb-modal-summary-item">
+        <div class="sb-modal-summary-label">Gain min total</div>
+        <div class="sb-modal-summary-value green">${Math.round(r.gainMinTotal).toLocaleString('fr-FR')} XOF</div>
+      </div>
+      <div class="sb-modal-summary-item">
+        <div class="sb-modal-summary-label">Bénéf min</div>
+        <div class="sb-modal-summary-value ${benefClass}">${r.gainNet > 0 ? '+' : ''}${Math.round(r.gainNet).toLocaleString('fr-FR')} XOF</div>
+      </div>
+      <div class="sb-modal-summary-item">
+        <div class="sb-modal-summary-label">ROI</div>
+        <div class="sb-modal-summary-value ${roiClass}">${r.roi > 0 ? '+' : ''}${r.roi.toFixed(2)}%</div>
+      </div>
+    </div>
+    ${infoHtml}
+    ${warningHtml}`;
+  resultDiv.classList.add('visible');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITAIRES
+// ═══════════════════════════════════════════════════════════════
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+
+$('sb-content').addEventListener('click', e => {
+    const b = e.target.closest('[data-sb]'); if (!b) return;
+    const s = all.find(x => String(x.id) === b.dataset.sb); if (s) ouvrirModale(s);
+});
+$('sb-search').addEventListener('input', render);
+$('sb-sort').addEventListener('change', render);
+$('sb-refresh').addEventListener('click', () => load(false));
+$('sb-auto').addEventListener('click', e => {
+    auto = !auto;
+    const b = e.currentTarget;
+    b.classList.toggle('on', auto);
+    b.innerHTML = '<i class="fas fa-clock"></i> Auto : ' + (auto ? '30 s' : 'désactivé');
+    clearInterval(timer); timer = null;
+    if (auto) timer = setInterval(() => { if ($('icegame-section').classList.contains('active')) load(true); }, 30000);
+});
+$('sb-modal-close').addEventListener('click', fermerModale);
+$('sb-modal-overlay').addEventListener('click', e => { if (e.target.id === 'sb-modal-overlay') fermerModale(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fermerModale(); });
+window.SureBet = { onShow() { load(loaded); } };
+})();
 </script>
 
 <!-- ══ AUTHENTIFICATION FIREBASE / GOOGLE — obligatoire avant accès ══ -->
