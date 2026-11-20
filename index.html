@@ -1252,20 +1252,20 @@
            posées par applyStarkyTheme(), décor par body[data-theme].
            ══════════════════════════════════════════════════════════════ */
         :root{
-            --base:#0B0B1C; --on-primary:#FFFFFF;
-            --primary:#7B6EF6; --cyan:#00D4FF; --magenta:#E040FB;
-            --grad:linear-gradient(135deg,#7B6EF6 0%,#00D4FF 50%,#E040FB 100%);
-            --grad-soft:linear-gradient(135deg,rgba(123,110,246,.16),rgba(0,212,255,.10));
-            --primary-glow:rgba(123,110,246,.28); --border-bright:rgba(123,110,246,.5);
-            --bg:#EEEEF8; --bg-surface:#F7F7FD; --bg-card:#FFFFFF; --bg-elevated:#F3F3FB;
-            --text:#0E0E2A; --text-muted:#5A5A80; --text-inactive:#9090B0;
-            --border:rgba(14,14,42,.12); --glass-border:rgba(14,14,42,.12);
-            --glass-fill:#FFFFFF; --glass-fill-strong:#ECECF7; --logo-bg:#FFFFFF;
-            --header-bg:#F7F7FD; --nav-bg:#F7F7FD; --side-bg:#F7F7FD;
-            --side-hover:rgba(123,110,246,.12); --side-active:rgba(123,110,246,.22);
-            --shadow:rgba(14,14,42,.10); --overlay-bg:rgba(8,8,24,.55);
-            --line:rgba(14,14,42,.09); --snowc:rgba(90,120,170,.5);
-            --home-color:#E040FB; --away-color:#00D4FF;
+            --base:#0A0E17; --on-primary:#FFFFFF;
+            --primary:#4F8CFF; --cyan:#2DD4BF; --magenta:#F5A524;
+            --grad:linear-gradient(135deg,#8DB2FF 0%,#4F8CFF 100%);
+            --grad-soft:linear-gradient(135deg,rgba(79,140,255,.16),rgba(45,212,191,.10));
+            --primary-glow:rgba(79,140,255,.28); --border-bright:rgba(79,140,255,.5);
+            --bg:#F1F4F9; --bg-surface:#F8FAFC; --bg-card:#FFFFFF; --bg-elevated:#EDF1F7;
+            --text:#0B1220; --text-muted:#5B6678; --text-inactive:#94A0B3;
+            --border:rgba(11,18,32,.10); --glass-border:rgba(11,18,32,.10);
+            --glass-fill:#FFFFFF; --glass-fill-strong:#E7ECF4; --logo-bg:#FFFFFF;
+            --header-bg:#F8FAFC; --nav-bg:#F8FAFC; --side-bg:#F8FAFC;
+            --side-hover:rgba(79,140,255,.10); --side-active:rgba(79,140,255,.18);
+            --shadow:rgba(11,18,32,.08); --overlay-bg:rgba(8,12,22,.55);
+            --line:rgba(11,18,32,.08); --snowc:rgba(90,120,170,.5);
+            --home-color:#F5A524; --away-color:#2DD4BF;
             --success:#12A56B; --danger:#E5484D; --warning:#D99A12;
             --glass-blur:0px;
             --nav-h:clamp(56px,9vh,66px);
@@ -1280,10 +1280,13 @@
             --glass-border:var(--border); --glass-fill:var(--bg-card);
             --glass-fill-strong:var(--bg-elevated); --logo-bg:var(--bg-card);
             --header-bg:var(--bg-surface); --nav-bg:var(--bg-surface); --side-bg:var(--bg-surface);
-            --text:#F2F2FA; --text-muted:#B6B6D6; --text-inactive:#78789A;
+            --text:#EEF2F8; --text-muted:#A3AEC2; --text-inactive:#6B778C;
             --shadow:rgba(0,0,0,.5); --overlay-bg:rgba(0,0,0,.65);
             --line:rgba(255,255,255,.08); --snowc:rgba(255,255,255,.8);
             --success:#4ADE9C;
+            --border-bright:color-mix(in srgb,var(--primary) 55%,transparent);
+            --side-hover:color-mix(in srgb,var(--primary) 14%,transparent);
+            --side-active:color-mix(in srgb,var(--primary) 22%,transparent);
         }
 
         /* ── Décor de fond : un par thème (scènes SVG + effets animés) ── */
@@ -1297,13 +1300,23 @@
         @keyframes batFlap{from{transform:scaleY(1)}to{transform:scaleY(.5)}}
         body.fx-off .bat svg{animation:none}
 
-        /* Par défaut : trame diagonale + deux lueurs aux couleurs du logo */
+        /* Par défaut : sobre et pro — halo bleu, grille de points discrète, courbe de tendance */
         body[data-theme="defaut"] .app-bg{
             background:
-                radial-gradient(70% 45% at 88% 0%,color-mix(in srgb,var(--primary) 18%,transparent),transparent 70%),
-                radial-gradient(60% 40% at 0% 100%,color-mix(in srgb,var(--magenta) 11%,transparent),transparent 70%),
-                repeating-linear-gradient(135deg,var(--line) 0 1px,transparent 1px 32px);
+                radial-gradient(60% 38% at 50% -6%,color-mix(in srgb,var(--primary) 16%,transparent),transparent 72%),
+                radial-gradient(50% 30% at 100% 100%,color-mix(in srgb,var(--cyan) 8%,transparent),transparent 70%);
         }
+        body[data-theme="defaut"] .app-bg::before{
+            display:block;inset:0;
+            background-image:radial-gradient(var(--line) 1px,transparent 1.3px);background-size:24px 24px;
+            -webkit-mask-image:radial-gradient(110% 75% at 50% 25%,#000 20%,transparent 78%);
+            mask-image:radial-gradient(110% 75% at 50% 25%,#000 20%,transparent 78%);
+        }
+        body[data-theme="defaut"] .bg-spark{display:block;left:0;right:0;bottom:calc(var(--nav-h) + 26px + env(safe-area-inset-bottom,0px));width:100%;height:120px;color:var(--primary)}
+        .bg-spark path.a{fill:url(#sparkFill)}
+        .bg-spark path.l{fill:none;stroke:currentColor;stroke-width:1.6;opacity:.4;stroke-dasharray:600;stroke-dashoffset:600;animation:sparkDraw 5s ease-out .3s forwards}
+        @keyframes sparkDraw{to{stroke-dashoffset:0}}
+        body.fx-off .bg-spark path.l{animation:none;stroke-dashoffset:0}
 
         /* Noël : neige qui tombe + bonhomme de neige, sapin, cadeaux */
         body[data-theme="noel"] .app-bg{
@@ -1398,6 +1411,10 @@
             color:var(--text);opacity:0;transform:translateY(12px);animation:authSplashLetter 1.2s 1.5s forwards;
         }
         .auth-splash-msg b{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-size:1.25em}
+        .auth-splash-bar{display:none;width:120px;height:2px;border-radius:2px;background:var(--border);overflow:hidden;position:relative;z-index:1}
+        .auth-splash-bar i{display:block;height:100%;width:0;background:var(--primary);animation:splashBar 3.2s cubic-bezier(.4,0,.2,1) forwards}
+        body[data-theme="defaut"] .auth-splash-bar{display:block}
+        @keyframes splashBar{to{width:100%}}
         #fx-splash,#bat-splash{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none}
         body[data-theme="nouvelan"] #fx-splash,body[data-theme="halloween"] #bat-splash{display:block}
 
@@ -1517,7 +1534,7 @@
 <body>
 <script>try{
 window.STARKY_THEMES=[
-{id:'defaut',name:'Par défaut',tag:'Thème par défaut',base:'#0B0B1C',colors:['#7B6EF6','#00D4FF','#E040FB']},
+{id:'defaut',name:'Par défaut',tag:'Thème par défaut',base:'#0A0E17',colors:['#4F8CFF','#2DD4BF','#F5A524'],grad:'linear-gradient(135deg,#8DB2FF 0%,#4F8CFF 100%)'},
 {id:'noel',name:'Noël',tag:'Édition limitée',base:'#0A1A12',colors:['#E63946','#2FBF71','#F6C453']},
 {id:'nouvelan',name:'Nouvel an',tag:'Édition limitée',base:'#0A0B16',colors:['#F5C451','#D9DEE8','#FF7AA2']},
 {id:'halloween',name:'Halloween',tag:'Édition limitée',base:'#120A16',colors:['#FF7A1A','#9B5DE5','#8FE04A']}];
@@ -1529,7 +1546,7 @@ window.applyStarkyTheme=function(th){
  var r=document.documentElement.style,c=th.colors;
  r.setProperty('--base',th.base);document.body.setAttribute('data-theme',th.id);
  r.setProperty('--primary',c[0]);r.setProperty('--cyan',c[1]);r.setProperty('--magenta',c[2]);
- r.setProperty('--grad','linear-gradient(135deg,'+c[0]+' 0%,'+c[1]+' 50%,'+c[2]+' 100%)');
+ r.setProperty('--grad',th.grad||'linear-gradient(135deg,'+c[0]+' 0%,'+c[1]+' 50%,'+c[2]+' 100%)');
  r.setProperty('--grad-soft','linear-gradient(135deg,'+rgba(c[0],.16)+','+rgba(c[1],.10)+')');
  r.setProperty('--border-bright',rgba(c[0],.5));r.setProperty('--primary-glow',rgba(c[0],.28));
  r.setProperty('--side-hover',rgba(c[0],.12));r.setProperty('--side-active',rgba(c[0],.22));
@@ -1557,7 +1574,7 @@ try{var av=localStorage.getItem('starky_anim');if(av==='0'||(av===null&&matchMed
     window.__authSplashStart = Date.now();
 }catch(e){}</script>
 
-<div class="app-bg" id="app-bg"><i class="bg-a"></i><i class="bg-b"></i><svg class="bg-web" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M45 0 Q40 8 42 17 Q34 23 32 32 Q23 34 17 42 Q8 40 0 45"/><path d="M90 0 Q79 16 83 34 Q67 45 64 64 Q45 67 34 83 Q16 79 0 90"/><path d="M135 0 Q119 24 125 52 Q101 68 95 95 Q68 101 52 125 Q24 119 0 135"/><path d="M180 0 Q159 32 166 69 Q135 90 127 127 Q90 135 69 166 Q32 159 0 180"/><line x1="0" y1="0" x2="200" y2="0"/><line x1="0" y1="0" x2="185" y2="77"/><line x1="0" y1="0" x2="141" y2="141"/><line x1="0" y1="0" x2="77" y2="185"/><line x1="0" y1="0" x2="0" y2="200"/></svg><svg class="scene scene-noel" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+<div class="app-bg" id="app-bg"><i class="bg-a"></i><i class="bg-b"></i><svg class="bg-web" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M45 0 Q40 8 42 17 Q34 23 32 32 Q23 34 17 42 Q8 40 0 45"/><path d="M90 0 Q79 16 83 34 Q67 45 64 64 Q45 67 34 83 Q16 79 0 90"/><path d="M135 0 Q119 24 125 52 Q101 68 95 95 Q68 101 52 125 Q24 119 0 135"/><path d="M180 0 Q159 32 166 69 Q135 90 127 127 Q90 135 69 166 Q32 159 0 180"/><line x1="0" y1="0" x2="200" y2="0"/><line x1="0" y1="0" x2="185" y2="77"/><line x1="0" y1="0" x2="141" y2="141"/><line x1="0" y1="0" x2="77" y2="185"/><line x1="0" y1="0" x2="0" y2="200"/></svg><svg class="bg-spark" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".22"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs><path class="a" d="M0 95 C30 90 40 70 70 74 S110 98 140 80 S185 40 215 52 S260 78 290 50 S345 18 400 26 L400 120 L0 120Z"/><path class="l" d="M0 95 C30 90 40 70 70 74 S110 98 140 80 S185 40 215 52 S260 78 290 50 S345 18 400 26"/></svg><svg class="scene scene-noel" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
 <path d="M-400 205 Q-100 188 100 208 T400 202 T800 206 V240 H-400Z" fill="#EEF4FF"/>
 <g transform="translate(62 0)"><rect x="-6" y="192" width="12" height="20" fill="#6B4226"/>
 <path d="M0 98 L-34 146 H34Z" fill="#1E8A4C"/><path d="M0 122 L-44 174 H44Z" fill="#23A05A"/><path d="M0 148 L-54 200 H54Z" fill="#2FBF71"/>
@@ -1586,6 +1603,7 @@ try{var av=localStorage.getItem('starky_anim');if(av==='0'||(av===null&&matchMed
         <span style="animation-delay:.00s">S</span><span style="animation-delay:.16s">t</span><span style="animation-delay:.32s">a</span><span style="animation-delay:.48s">r</span><span style="animation-delay:.64s">k</span><span style="animation-delay:.80s">y</span><span class="auth-splash-space" style="animation-delay:.96s">&nbsp;</span><span style="animation-delay:1.12s">S</span><span style="animation-delay:1.28s">p</span><span style="animation-delay:1.44s">o</span><span style="animation-delay:1.60s">r</span><span style="animation-delay:1.76s">t</span><span style="animation-delay:1.92s">s</span>
     </div>
     <div class="auth-splash-msg" id="auth-splash-msg"></div>
+    <div class="auth-splash-bar"><i></i></div>
 </div>
 
 <!-- AUTHENTIFICATION OBLIGATOIRE (overlay Google) -->
@@ -3860,103 +3878,75 @@ async function load(silent) {
         if (!silent || !loaded) box.innerHTML = '<div class="sb-state err">Impossible de charger les SureBets : ' + escapeHtml(e.message) + '</div>';
     }
 }
+/* ═══ CALCUL DES MISES — optimum exact ═══
+   Gain garanti = min(mise_i × cote_i) − total misé. On le maximise exactement :
+   pour chaque issue « limitante » j et chaque mise k·pas, les autres issues reçoivent la
+   plus petite mise (multiple du pas) qui atteint le même paiement. Le total est croissant
+   avec k → recherche dichotomique du plus grand k admissible, puis petite fenêtre en dessous
+   (effets d'arrondi). Parmi les solutions à ≤ 0,5 % de l'optimum, on prend la plus équilibrée.
+   Arrondi intelligent : on garde le pas le plus « rond » dont la perte reste ≤ 3 % de l'optimum. */
+const PAS_LISTE = [500, 100, 50, 10];
+const TOLERANCE_ARRONDI = 0.97;
+const TOLERANCE_EQUILIBRE = 0.995;
+const FENETRE = 250;
+
 function calculerMisesOptimal(budget, issues) {
-  if (!issues || issues.length === 0) return null;
-
-  // 1. Essai avec PAS = 500
-  const res500 = _rechercher(budget, issues, PAS);
-  if (res500 && res500.gainNet > 0) {
-    return { ...res500, pasUtilise: PAS, fallback: false };
-  }
-
-  // 2. Fallback : PAS = 1
-  const res1 = _rechercher(budget, issues, PAS_FALLBACK);
-  if (res1 && res1.gainNet > 0) {
-    return { ...res1, pasUtilise: PAS_FALLBACK, fallback: true };
-  }
-
-  // 3. Dernier recours
-  if (res1) {
-    return { ...res1, pasUtilise: PAS_FALLBACK, fallback: true,
-             warning: "⚠️ Aucune combinaison avec ROI > 0. Mise minimale utilisée." };
-  }
-  return null;
+    if (!issues || issues.length < 2) return null;
+    const exact = _rechercher(budget, issues, 1);
+    if (!exact) return null;
+    if (exact.gainNet <= 0) {
+        return { ...exact, pasUtilise: 1, fallback: true, optimum: exact.gainNet,
+                 warning: "Aucune répartition à gain garanti avec ce budget : voici la moins défavorable." };
+    }
+    for (const pas of PAS_LISTE) {
+        const r = _rechercher(budget, issues, pas);
+        if (r && r.gainNet > 0 && r.gainNet >= exact.gainNet * TOLERANCE_ARRONDI) {
+            return { ...r, pasUtilise: pas, fallback: false, optimum: exact.gainNet };
+        }
+    }
+    return { ...exact, pasUtilise: 1, fallback: true, optimum: exact.gainNet };
 }
 
 function _rechercher(budget, issues, pas) {
-  const n = issues.length;
-  let B = Math.floor(budget / pas) * pas;
-  if (B < MISE_MIN) B = MISE_MIN;
-
-  const invSum = issues.reduce((acc, i) => acc + 1 / i.cote, 0);
-
-  function evaluer(mises) {
-    const total = mises.reduce((a, v) => a + v, 0);
-    if (total > B) return null;
-    if (mises.some(m => m < pas)) return null;
-    const gains = mises.map((m, i) => m * issues[i].cote);
-    const gainMin = Math.min(...gains);
-    const gainMax = Math.max(...gains);
-    const reste = B - total;
-    const gainsTotaux = gains.map(g => g + reste);
-    const gainMinTotal = Math.min(...gainsTotaux);
-    const gainNet = gainMinTotal - B;
-    const roi = gainNet / B * 100;
-    return {
-      mises: [...mises], gains, gainsTotaux, reste, total,
-      gainMin, gainMax, ecart: gainMax - gainMin,
-      gainMinTotal, gainNet, roi,
+    const n = issues.length, B = budget;
+    const cotes = issues.map(i => Number(i.cote));
+    if (cotes.some(c => !(c > 1))) return null;
+    const somme = m => m.reduce((a, v) => a + v, 0);
+    const misesPour = (j, k) => {
+        const G = k * pas * cotes[j];
+        return cotes.map((c, i) => i === j ? k * pas : Math.max(pas, Math.ceil(G / c / pas - 1e-9) * pas));
     };
-  }
-
-  const theoriques = issues.map(i => B * (1 / i.cote) / invSum);
-  let base = theoriques.map(t => Math.max(pas, Math.floor(t / pas) * pas));
-  let sumBase = base.reduce((a, v) => a + v, 0);
-  if (sumBase < B) {
-    let idxMax = 0;
-    for (let i = 1; i < base.length; i++) if (base[i] > base[idxMax]) idxMax = i;
-    const diff = Math.min(B - sumBase, Math.floor((B - sumBase) / pas) * pas);
-    base[idxMax] += diff;
-  }
-
-  // K adaptatif
-  const K = pas === 1
-    ? Math.min(1500, Math.max(150, Math.floor(B / (n * 10))))
-    : Math.min(50, Math.max(10, Math.floor(B / (pas * n * 4))));
-
-  let meilleur = null;
-  const offsets = [];
-  for (let d = -K; d <= K; d++) offsets.push(d * pas);
-
-  function explorer(idx, current) {
-    if (idx === n) {
-      const ev = evaluer(current);
-      if (!ev) return;
-      if (ev.gainNet <= 0) return;
-      if (!meilleur ||
-          ev.ecart < meilleur.ecart - 1e-6 ||
-          (Math.abs(ev.ecart - meilleur.ecart) < 1e-6 && ev.gainNet > meilleur.gainNet)) {
-        meilleur = ev;
-      }
-      return;
+    function evaluer(mises) {
+        const total = somme(mises);
+        const gains = mises.map((m, i) => m * cotes[i]);
+        const gainMin = Math.min(...gains), gainMax = Math.max(...gains);
+        const reste = B - total;
+        const gainsTotaux = gains.map(g => g + reste);
+        const gainMinTotal = gainMin + reste;
+        const gainNet = gainMinTotal - B;
+        return { mises, gains, gainsTotaux, reste, total, gainMin, gainMax, ecart: gainMax - gainMin,
+                 gainMinTotal, gainNet, roi: gainNet / B * 100 };
     }
-    for (const off of offsets) {
-      const m = base[idx] + off;
-      if (m < pas) continue;
-      current.push(m);
-      const sumPart = current.reduce((a, v) => a + v, 0);
-      const minRest = (n - idx - 1) * pas;
-      if (sumPart + minRest <= B) explorer(idx + 1, current);
-      current.pop();
+    const candidats = [];
+    for (let j = 0; j < n; j++) {
+        if (somme(misesPour(j, 1)) > B) continue;
+        let lo = 1, hi = Math.floor(B / pas);
+        while (lo < hi) {
+            const mid = Math.ceil((lo + hi) / 2);
+            if (somme(misesPour(j, mid)) <= B) lo = mid; else hi = mid - 1;
+        }
+        for (let k = lo; k >= Math.max(1, lo - FENETRE); k--) {
+            const m = misesPour(j, k);
+            if (somme(m) <= B) candidats.push(evaluer(m));
+        }
     }
-  }
-
-  explorer(0, []);
-  return meilleur;
+    if (!candidats.length) return null;
+    const meilleurGain = Math.max(...candidats.map(c => c.gainNet));
+    const seuil = meilleurGain > 0 ? meilleurGain * TOLERANCE_EQUILIBRE : meilleurGain;
+    return candidats.filter(c => c.gainNet >= seuil - 1e-9).reduce((a, b) =>
+        (b.ecart < a.ecart - 1e-6 || (Math.abs(b.ecart - a.ecart) < 1e-6 && b.gainNet > a.gainNet)) ? b : a);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// RENDU
 
 let sortMode = 0;
 const SORTS = ['Profit ↓', 'Profit ↑', 'Récent'];
@@ -4083,9 +4073,10 @@ function lancerCalcul(s) {
   const benefClass = r.gainNet > 0 ? 'green' : 'red';
 
   // Bandeau info si fallback
-  const infoHtml = r.fallback
-    ? `<div class="sb-modal-info">Arrondi au franc près (pas de ${PAS_FALLBACK} XOF) — aucune solution à ${PAS} XOF avec ROI positif.</div>`
-    : '';
+  const perte = Math.max(0, Math.round((r.optimum ?? r.gainNet) - r.gainNet));
+  const infoHtml = r.warning ? '' : (r.pasUtilise > 1
+    ? `<div class="sb-modal-info">Mises arrondies à ${r.pasUtilise} XOF : ${perte ? 'perte de ' + perte.toLocaleString('fr-FR') + ' XOF seulement' : 'aucune perte'} par rapport à l’optimum exact (${Math.round(r.optimum).toLocaleString('fr-FR')} XOF).</div>`
+    : `<div class="sb-modal-info">Répartition au franc près pour maximiser le gain garanti.</div>`);
   const warningHtml = r.warning ? `<div class="sb-modal-warning">${r.warning}</div>` : '';
 
   resultDiv.innerHTML = `
@@ -4243,14 +4234,32 @@ const bg = Fireworks($('fx-canvas')), sp = Fireworks($('fx-splash'));
 let t10 = 0, tb = 0, ts = 0;
 const locked = () => document.body.classList.contains('auth-checking');
 
+const PHRASES = {
+    defaut: ['Analyse en cours, chiffres à l’appui.', 'Les bonnes cotes se méritent.', 'La donnée avant l’intuition.',
+        'Chaque pari commence par une analyse.', 'Méthode, patience et discipline.', 'Bien gérer sa mise, c’est déjà gagner.',
+        'Les pronostics du jour arrivent.', 'Cherchez la valeur, pas le hasard.', 'Un bankroll bien géré dort tranquille.',
+        'Jouez malin, jouez responsable.', 'Les surebets ne dorment jamais.', 'On prépare le terrain…'],
+    noel: ['Joyeux Noël de la part de toute l’équipe Starky', 'Que cette fin d’année vous apporte de belles victoires',
+        'Chaleur, famille et bons pronostics : joyeuses fêtes'],
+    halloween: ['Joyeux Halloween ! Starky vous souhaite de belles frayeurs', 'Gare aux cotes qui rôdent dans le noir…',
+        'Pas de pari maudit cette nuit : jouez malin']
+};
+const chosen = {};
+function phrase(th) {
+    const l = PHRASES[th]; if (!l) return '';
+    if (chosen[th] === undefined) {          // une nouvelle phrase à chaque lancement, jamais deux fois la même d'affilée
+        const k = 'starky_phrase_' + th; let last = -1, i;
+        try { last = parseInt(localStorage.getItem(k), 10); } catch (e) {}
+        do { i = Math.floor(Math.random() * l.length); } while (i === last && l.length > 1);
+        try { localStorage.setItem(k, i); } catch (e) {}
+        chosen[th] = i;
+    }
+    return l[chosen[th]];
+}
 function message() {
     const el = $('auth-splash-msg'); if (!el) return;
-    const d = new Date(), y = d.getMonth() === 11 ? d.getFullYear() + 1 : d.getFullYear();
-    const m = {
-        nouvelan: 'Starky vous souhaite une bonne et heureuse année <b>' + y + '</b>',
-        noel: 'Joyeux Noël de la part de toute l’équipe Starky',
-        halloween: 'Joyeux Halloween ! Starky vous souhaite de belles frayeurs'
-    }[theme()] || '';
+    const th = theme(), d = new Date(), y = d.getMonth() === 11 ? d.getFullYear() + 1 : d.getFullYear();
+    const m = th === 'nouvelan' ? 'Starky vous souhaite une bonne et heureuse année <b>' + y + '</b>' : phrase(th);
     el.innerHTML = m; el.style.display = m ? 'block' : 'none';
 }
 function refresh() {
