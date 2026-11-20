@@ -1466,25 +1466,55 @@
         .sb-bar b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
         .sb-bar b.pos{color:var(--success)}
         .sb-sort{background:none;border:1px solid var(--border);color:var(--text);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer;flex:none}
-        .sb-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:14px 16px;margin-bottom:10px}
-        .sb-head2{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
-        .sb-main{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:10px 0 14px}
-        .sb-teams{min-width:0;font-weight:700;font-size:15.5px;line-height:1.4}
-        .sb-teams div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .sb-gain{text-align:right;flex:none}
-        .sb-profit{font:800 22px/1 'Bricolage Grotesque','DM Sans',sans-serif;color:var(--success);font-variant-numeric:tabular-nums;white-space:nowrap}
-        .sb-gain-cap{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-top:5px;font-weight:600}
-        .sb-slips{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px}
-        .sb-slip{background:var(--bg-elevated);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
-        .sb-slip-label{font-size:12.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .sb-slip-cote{font:800 22px/1 'Bricolage Grotesque','DM Sans',sans-serif;font-variant-numeric:tabular-nums}
+        .sb-card{
+            container-type:inline-size;
+            background:color-mix(in srgb,var(--bg-card) 76%,transparent);
+            border:1px solid color-mix(in srgb,var(--text) 9%,transparent);
+            border-radius:18px;padding:14px 16px;margin-bottom:12px;
+            box-shadow:0 14px 32px var(--shadow),0 2px 6px var(--shadow),inset 0 1px 0 color-mix(in srgb,var(--text) 6%,transparent);
+        }
+        .sb-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+        .sb-id{min-width:0;flex:1}
+        .sb-match{font-weight:800;font-size:15.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .sb-vs{font-weight:500;font-size:12px;color:var(--text-muted);margin:0 6px}
+        .sb-league{font-size:12px;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .sb-when{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-muted);margin-top:3px;font-variant-numeric:tabular-nums}
+        .sb-when i{font-size:10px;opacity:.75}
+        .sb-pct{
+            flex:none;font:800 15px/1 'Bricolage Grotesque','DM Sans',sans-serif;font-variant-numeric:tabular-nums;color:var(--success);
+            background:color-mix(in srgb,var(--success) 13%,transparent);border:1px solid color-mix(in srgb,var(--success) 32%,transparent);
+            border-radius:10px;padding:7px 10px;box-shadow:0 4px 12px color-mix(in srgb,var(--success) 14%,transparent);
+        }
+        .sb-slips{display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:6px;margin:14px 0 12px}
+        .sb-slip{
+            min-width:0;display:flex;flex-direction:column;gap:4px;padding:8px 10px;border-radius:12px;
+            background:color-mix(in srgb,var(--text) 5%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--text) 6%,transparent);
+        }
+        .sb-slip-label{font-size:11.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .sb-slip-cote{font:800 19px/1.1 'Bricolage Grotesque','DM Sans',sans-serif;font-variant-numeric:tabular-nums}
+        /* 3 options (ou carte étroite) : la ligne s'adapte en masquant le nom du bookmaker, la pastille reste */
+        @container (max-width:420px){
+            .sb-slips[data-n="3"] .sb-bk-name{display:none}
+            .sb-slips[data-n="3"] .sb-slip{padding:8px}
+            .sb-slips[data-n="3"] .sb-slip-cote{font-size:17px}
+        }
+        @container (max-width:300px){.sb-slips .sb-bk-name{display:none}}
         .sb-bk{display:inline-flex;align-items:center;gap:7px;min-width:0}
-        .sb-bk-name{font-size:12px;font-weight:700}
+        .sb-bk-name{font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .sb-logo{width:20px;height:20px;border-radius:6px;display:inline-grid;place-items:center;font-size:10px;font-weight:800;letter-spacing:-.02em;color:#fff;flex:none}
         .bk-1xbet{background:#1F63E0}.bk-betmomo{background:#F28A1E}.bk-other{background:var(--text-inactive)}
-        .sb-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:12px}
-        .sb-market{font-size:12px;color:var(--text-muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .sb-calc{background:var(--primary);color:var(--on-primary);border:none;border-radius:999px;padding:8px 18px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;flex:none}
+        .sb-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+        .sb-market{
+            min-width:0;max-width:58%;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+            padding:7px 11px;border-radius:9px;color:var(--text);
+            background:color-mix(in srgb,var(--primary) 15%,transparent);border:1px solid color-mix(in srgb,var(--primary) 38%,transparent);
+        }
+        .sb-calc{
+            flex:none;display:inline-flex;align-items:center;gap:8px;border:none;border-radius:999px;padding:9px 16px;cursor:pointer;
+            background:var(--primary);color:var(--on-primary);font:inherit;font-size:13px;font-weight:700;
+            box-shadow:0 8px 18px color-mix(in srgb,var(--primary) 38%,transparent);transition:transform .15s;
+        }
+        .sb-calc i{font-size:12px}
         .sb-calc:active{transform:scale(.96)}
         .sb-modal-issue .sb-bk{justify-content:center}
         .sb-badge{color:var(--warning);font-size:10px;font-weight:700;margin-left:8px;letter-spacing:.04em}
@@ -4031,21 +4061,45 @@ function bookLogo(b) {
     return `<span class="sb-bk"><span class="sb-logo ${k.cls}">${k.txt}</span><span class="sb-bk-name">${escapeHtml(k.name)}</span></span>`;
 }
 const fmtCote = c => Number(c).toFixed(3).replace(/0$/, '');
+function quand(s) {
+    /* date + heure du match : champ date éventuel, sinon `heure` (heure seule ou date complète) */
+    const dRaw = String(s.start_time || s.match_date || s.date_match || s.date || '').trim();
+    const hRaw = String(s.heure || '').trim();
+    const hm = hRaw.match(/^(\d{1,2})\s*[:h]\s*(\d{2})/);
+    let date = '', time = hm ? hm[1].padStart(2, '0') + ':' + hm[2] : '';
+    const src = dRaw || (hm ? '' : hRaw);
+    if (src) {
+        const d = new Date(src.replace(' ', 'T'));
+        if (!isNaN(d)) {
+            date = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+            if (!time && /\d{1,2}:\d{2}/.test(src)) time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        } else if (!time) time = src;
+    }
+    return [date, time].filter(Boolean).join(' · ');
+}
 function card(s) {
-    const slips = (s.issues || []).map(i => `<div class="sb-slip">
+    const iss = s.issues || [], n = Math.max(iss.length, 2);
+    const slips = iss.map(i => `<div class="sb-slip">
         ${bookLogo(i.bookmaker)}
-        <div class="sb-slip-label">${escapeHtml(i.label || i.key)}</div>
+        <div class="sb-slip-label" title="${escapeHtml(i.label || i.key)}">${escapeHtml(i.label || i.key)}</div>
         <div class="sb-slip-cote">${fmtCote(i.cote)}</div></div>`).join('');
     const market = [s.marche, s.period && s.period !== 'MATCH' ? s.period : ''].filter(Boolean).join(' · ');
+    const league = [s.champ, s.country].filter(Boolean).join(' · ');
+    const when = quand(s);
     return `<div class="sb-card">
-        <div class="sb-head2"><span>${escapeHtml([s.country, s.champ].filter(Boolean).join(' · '))}${s.inversed ? '<span class="sb-badge">inversé</span>' : ''}</span><span>${escapeHtml(s.heure || '')}</span></div>
-        <div class="sb-main">
-            <div class="sb-teams"><div>${escapeHtml(s.team1 || '?')}</div><div>${escapeHtml(s.team2 || '?')}</div></div>
-            <div class="sb-gain"><div class="sb-profit">+${s.profit_pct.toFixed(2)}%</div><div class="sb-gain-cap">profit garanti</div></div>
+        <div class="sb-top">
+            <div class="sb-id">
+                <div class="sb-match" title="${escapeHtml((s.team1 || '?') + ' vs ' + (s.team2 || '?'))}">${escapeHtml(s.team1 || '?')}<span class="sb-vs">vs</span>${escapeHtml(s.team2 || '?')}</div>
+                <div class="sb-league">${escapeHtml(league)}${s.inversed ? '<span class="sb-badge">inversé</span>' : ''}</div>
+                ${when ? `<div class="sb-when"><i class="fas fa-calendar-alt"></i>${escapeHtml(when)}</div>` : ''}
+            </div>
+            <div class="sb-pct">+${s.profit_pct.toFixed(2)}%</div>
         </div>
-        <div class="sb-slips">${slips}</div>
-        <div class="sb-foot"><span class="sb-market">${escapeHtml(market)}</span>
-        <button type="button" class="sb-calc" data-sb="${s.id}">Calculer</button></div></div>`;
+        <div class="sb-slips" data-n="${n}" style="--n:${n}">${slips}</div>
+        <div class="sb-foot">
+            <span class="sb-market" title="${escapeHtml(market)}">${escapeHtml(market || '—')}</span>
+            <button type="button" class="sb-calc" data-sb="${s.id}"><i class="fas fa-calculator"></i><span>Calculer mise</span></button>
+        </div></div>`;
 }
 let currentSurebet = null;
 
