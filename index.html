@@ -3919,17 +3919,16 @@ async function load(silent) {
     }
 }
 /* ═══ CALCUL DES MISES — gain garanti maximal, mises « humaines » ═══
-   Gain garanti = min(mise_i × cote_i) − total misé.
-   1. On calcule l'optimum exact (au franc près) : c'est la référence.
-   2. On cherche des mises rondes (multiples de 500, de préférence de 1000) autour de la
-      répartition théorique. On garde celles dont le gain est à ≤ 3 % du meilleur gain arrondi,
-      puis on choisit la plus « ronde » : budget entièrement utilisé > plus de multiples de 1000
-      > plus petite réserve > gains équilibrés.
-   3. Si l'arrondi fait perdre trop de gain (montant trop petit), on mise la totalité du budget
-      au franc près, sans arrondi ni réserve. */
-const PAS_ARRONDI = 500;
-const RATIO_MIN_ARRONDI = 0.8;
-const TOLERANCE_ROND = 0.97;
+   Gain garanti = min(mise_i × cote_i) − total misé ; rendement = gain garanti / total misé.
+   • Humanisé : mises au millier. On ne mise pas forcément tout le budget : on cherche les
+     répartitions dont le rendement reste proche du profit théorique du surebet (1/Σ(1/cote) − 1),
+     puis, parmi elles, celle qui rapporte le plus en valeur absolue. Le reste est une réserve.
+     Si aucune répartition au millier n'approche le profit théorique (montant trop petit),
+     on mise la totalité du budget au franc près, sans arrondi ni réserve.
+   • Non humanisé : optimum exact au franc près, budget misé en totalité. */
+const PAS_ARRONDI = 1000;
+const TIERS_ROI = [0.04, 0.08, 0.15, 0.25];  // écart toléré au profit théorique, du plus strict au plus large
+const GARDE_PROFIT = 0.6;                    // le tier strict ne doit pas sacrifier plus de 40 % du gain absolu
 const TOLERANCE_EQUILIBRE = 0.995;
 const FENETRE = 250;
 
@@ -3945,11 +3944,8 @@ function calculerMisesOptimal(budget, issues, humaniser = true) {
     if (!humaniser) {   // interrupteur désactivé : optimum exact, budget misé en totalité
         return { ..._remplirTotalite(budget, issues, exact), pasUtilise: 1, mode: 'exact', fallback: false, optimum: exact.gainNet };
     }
-    const rond = _meilleurArrondi(budget, issues, exact.gainNet);
-    if (rond) {
-        return { ...rond, pasUtilise: rond.mises.every(m => m % 1000 === 0) ? 1000 : PAS_ARRONDI,
-                 mode: 'rond', fallback: false, optimum: exact.gainNet };
-    }
+    const rond = _meilleurArrondi(budget, issues);
+    if (rond) return { ...rond, pasUtilise: PAS_ARRONDI, mode: 'rond', fallback: false, optimum: exact.gainNet };
     return { ..._remplirTotalite(budget, issues, exact), pasUtilise: 1, mode: 'total', fallback: true, optimum: exact.gainNet };
 }
 
@@ -3961,7 +3957,7 @@ function _evaluer(B, cotes, mises) {
     const gainMinTotal = gainMin + reste;
     const gainNet = gainMinTotal - B;
     return { mises, gains, gainsTotaux: gains.map(g => g + reste), reste, total, gainMin, gainMax,
-             ecart: gainMax - gainMin, gainMinTotal, gainNet, roi: gainNet / B * 100 };
+             ecart: gainMax - gainMin, gainMinTotal, gainNet, roi: total > 0 ? gainNet / total * 100 : 0 };
 }
 
 /* Répartit le petit reste d'un calcul exact sur les issues les moins payées : budget misé en totalité. */
@@ -3978,37 +3974,39 @@ function _remplirTotalite(budget, issues, ex) {
     return _evaluer(budget, cotes, m);
 }
 
-function _meilleurArrondi(budget, issues, gainExact) {
+function _meilleurArrondi(budget, issues) {
     const pas = PAS_ARRONDI, n = issues.length, B = budget;
     const cotes = issues.map(i => Number(i.cote));
     if (cotes.some(c => !(c > 1))) return null;
-    const inv = cotes.reduce((a, c) => a + 1 / c, 0);
-    const W = n <= 2 ? 14 : n === 3 ? 9 : n === 4 ? 5 : 3;
-    const plages = cotes.map(c => {
-        const t = Math.round(B / (c * inv) / pas), a = [];
-        for (let k = Math.max(1, t - W); k <= t + W; k++) a.push(k * pas);
-        return a;
-    });
+    const roiIdeal = (1 / cotes.reduce((a, c) => a + 1 / c, 0) - 1) * 100;
+    if (!(roiIdeal > 0)) return null;
+    const kMax = Math.floor(B / pas);
+    if (kMax < n) return null;
+    const saut = Math.max(1, Math.ceil(kMax / 20000));
     const cands = [];
-    (function rec(i, cur, s) {
-        if (i === n) { cands.push(_evaluer(B, cotes, cur.slice())); return; }
-        for (const m of plages[i]) {
-            if (s + m + (n - i - 1) * pas > B) break;
-            cur.push(m); rec(i + 1, cur, s + m); cur.pop();
-        }
-    })(0, [], 0);
-    if (!cands.length) return null;
-    const best = Math.max(...cands.map(c => c.gainNet));
-    if (best <= 0 || best < gainExact * RATIO_MIN_ARRONDI) return null;
-    const mille = c => c.mises.filter(m => m % 1000 === 0).length;
-    const plein = c => c.reste === 0 ? 1 : 0;
-    return cands.filter(c => c.gainNet >= best * TOLERANCE_ROND).reduce((a, b) => {
-        if (plein(b) !== plein(a)) return plein(b) > plein(a) ? b : a;
-        if (mille(b) !== mille(a)) return mille(b) > mille(a) ? b : a;
-        if (b.reste !== a.reste) return b.reste < a.reste ? b : a;
-        if (Math.abs(b.ecart - a.ecart) > 1e-6) return b.ecart < a.ecart ? b : a;
-        return b.gainNet > a.gainNet ? b : a;
-    });
+    for (let k = 1; k <= kMax; k += saut) {
+        const centres = cotes.map(c => Math.round(k * cotes[0] / c));
+        (function rec(i, cur, s) {
+            if (i === n) { const e = _evaluer(B, cotes, cur.slice()); if (e.gainNet > 0) cands.push(e); return; }
+            for (let d = -1; d <= 1; d++) {
+                const j = Math.max(1, centres[i] + d) * pas;
+                if (s + j + (n - i - 1) * pas > B) continue;
+                cur.push(j); rec(i + 1, cur, s + j); cur.pop();
+            }
+        })(1, [k * pas], k * pas);
+    }
+    const plancher = roiIdeal * (1 - TIERS_ROI[TIERS_ROI.length - 1]);
+    const larges = cands.filter(e => e.roi >= plancher);
+    if (!larges.length) return null;
+    const meilleur = arr => arr.reduce((a, b) => (b.gainNet > a.gainNet + 1e-9 || (Math.abs(b.gainNet - a.gainNet) <= 1e-9 && b.roi > a.roi)) ? b : a);
+    const gainMaxAbs = Math.max(...larges.map(e => e.gainNet));
+    for (const t of TIERS_ROI) {
+        const pool = larges.filter(e => e.roi >= roiIdeal * (1 - t));
+        if (!pool.length) continue;
+        const best = meilleur(pool);
+        if (best.gainNet >= GARDE_PROFIT * gainMaxAbs) return { ...best, roiIdeal };
+    }
+    return { ...meilleur(larges), roiIdeal };
 }
 
 function _rechercher(budget, issues, pas) {
@@ -4144,7 +4142,7 @@ function ouvrirModale(s) {
   document.getElementById('sb-modal-calc').addEventListener('click', () => lancerCalcul(s));
   const hum = document.getElementById('sb-humaniser'), humSub = document.getElementById('sb-humaniser-sub');
   let humPref = true; try { humPref = localStorage.getItem('starky_sb_humaniser') !== '0'; } catch (e) {}
-  const majHum = () => { humSub.textContent = hum.checked ? 'Montants ronds (500 / 1000 XOF)' : 'Montants exacts, au franc près'; };
+  const majHum = () => { humSub.textContent = hum.checked ? 'Arrondi au millier, réserve si utile' : 'Montants exacts, au franc près'; };
   hum.checked = humPref; majHum();
   hum.addEventListener('change', () => {
     try { localStorage.setItem('starky_sb_humaniser', hum.checked ? '1' : '0'); } catch (e) {}
@@ -4209,12 +4207,11 @@ function lancerCalcul(s) {
   const benefClass = r.gainNet > 0 ? 'green' : 'red';
 
   // Bandeau info si fallback
-  const perte = Math.max(0, Math.round((r.optimum ?? r.gainNet) - r.gainNet));
   const infoHtml = r.warning ? '' : (r.mode === 'exact'
     ? `<div class="sb-modal-info">Mises exactes, au franc près : gain garanti maximal, budget utilisé en totalité.</div>`
     : r.mode === 'total'
     ? `<div class="sb-modal-info">Montant trop faible pour des mises rondes : la totalité du budget est misée, sans arrondi ni réserve.</div>`
-    : `<div class="sb-modal-info">Mises rondes (multiples de ${r.pasUtilise} XOF)${r.reste === 0 ? ', budget utilisé en totalité' : ', le reste est gardé en réserve'}. Écart avec l’optimum exact (${Math.round(r.optimum).toLocaleString('fr-FR')} XOF) : ${perte.toLocaleString('fr-FR')} XOF.</div>`);
+    : `<div class="sb-modal-info">Mises arrondies au millier${r.reste > 0 ? ' : ' + Math.round(r.reste).toLocaleString('fr-FR') + ' XOF gardés en réserve pour conserver un profit de ' + r.roi.toFixed(2) + ' % (théorique : ' + r.roiIdeal.toFixed(2) + ' %).' : ', budget utilisé en totalité.'}</div>`);
   const warningHtml = r.warning ? `<div class="sb-modal-warning">${r.warning}</div>` : '';
 
   resultDiv.innerHTML = `
